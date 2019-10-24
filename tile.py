@@ -29,8 +29,6 @@ class Properties(Tile):
     def getName(self):
         return self.name
 
-    
-
     #def onLand(self):
 
 
@@ -42,6 +40,8 @@ class Parking(Tile):
     def onLand(self):
         None
 
+
+# TO-DO:
 # class goToJail(Tile):
 #     #def onLand(self):
 
