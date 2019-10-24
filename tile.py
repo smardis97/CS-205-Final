@@ -10,6 +10,7 @@ class Properties(Tile):
         self.value = value
         self.group = group
         self.owner = owner
+        Tile.__init__(self)
     
     def setOwner(self, owner):
         self.owner = owner
@@ -33,11 +34,13 @@ class Properties(Tile):
     #def onLand(self):
 
 
-# class Go(Tile):
-#     #def onLand(self):
+class Go(Tile):
+    def onLand(self):
+        return 200
 
-# class Parking(Tile):
-#     #def onLand(self):
+class Parking(Tile):
+    def onLand(self):
+        None
 
 # class goToJail(Tile):
 #     #def onLand(self):
