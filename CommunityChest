@@ -1,0 +1,47 @@
+import random
+
+class CommunityChest:
+    def __init__(self,card):
+        self.card = card
+
+
+
+    def pickCard(self, Pla):
+        #get a random number and return that card
+        num = random.randint(1,16)
+
+        if (num ==1):
+            return "Advance to Go collect $200"
+        elif(num==2):
+            return "Bank error in your favor. Collect $200"
+        elif(num==3):
+            return "Doctor's fee, pay $50"
+        elif(num==4):
+            return "From sale of stock you get $50"
+        elif(num==5):
+            return "Get out of jail free"
+        elif(num==6):
+            return "Go to jail"
+        elif(num==7):
+            return "Grand Opera Night Collect $50 from every player for opening night seats"
+        elif(num==8):
+            return "Holiday fund matures, recieve $100"
+        elif(num==9):
+            return"Income tax refund. Collect $20"
+        elif(num==10):
+            return "Life insurance matures – Collect $100"
+        elif(num==11):
+            return"Hospital Fees. Pay $50"
+        elif(num==12):
+            return "School fees. Pay $50"
+        elif(num==13):
+            return "Receive $25 consultancy fee"
+        elif(num==14):
+            return "You are assessed for street repairs: Pay $40 per house and $115 per hotel you own"
+        elif(num==15):
+            return "You have won second prize in a beauty contest. Collect $10"
+        elif(num==16):
+            return "You inherit $100"
+
+
+#edit players money
