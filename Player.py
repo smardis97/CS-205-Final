@@ -3,15 +3,15 @@
 
 
 class Player:
-    def __init__(self, money=1200, is_player=False, name="", inJail_bool=False):
+    def __init__(self, money=1200, is_player=False, name=""):
         self.money = money
-        self.is_player = is_player
-        self.has_jail_card = False
-        self.owned_properties = []
+        self.isPlayer = is_player
+        self.hasJailCard = False
+        self.ownedProperties = []
         self.name = name
-        self.inJjail_bool=inJail_bool
+        self.inJail = False
 
-    def take_money(self, amount):
+    def takeMoney(self, amount):
         if self.money >= amount:
             self.money -= amount
             return 0
@@ -19,11 +19,11 @@ class Player:
             self.money = 0
             return -1 * (self.money - amount)
 
-    def give_money(self, amount):
+    def giveMoney(self, amount):
         self.money += amount
 
-    def has_property(self, prop):
-        for p in self.owned_properties:
+    def hasProperty(self, prop):
+        for p in self.ownedProperties:
             if p == prop:
                 return True
         return False
