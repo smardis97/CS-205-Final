@@ -1,12 +1,15 @@
-import pygame
+
+#import pygame
 
 
 class Player:
-    def __init__(self, money=1200, isPlayer=False):
+    def __init__(self, money=1200, is_player=False, name=""):
         self.money = money
-        self.isPlayer = isPlayer
+        self.isPlayer = is_player
         self.hasJailCard = False
         self.ownedProperties = []
+        self.name = name
+        self.inJail = False
 
     def takeMoney(self, amount):
         if self.money >= amount:
@@ -25,7 +28,25 @@ class Player:
                 return True
         return False
 
-    #
-    # TODO: add_property, add_jail_card, remove_jail_card, 
-    #
-    #
+    
+
+    def add_property(self, property):
+        self.owned_properties.append(property)
+
+    def add_jail_card(self):
+        self.has_jail_card= True;
+
+    def remove_jail_card(self):
+        self.has_jail_card = False
+
+    def goToJail(self):
+        self.inJjail_bool = True
+
+
+    def getOutOfJail(self):
+        self.inJjail_bool = False
+
+
+
+
+
