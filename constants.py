@@ -7,3 +7,5 @@ FPS = 40
 
 black = (0, 0, 0)
 white = (255, 255, 255)
+
+TILE_LIMIT = 40
