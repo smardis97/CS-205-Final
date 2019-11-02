@@ -1,24 +1,30 @@
+import Board
 import Player
 import random
 
-class Controller:
-    def __init__(self, playerList):
-        self.players = playerList;
-        self.sentinel = False;
-    def rollDice(self):
-        dices = (random.randInt(1,6), random.randInt(1,6));
-        return dices;
-    def pairCheck(self, dices):
-        if dices[0] == dices[1]:
-            return True;
-        else:
-            return False;
-    #def playerCheck():
+def rollDice(self):
+    dices = (random.randint(1,6), random.randint(1,6))
+    return dices
 
 
-    def run(self, Player, Tile):
-        self.sentinel = True;
-        while self.sentinel:
+
+def main():
+    board = Board.Board()
+    player1 = Player.Player("test")
+    player2 = Player.Player("test2")
+    board.addPlayer(player1)
+    board.addPlayer(player2)
+
+
+
+    return 0;
+
+
+
+
+
+
+
 
 
         
