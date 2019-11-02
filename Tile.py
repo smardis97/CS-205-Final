@@ -5,7 +5,7 @@ class Tile:
 
 # initialize numHouses to 0 in main
 class Properties(Tile):
-    def __init__(self, purchaseValue, group, name, owner, baseRent, numHouses, house_cost):
+    def __init__(self, purchaseValue, group, name, owner, baseRent, numHouses, house_cost, numHotels):
         self.name = name
         self.purchaseValue = purchaseValue
         self.group = group
@@ -14,6 +14,7 @@ class Properties(Tile):
         Tile.__init__(self)
         self.numHouses = numHouses
         self.house_cost = house_cost
+        self.numHotels = numHotels
 
     def setOwner(self, owner):
         self.owner = owner
@@ -56,6 +57,9 @@ class Properties(Tile):
 
     def getNumHouses(self):
         return self.numHouses
+
+    def getNumHotels(self):
+        return self.numHotels
 
 
 
