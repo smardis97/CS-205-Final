@@ -4,17 +4,16 @@ class Tile:
 
 
 # initialize numHouses to 0 in main
-class Properties(Tile):
-    def __init__(self, purchaseValue, group, name, owner, baseRent, numHouses, house_cost, numHotels):
+class Property(Tile):
+    def __init__(self, purchaseValue, name, rent, house_cost=None, group=None):
         self.name = name
         self.purchaseValue = purchaseValue
         self.group = group
-        self.owner = owner
-        self.baseRent = baseRent
+        self.owner = None
+        self.rent = rent
         Tile.__init__(self)
-        self.numHouses = numHouses
+        self.numHouses = 0
         self.house_cost = house_cost
-        self.numHotels = numHotels
 
     def setOwner(self, owner):
         self.owner = owner
@@ -28,8 +27,8 @@ class Properties(Tile):
     def setName(self, name):
         self.name = name
 
-    def setBaseRent(self, baseRent):
-        self.baseRent = baseRent
+    def setRent(self, rent):
+        self.rent = rent
 
     def setHouseCost(self, house_cost):
         self.house_cost = house_cost
@@ -46,8 +45,8 @@ class Properties(Tile):
     def getName(self):
         return self.name
 
-    def getBaseRent(self):
-        return self.baseRent
+    def getRent(self):
+        return self.rent
 
     def getHouseCost(self):
         return self.house_cost
@@ -69,17 +68,54 @@ class Properties(Tile):
 
 
 class Go(Tile):
+    def __init__(self):
+        Tile.__init__(self)
+
     def onLand(self):
         return 200
 
 
 class Parking(Tile):
+    def __init__(self):
+        Tile.__init__(self)
+
     def onLand(self):
         None
 
-# TO-DO:
-# class goToJail(Tile):
-#     #def onLand(self):
+# TODO: flesh out functionality
+class GoToJail(Tile):
+    def __init__(self):
+        Tile.__init__(self)
 
-# class cardTile(Tile):
-#     #def onLand(self):
+    def onLand(self):
+        pass
+
+class CardTile(Tile):  # TODO: argument for card type
+    def __init__(self):
+        Tile.__init__(self)
+
+    def onLand(self):
+        pass
+
+class Jail(Tile):
+    def __init__(self):
+        Tile.__init__(self)
+
+    def onLand(self):
+        pass
+
+
+class FreeParking(Tile):
+    def __init__(self):
+        Tile.__init__(self)
+
+    def onLand(self):
+        pass
+
+
+class Tax(Tile):  # TODO: argument for tax type
+    def __init__(self):
+        Tile.__init__(self)
+
+    def onLand(self):
+        pass
