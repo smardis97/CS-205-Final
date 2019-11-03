@@ -57,6 +57,9 @@ class Property(Tile):
     def getNumHouses(self):
         return self.numHouses
 
+    def getNumHotels(self):
+        return self.numHotels
+
 
 
 

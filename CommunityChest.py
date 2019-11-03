@@ -58,6 +58,14 @@ class CommunityChest:
             return "Receive $25 consultancy fee"
         elif(num==14):
             #TODO method to get number of houses and hotels a player has
+            propertyList = Player.getOwnedProperties()
+            numHouses = 0
+            numHotels = 0
+            for Properties in propertyList:
+                numHouses +=Properties.getNumHouses(self)
+                numHotels +=Properties.getNumHotels(self)
+            Player.takeMoney(self,numHouses*40)
+            Player.takeMoney(self,numHotels*115)
             return "You are assessed for street repairs: Pay $40 per house and $115 per hotel you own"
         elif(num==15):
             Player.giveMoney(self,10)

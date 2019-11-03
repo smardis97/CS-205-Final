@@ -46,6 +46,8 @@ class Player:
     def getOutOfJail(self):
         self.inJjail_bool = False
 
+    def getOwnedProperties(self):
+        return self.ownedProperties
 
 
 
