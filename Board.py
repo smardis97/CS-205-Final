@@ -57,7 +57,7 @@ class Board:
 
     def addPlayer(self, player):
         if not self.gameStarted:
-            self.players[player.name] = (player, 0)
+            self.players[player.name] = [player, 0]
             return True
         else:
             return False
@@ -78,7 +78,7 @@ class Board:
         self.players[name][1] = destination
         if passGo:
             self.players[name][0].giveMoney(200)
-        self.tileList[destination].onLand(self.players[name][0])
+        self.tileList[destination].onLand()
 
 
     # TODO: only necessary for Jail?

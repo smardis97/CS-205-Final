@@ -28,7 +28,8 @@ class Player:
                 return True
         return False
 
-    
+    def getName(self):
+        return self.name
 
     def add_property(self, property):
         self.owned_properties.append(property)
