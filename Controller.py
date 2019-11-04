@@ -2,24 +2,25 @@ import Board
 import Player
 import random
 
-def rollDice(self):
+def rollDice():
     dices = (random.randint(1,6), random.randint(1,6))
     return dices
 
 
-
 def main():
     board = Board.Board()
-    player1 = Player.Player("test")
-    player2 = Player.Player("test2")
-    board.addPlayer(player1)
-    board.addPlayer(player2)
-
-
-
-    return 0;
-
-
+    player = Player.Player(1200, True, "test")
+    board.addPlayer(player)
+    playerName = player.getName()
+    print(playerName)
+    sentinel = 'Y'
+    while sentinel == 'Y':
+        diceRoll = rollDice()
+        dicYeSum = diceRoll[0] + diceRoll[1]
+        board.playerStandardMove("test", diceSum)
+        sentinel = input("Would you like to continue? Y/N: ")
+        
+main()
 
 
 

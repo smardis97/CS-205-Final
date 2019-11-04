@@ -60,11 +60,9 @@ class Property(Tile):
     def getNumHotels(self):
         return self.numHotels
 
-
-
-
-
-        # def onLand(self):
+    def onLand(self):
+        print("You reached " + self.getName())
+        
 
 
 class Go(Tile):
@@ -72,6 +70,7 @@ class Go(Tile):
         Tile.__init__(self)
 
     def onLand(self):
+        print("You passed GO")
         return 200
 
 
@@ -88,6 +87,7 @@ class GoToJail(Tile):
         Tile.__init__(self)
 
     def onLand(self):
+        print("You've reached the Go to Jail tile")
         pass
 
 class CardTile(Tile):  # TODO: argument for card type
@@ -95,6 +95,7 @@ class CardTile(Tile):  # TODO: argument for card type
         Tile.__init__(self)
 
     def onLand(self):
+        print("You reached the community chest")
         pass
 
 class Jail(Tile):
@@ -102,6 +103,7 @@ class Jail(Tile):
         Tile.__init__(self)
 
     def onLand(self):
+        print("You reached the Jail Tile")
         pass
 
 
@@ -110,6 +112,7 @@ class FreeParking(Tile):
         Tile.__init__(self)
 
     def onLand(self):
+        ("You reached Free Parking")
         pass
 
 
@@ -118,4 +121,5 @@ class Tax(Tile):  # TODO: argument for tax type
         Tile.__init__(self)
 
     def onLand(self):
+        ("You reached Tax")
         pass
