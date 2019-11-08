@@ -67,6 +67,8 @@ class Board:
             return False
         else:
             self.tileList.append(tile)
+            if isinstance(tile, Tile.Property):
+                self.properties[tile.getName()] = tile
             return True
 
     def playerStandardMove(self, name, roll):  # move, pass Go if applicable
