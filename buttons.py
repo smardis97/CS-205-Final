@@ -1,5 +1,7 @@
 import pygame
 from constants import *
+import sys
+sys.path.insert(0, '..')
 
 pygame.font.init()
 
@@ -11,6 +13,8 @@ class BUTTONS:
         self.width = pygameWindowWidth
         self.depth = pygameWindowDepth
         self.screen = pygame.display.set_mode((pygameWindowWidth, pygameWindowDepth))
+        self.programState = 0
+        self.musicState = True
     def DrawButtons(self):
         mouse = pygame.mouse.get_pos()
         # print(mouse[0],mouse[1])
@@ -48,6 +52,51 @@ class BUTTONS:
         self.screen.blit(startSurf, startRect)
         self.screen.blit(diceSurf, diceRect)
         self.screen.blit(resetSurf, resetRect)
+        self.screen.blit(quitSurf, quitRect)
+
+    def homeButtons(self):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        # start
+        if self.width/2+100 > mouse[0] > self.width/2-100 and 570 > mouse[1] > 470:
+            pygame.draw.rect(self.screen, lightGreen, (self.width/2-100, 470, 200, 100))
+            if click[0] == 1:
+                self.programState = 1
+        else:
+            pygame.draw.rect(self.screen, green, (self.width/2-100, 470, 200, 100))
+        # music
+        if self.width/2-200 > mouse[0] > self.width/2-400 and 570 > mouse[1] > 470:
+            pygame.draw.rect(self.screen, lightBlue, (self.width/2-400, 470, 200, 100))
+            if click[0] == 1 and self.musicState:
+                pygame.mixer.music.pause()
+                self.musicState = False
+            elif click[0] == 1 and not self.musicState:
+                pygame.mixer.music.unpause()
+                self.musicState = True
+
+        else:
+            pygame.draw.rect(self.screen, blue, (self.width/2-400, 470, 200, 100))
+        # quit
+        if self.width/2+400 > mouse[0] > self.width/2+200 and 570 > mouse[1] > 470:
+            pygame.draw.rect(self.screen, lightBlue, (self.width/2+200, 470, 200, 100))
+            if click[0] ==1:
+                pygame.display.quit()
+                pygame.quit()
+                exit()
+        else:
+            pygame.draw.rect(self.screen, blue, (self.width/2+200, 470, 200, 100))
+
+        startSurf, startRect = self.textObjects("Start",self.smallFont)
+        musicSurf, musicRect = self.textObjects("Music",self.smallFont)
+        quitSurf, quitRect = self.textObjects("Quit",self.smallFont)
+
+
+        startRect.center=(self.width/2-100+100, 470+50)
+        musicRect.center=(self.width/2-400+100, 470+50)
+        quitRect.center=(self.width/2+200+100, 470+50)
+
+        self.screen.blit(startSurf, startRect)
+        self.screen.blit(musicSurf, musicRect)
         self.screen.blit(quitSurf, quitRect)
 
     def textObjects(self,text,font):
