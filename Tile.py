@@ -66,15 +66,24 @@ class Property(Tile):
     def onLand(self, player):
         print("You have reached " + self.getName())
         if self.owner == None:
-            playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N")
+            playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N ")
             if playerAnswer == 'Y':
-                player.add_property(self)
-                self.owner = player
-            if playerAnswer == 'N':
+                if player.getMoney() >= self.getPurchaseValue():
+                    player.takeMoney(self.getPurchaseValue())
+                    player.add_property(self)
+                    self.owner = player
+                else:
+                    print("You cannot afford this property.")
+            elif playerAnswer == 'N':
                 None
         else:
-            print("This property is owned by " + self.getOwner.getName())
-            player.takeMoney(self.rent)
+            print("This property is owned by " + self.getOwner().getName())
+            debt = player.takeMoney(self.rent)
+            if debt == 0:
+                ("You paid rent!")
+            else:
+                print("You owe " + debt)
+                print("You must sell one of your properties back to the bank")
             self.getOwner.giveMoney(self.rent)
 
             

@@ -11,6 +11,10 @@ class Player:
         self.name = name
         self.inJail = False
 
+
+    def getMoney(self):
+        return self.money
+
     def takeMoney(self, amount):
         if self.money >= amount:
             self.money -= amount
