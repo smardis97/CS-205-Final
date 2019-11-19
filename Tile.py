@@ -76,15 +76,21 @@ class Property(Tile):
                     print("You cannot afford this property.")
             elif playerAnswer == 'N':
                 None
+        elif self.getOwner().getName() == player.getName():
+            playerAnswer2 = input("Would you like to build a house? Y/N ")
+            if playerAnswer2 == 'Y':
+                self.numHouses += 1;
+            else:
+                None
         else:
             print("This property is owned by " + self.getOwner().getName())
-            debt = player.takeMoney(self.rent)
+            debt = player.takeMoney(self.rent[self.getNumHouses()])
             if debt == 0:
-                ("You paid rent!")
+                print("You paid rent!")
             else:
                 print("You owe " + debt)
                 print("You must sell one of your properties back to the bank")
-            self.getOwner.giveMoney(self.rent)
+            self.getOwner().giveMoney(self.rent[self.getNumHouses()])
 
             
         
@@ -117,7 +123,7 @@ class GoToJail(Tile):
             player.remove_jail_card()
             print("You used your get out of jail card!")
         else:
-            player.GoToJail()        
+            player.goToJail()        
         pass
 
 class CardTile(Tile):  # TODO: argument for card type
