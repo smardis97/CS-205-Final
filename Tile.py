@@ -1,4 +1,5 @@
 import Player
+import CommunityChest
 
 class Tile:
     def onLand(self, player):
@@ -86,7 +87,7 @@ class Go(Tile):
 
     def onLand(self, player):
         print("You passed GO")
-        return 200
+        player.giveMoney(200)
 
 
 class Parking(Tile):
@@ -94,7 +95,7 @@ class Parking(Tile):
         Tile.__init__(self)
 
     def onLand(self, player):
-        None
+        print("Free parking!")
 
 # TODO: flesh out functionality
 class GoToJail(Tile):
@@ -103,6 +104,11 @@ class GoToJail(Tile):
 
     def onLand(self, player):
         print("You've reached the Go to Jail tile")
+        if player.get_jail_card():
+            player.remove_jail_card()
+            print("You used your get out of jail card!")
+        else:
+            player.GoToJail()        
         pass
 
 class CardTile(Tile):  # TODO: argument for card type

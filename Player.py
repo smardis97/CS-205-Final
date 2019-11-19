@@ -34,6 +34,9 @@ class Player:
     def add_property(self, property):
         self.ownedProperties.append(property)
 
+    def get_jail_card(self):
+        return self.hasJailCard
+
     def add_jail_card(self):
         self.has_jail_card= True;
 
