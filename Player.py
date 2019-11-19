@@ -32,7 +32,7 @@ class Player:
         return self.name
 
     def add_property(self, property):
-        self.owned_properties.append(property)
+        self.ownedProperties.append(property)
 
     def add_jail_card(self):
         self.has_jail_card= True;
