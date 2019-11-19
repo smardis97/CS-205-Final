@@ -67,6 +67,8 @@ class Board:
             return False
         else:
             self.tileList.append(tile)
+            if isinstance(tile, Tile.Property):
+                self.properties[tile.getName()] = tile
             return True
 
     def playerStandardMove(self, name, roll):  # move, pass Go if applicable
@@ -79,6 +81,21 @@ class Board:
         if passGo:
             self.players[name][0].giveMoney(200)
         self.tileList[destination].onLand()
+
+    def getTiles(self):
+        return self.tileList
+
+    def getProperties(self):
+        return self.properties
+
+    def getPlayers(self):
+        return self.players
+
+    def gameStarted(self):
+        return self.gameStarted
+
+    def startGame(self):
+        self.gameStarted = True
 
 
     # TODO: only necessary for Jail?
