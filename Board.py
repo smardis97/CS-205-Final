@@ -6,7 +6,8 @@ class Board:
     def __init__(self):
         self.tileList = []
         self.properties = {}  # {property-name, property-reference}
-        self.players = {}  # {"identifier", (player_reference, position)}
+        self.turnOrder = []
+        self.players = {}  # {"identifier", [player_reference, position]}
         self.gameStarted = False
         self.constructBoard()
 
@@ -57,10 +58,16 @@ class Board:
 
     def addPlayer(self, player):
         if not self.gameStarted:
-            self.players[player.name] = [player, 0]
+            self.players[player.getName()] = [player, 0]
+            self.turnOrder.append(player.getName())
             return True
         else:
             return False
+
+    def removePlayer(self, player_name):
+        turnIndex = self.turnOrder.index(player_name)
+        self.turnOrder.pop(turnIndex)
+        return True
 
     def addTile(self, tile):
         if len(self.tileList) >= constants.TILE_LIMIT:
