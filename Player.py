@@ -50,6 +50,8 @@ class Player:
     def getOwnedProperties(self):
         return self.ownedProperties
 
+    def getName(self):
+        return self.name
 
 
 

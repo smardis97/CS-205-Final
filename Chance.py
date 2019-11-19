@@ -8,7 +8,7 @@ class Chance:
 
 
 
-    def pickCard(self, Player, playerList):
+    def pickCard(self, Player, playerList, Board):
 
         if Player in playerList:
             playerList.remove(Player)
@@ -17,17 +17,19 @@ class Chance:
 
         if(num==1):
             #TODO move player to go
+            Board.playerDirectMove(self,Player.getName(),0)
             Player.giveMoney(self,200)
             return "Advance to go Collect $200"
 
         if(num==2):
-            #TODO move player to Illisnois ave
             #TODO determine if player passed go
+            Board.playerDirectMove(self,Player.getName(),24)
             return "Advance to Illinois Ave—If you pass Go, collect $200"
 
         if(num==3):
             #TODO move player to St.Charles Place
             #TODO determine if player pased go
+            Board.playerDirectMove(self,Player.getName(),11)
             return "Advance to St. Charles Place – If you pass Go, collect $200"
 
         if(num==4):
@@ -54,12 +56,22 @@ class Chance:
 
         if(num == 8):
             #TODO move player 3 spaces backwards
+            Board.playerStandardMove(self,Player.getName(),-3)
             return "Go Back 3 Spaces"
 
         if(num==9):
+            Player.goToJail()
             return "Go to Jail–Go directly to Jail–Do not pass Go, do not collect $200"
 
         if(num == 10):
+            propertyList = Player.getOwnedProperties()
+            numHouses = 0
+            numHotels = 0
+            for Properties in propertyList:
+                numHouses += Properties.getNumHouses(self)
+                numHotels += Properties.getNumHotels(self)
+            Player.takeMoney(self, numHouses * 25)
+            Player.takeMoney(self, numHotels * 100)
             return "Make general repairs on all your property–For each house pay $25–For each hotel $100"
 
         if(num==11):
@@ -67,9 +79,12 @@ class Chance:
             return "Pay poor tax of $15"
 
         if(num==12):
+            #TODO determine if player passes go
+            Board.playerDirectMove(self,Player.getName(),5)
             return "Take a trip to Reading Railroad–If you pass Go, collect $200"
 
         if(num==13):
+            Board.playerDirectMove(self,Player.getName(),39)
             return "Take a walk on the Boardwalk–Advance token to Boardwalk"
 
         if(num==14):
