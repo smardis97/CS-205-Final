@@ -17,13 +17,6 @@ def homePage():
     welcome = welcomeFont.render(welcomeText,False,(0, 0, 0))
     pygameWindow.screen.blit(welcome,(450,200))
     buttons.homeButtons()
-def plainBase():
-    graph = pygame.image.load('images/plainBackground.png')
-    graph = pygame.transform.scale(graph, (940, 940))
-    pygameWindow.screen.blit(graph, (280, 0))
-    graph = pygame.image.load('images/horse.jpeg')
-    graph = pygame.transform.scale(graph, (40, 40))
-    pygameWindow.screen.blit(graph, (1100, 830))
 
 def music():
     pygame.mixer.init()
@@ -41,7 +34,7 @@ while run:
     if buttons.programState == 0:
         homePage()
     elif buttons.programState == 1:
-        plainBase()
+        buttons.plainBase()
         buttons.DrawButtons()
 
     pygameWindow.Reveal()
