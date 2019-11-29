@@ -23,18 +23,42 @@ def music():
     pygame.mixer.music.load("happyDreams.mp3")
     pygame.mixer.music.play(-1)
 
-music()
-run = True
-while run:
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+def inpt():
+    word="123"
     pygameWindow.Prepare()
-    if buttons.programState == 0:
-        homePage()
-    elif buttons.programState == 1:
-        buttons.plainBase()
-        buttons.DrawButtons()
+    done = True
+    while done:
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    word+=str(chr(event.key))
+                if event.key == pygame.K_b:
+                    word+=chr(event.key)
+                if event.key == pygame.K_c:
+                    word+=chr(event.key)
+                if event.key == pygame.K_d:
+                    word+=chr(event.key)
+                if event.key == pygame.K_RETURN:
+                    done=False
+        print(word)
+        pygameWindow.Reveal()
 
-    pygameWindow.Reveal()
+inpt()
+# music()
+# run = True
+# while run:
+#
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             run = False
+#     pygameWindow.Prepare()
+#     if buttons.programState == 0:
+#         homePage()
+#     elif buttons.programState == 1:
+#         buttons.plainBase()
+#         buttons.DrawButtons()
+#
+#     pygameWindow.Reveal()

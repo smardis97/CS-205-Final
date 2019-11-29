@@ -17,7 +17,7 @@ def main():
     while sentinel == 'Y':
         diceRoll = rollDice()
         dicYeSum = diceRoll[0] + diceRoll[1]
-        board.playerStandardMove("test", diceSum)
+        board.playerStandardMove("test", dicYeSum)
         sentinel = input("Would you like to continue? Y/N: ")
         
 main()
