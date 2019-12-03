@@ -1,5 +1,8 @@
+import Player
+import CommunityChest
+
 class Tile:
-    def onLand(self):
+    def onLand(self, player):
         raise NotImplementedError
 
 
@@ -60,8 +63,36 @@ class Property(Tile):
     def getNumHotels(self):
         return self.numHotels
 
-    def onLand(self):
-        print("You reached " + self.getName())
+    def onLand(self, player):
+        print("You have reached " + self.getName())
+        if self.owner == None:
+            playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N ")
+            if playerAnswer == 'Y':
+                if player.getMoney() >= self.getPurchaseValue():
+                    player.takeMoney(self.getPurchaseValue())
+                    player.add_property(self)
+                    self.owner = player
+                else:
+                    print("You cannot afford this property.")
+            elif playerAnswer == 'N':
+                None
+        elif self.getOwner().getName() == player.getName():
+            playerAnswer2 = input("Would you like to build a house? Y/N ")
+            if playerAnswer2 == 'Y':
+                self.numHouses += 1;
+            else:
+                None
+        else:
+            print("This property is owned by " + self.getOwner().getName())
+            debt = player.takeMoney(self.rent[self.getNumHouses()])
+            if debt == 0:
+                print("You paid rent!")
+            else:
+                print("You owe " + debt)
+                print("You must sell one of your properties back to the bank")
+            self.getOwner().giveMoney(self.rent[self.getNumHouses()])
+
+            
         
 
 
@@ -69,32 +100,37 @@ class Go(Tile):
     def __init__(self):
         Tile.__init__(self)
 
-    def onLand(self):
+    def onLand(self, player):
         print("You passed GO")
-        return 200
+        player.giveMoney(200)
 
 
 class Parking(Tile):
     def __init__(self):
         Tile.__init__(self)
 
-    def onLand(self):
-        None
+    def onLand(self, player):
+        print("Free parking!")
 
 # TODO: flesh out functionality
 class GoToJail(Tile):
     def __init__(self):
         Tile.__init__(self)
 
-    def onLand(self):
+    def onLand(self, player):
         print("You've reached the Go to Jail tile")
+        if player.get_jail_card():
+            player.remove_jail_card()
+            print("You used your get out of jail card!")
+        else:
+            player.goToJail()        
         pass
 
 class CardTile(Tile):  # TODO: argument for card type
     def __init__(self):
         Tile.__init__(self)
 
-    def onLand(self):
+    def onLand(self, player):
         print("You reached the community chest")
         pass
 
@@ -102,7 +138,7 @@ class Jail(Tile):
     def __init__(self):
         Tile.__init__(self)
 
-    def onLand(self):
+    def onLand(self, player):
         print("You reached the Jail Tile")
         pass
 
@@ -111,7 +147,7 @@ class FreeParking(Tile):
     def __init__(self):
         Tile.__init__(self)
 
-    def onLand(self):
+    def onLand(self, player):
         ("You reached Free Parking")
         pass
 
@@ -120,6 +156,6 @@ class Tax(Tile):  # TODO: argument for tax type
     def __init__(self):
         Tile.__init__(self)
 
-    def onLand(self):
+    def onLand(self, player):
         ("You reached Tax")
         pass

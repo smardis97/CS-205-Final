@@ -88,7 +88,7 @@ class Board:
         self.players[name][1] = destination
         if passGo:
             self.players[name][0].giveMoney(200)
-        self.tileList[destination].onLand()
+        self.tileList[destination].onLand(self.players[name][0])
 
     def getTiles(self):
         return self.tileList

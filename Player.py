@@ -11,6 +11,10 @@ class Player:
         self.name = name
         self.inJail = False
 
+
+    def getMoney(self):
+        return self.money
+
     def takeMoney(self, amount):
         if self.money >= amount:
             self.money -= amount
@@ -33,6 +37,9 @@ class Player:
 
     def add_property(self, property):
         self.ownedProperties.append(property)
+        
+    def get_jail_card(self):
+        return self.hasJailCard
 
     def add_jail_card(self):
         self.hasJailCard = True;
@@ -52,5 +59,6 @@ class Player:
     def getName(self):
         return self.name
 
-
+    def getMoney(self):
+        return self.money;
 
