@@ -53,5 +53,6 @@ class Player:
     def getName(self):
         return self.name
 
-
+    def getMoney(self):
+        return self.money;
 
