@@ -114,4 +114,11 @@ class Board:
     # TODO: only necessary for Jail?
     # refactor accordingly
     def playerDirectMove(self, name, destination):  # move without passing Go
+        currentPos = self.players[name][1]
         self.players[name][1] = destination
+        passGo = False
+        if currentPos + destination >= constants.TILE_LIMIT:
+            passGo = True
+
+        if passGo:
+            self.players[name][0].giveMoney(200)
