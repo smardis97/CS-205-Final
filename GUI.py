@@ -22,43 +22,37 @@ def music():
     pygame.mixer.init()
     pygame.mixer.music.load("happyDreams.mp3")
     pygame.mixer.music.play(-1)
+def userMovingPosition():
+    pygame.draw.circle(pygameWindow.screen,black,(buttons.circleX,buttons.circleY),buttons.circleRadius)
 
-def inpt():
-    word="123"
+
+music()
+username = ""
+run = True
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                username+=str(chr(event.key))
+            if event.key == pygame.K_b:
+                username+=chr(event.key)
+            if event.key == pygame.K_c:
+                username+=chr(event.key)
+            if event.key == pygame.K_d:
+                username+=chr(event.key)
+            if event.key == pygame.K_RETURN:
+                buttons.programState = 2
+
     pygameWindow.Prepare()
-    done = True
-    while done:
-        for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    word+=str(chr(event.key))
-                if event.key == pygame.K_b:
-                    word+=chr(event.key)
-                if event.key == pygame.K_c:
-                    word+=chr(event.key)
-                if event.key == pygame.K_d:
-                    word+=chr(event.key)
-                if event.key == pygame.K_RETURN:
-                    done=False
-        print(word)
-        pygameWindow.Reveal()
+    if buttons.programState == 0:
+        homePage()
+    elif buttons.programState == 1:
+        buttons.enterUserName(username)
+    elif buttons.programState == 2:
+        buttons.plainBase()
+        buttons.DrawButtons()
+        userMovingPosition()
 
-inpt()
-# music()
-# run = True
-# while run:
-#
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             run = False
-#     pygameWindow.Prepare()
-#     if buttons.programState == 0:
-#         homePage()
-#     elif buttons.programState == 1:
-#         buttons.plainBase()
-#         buttons.DrawButtons()
-#
-#     pygameWindow.Reveal()
+    pygameWindow.Reveal()

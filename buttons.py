@@ -17,26 +17,76 @@ class BUTTONS:
         self.screen = pygame.display.set_mode((pygameWindowWidth, pygameWindowDepth))
         self.programState = 0
         self.musicState = True
-        self.dice1=random.randint(1,6)
-        self.dice2=random.randint(1,6)
+        self.dice1 = random.randint(1,6)
+        self.dice2 = random.randint(1,6)
+        self.distance = 18
+        self.circleX = 295+910-140-70+1+69+self.distance
+        self.circleY = 910-140+1+self.distance
+        self.circleRadius = self.distance
+        self.enterYourName = "Enter your name"
+        self.enterSwitch = False
+
     def DrawButtons(self):
         mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
         # start
         if self.width/2+50 > mouse[0] > self.width/2-50 and 250 > mouse[1] > 200:
             pygame.draw.rect(self.screen, lightGreen, (self.width/2-50, 200, 100, 50))
         else:
             pygame.draw.rect(self.screen, green, (self.width/2-50, 200, 100, 50))
-        # dice
+        # dice button
         if self.width/2+50 > mouse[0] > self.width/2-50 and 325 > mouse[1] > 275:
             pygame.draw.rect(self.screen, lightBlue, (self.width/2-50, 275, 100, 50))
-            if mouse[0]==1:
+            if click[0]==1:
                 sumDice=self.dice1+self.dice2
-
+                print("sumdice is",sumDice)
+                while sumDice >0:
+                    if self.circleX != 1065+self.distance-630 and self.circleY == 771+self.distance and sumDice!=0:
+                        self.circleX-=70
+                        sumDice-=1
+                        print(sumDice)
+                    # blue one near corner
+                    if self.circleX == 1065+self.distance-630 and self.circleY == 771+self.distance and sumDice!=0:
+                        self.circleX-=2*(self.distance)
+                        sumDice-=1
+                        print(sumDice)
+                    if self.circleX == 1065+self.distance-630-2*(self.distance) and self.circleY != 771+self.distance-630 and sumDice!=0:
+                        self.circleY-=70
+                        sumDice-=1
+                        print(sumDice)
+                    # light blue near corner
+                    if self.circleX == 1065+self.distance-630-2*(self.distance) and self.circleY == 771+self.distance-630 and sumDice!=0:
+                        self.circleY-=2*(self.distance)
+                        sumDice-=1
+                        print(sumDice)
+                    if self.circleX != 1065+self.distance-2*(self.distance) and self.circleY == 771+self.distance-630-2*(self.distance) and sumDice!=0:
+                        self.circleX+=70
+                        sumDice-=1
+                        print(sumDice)
+                    # orange near corner
+                    if self.circleX == 1065+self.distance-2*(self.distance) and self.circleY == 771+self.distance-630-2*(self.distance) and sumDice!=0:
+                        self.circleX+=2*(self.distance)
+                        sumDice-=1
+                        print(sumDice)
+                    if self.circleX == 1065+self.distance and self.circleY != 771+self.distance-2*(self.distance) and sumDice!=0:
+                        self.circleY+=70
+                        sumDice-=1
+                        print(sumDice)
+                    # yellow near corner
+                    if self.circleX == 1065+self.distance and self.circleY == 771+self.distance-2*self.distance and sumDice!=0:
+                        self.circleY+=2*(self.distance)
+                        sumDice-=1
+                        print(sumDice)
+                self.dice1 = random.randint(1, 6)
+                self.dice2 = random.randint(1, 6)
         else:
             pygame.draw.rect(self.screen, blue, (self.width/2-50, 275, 100, 50))
         # reset
         if self.width/2+50 > mouse[0] > self.width/2-50 and 400 > mouse[1] > 350:
             pygame.draw.rect(self.screen, lightGreen, (self.width/2-50, 350, 100, 50))
+            if click[0]==1:
+                self.circleX = 295 + 910 - 140 - 70 + 1 + 69 + self.distance
+                self.circleY = 910 - 140 + 1 + self.distance
         else:
             pygame.draw.rect(self.screen, green, (self.width/2-50, 350, 100, 50))
         # quit
@@ -109,6 +159,24 @@ class BUTTONS:
     def textObjects(self,text,font):
         textSurface = font.render(text, True, black)
         return textSurface, textSurface.get_rect()
+    def enterUserName(self,username):
+        print(username)
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        # start
+        if self.width/2+100 > mouse[0] > self.width/2-100 and 470 > mouse[1] > 370:
+            pygame.draw.rect(self.screen, lightGreen, (self.width/2-100, 370, 200, 100))
+            if click[0]==1:
+                self.enterSwitch = True
+        else:
+            pygame.draw.rect(self.screen, green, (self.width/2-100, 370, 200, 100))
+        if self.enterSwitch:
+            self.enterYourName = username
+
+        startSurf, startRect = self.textObjects(self.enterYourName,self.smallFont)
+        startRect.center=(self.width/2-100+100, 370+50)
+        self.screen.blit(startSurf, startRect)
+
 
     def plainBase(self):
         # background
