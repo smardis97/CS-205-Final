@@ -35,16 +35,16 @@ class Player:
     def getName(self):
         return self.name
 
-    def add_property(self, property):
-        self.ownedProperties.append(property)
+    def addProperty(self, prop):
+        self.ownedProperties.append(prop)
         
-    def get_jail_card(self):
+    def getJailCard(self):
         return self.hasJailCard
 
-    def add_jail_card(self):
-        self.hasJailCard = True;
+    def addJailCard(self):
+        self.hasJailCard = True
 
-    def remove_jail_card(self):
+    def removeJailCard(self):
         self.hasJailCard = False
 
     def goToJail(self):
@@ -55,10 +55,3 @@ class Player:
 
     def getOwnedProperties(self):
         return self.ownedProperties
-
-    def getName(self):
-        return self.name
-
-    def getMoney(self):
-        return self.money;
-
