@@ -6,9 +6,11 @@ class Board:
     def __init__(self):
         self.tileList = []
         self.properties = {}  # {property-name, property-reference}
-        self.players = {}  # {"identifier", (player_reference, position)}
+        self.turnOrder = []
+        self.players = {}  # {"identifier", [player_reference, position]}
         self.gameStarted = False
         self.constructBoard()
+        self.currentTurn = 0
 
     def constructBoard(self):
         self.addTile(Tile.Go())
@@ -57,10 +59,16 @@ class Board:
 
     def addPlayer(self, player):
         if not self.gameStarted:
-            self.players[player.name] = [player, 0]
+            self.players[player.getName()] = [player, 0]
+            self.turnOrder.append(player.getName())
             return True
         else:
             return False
+
+    def removePlayer(self, player_name):
+        turnIndex = self.turnOrder.index(player_name)
+        self.turnOrder.pop(turnIndex)
+        return True
 
     def addTile(self, tile):
         if len(self.tileList) >= constants.TILE_LIMIT:
@@ -96,6 +104,11 @@ class Board:
 
     def startGame(self):
         self.gameStarted = True
+
+    def progressTurn(self):
+        self.currentTurn += 1
+        if self.currentTurn >= len(self.turnOrder):
+            self.currentTurn = 0
 
 
     # TODO: only necessary for Jail?

@@ -37,22 +37,21 @@ class Player:
 
     def add_property(self, property):
         self.ownedProperties.append(property)
-
+        
     def get_jail_card(self):
         return self.hasJailCard
 
     def add_jail_card(self):
-        self.has_jail_card= True;
+        self.hasJailCard = True;
 
     def remove_jail_card(self):
-        self.has_jail_card = False
+        self.hasJailCard = False
 
     def goToJail(self):
-        self.inJjail_bool = True
-
+        self.inJail = True
 
     def getOutOfJail(self):
-        self.inJjail_bool = False
+        self.inJail = False
 
     def getOwnedProperties(self):
         return self.ownedProperties
