@@ -61,16 +61,16 @@ class Property(Tile):
         return self.numHouses
 
     def getNumHotels(self):
-        return self.numHotels
+        return max([self.numHouses - 3, 0])
 
     def onLand(self, player):
         print("You have reached " + self.getName())
-        if self.owner == None:
+        if self.owner is None:
             playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N ")
             if playerAnswer == 'Y':
                 if player.getMoney() >= self.getPurchaseValue():
                     player.takeMoney(self.getPurchaseValue())
-                    player.add_property(self)
+                    player.addProperty(self)
                     self.owner = player
                 else:
                     print("You cannot afford this property.")
@@ -119,8 +119,8 @@ class GoToJail(Tile):
 
     def onLand(self, player):
         print("You've reached the Go to Jail tile")
-        if player.get_jail_card():
-            player.remove_jail_card()
+        if player.getJailCard():
+            player.removeJailCard()
             print("You used your get out of jail card!")
         else:
             player.goToJail()        
@@ -148,7 +148,7 @@ class FreeParking(Tile):
         Tile.__init__(self)
 
     def onLand(self, player):
-        ("You reached Free Parking")
+        print("You reached Free Parking")
         pass
 
 
@@ -157,5 +157,5 @@ class Tax(Tile):  # TODO: argument for tax type
         Tile.__init__(self)
 
     def onLand(self, player):
-        ("You reached Tax")
+        print("You reached Tax")
         pass

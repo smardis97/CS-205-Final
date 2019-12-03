@@ -35,13 +35,13 @@ while run:
             run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
-                username+=str(chr(event.key))
+                username += str(chr(event.key))
             if event.key == pygame.K_b:
-                username+=chr(event.key)
+                username += chr(event.key)
             if event.key == pygame.K_c:
-                username+=chr(event.key)
+                username += chr(event.key)
             if event.key == pygame.K_d:
-                username+=chr(event.key)
+                username += chr(event.key)
             if event.key == pygame.K_RETURN:
                 buttons.programState = 2
 
@@ -52,7 +52,7 @@ while run:
         buttons.enterUserName(username)
     elif buttons.programState == 2:
         buttons.plainBase()
-        buttons.DrawButtons()
+        buttons.drawButtons()
         userMovingPosition()
 
     pygameWindow.Reveal()
