@@ -58,6 +58,8 @@ class Property(Tile):
         self.numHouses += 1
 
     def getNumHouses(self):
+        if self.numHouses > 3:
+            return self.numHouses - 1
         return self.numHouses
 
     def getNumHotels(self):

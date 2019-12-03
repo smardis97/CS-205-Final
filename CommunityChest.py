@@ -35,8 +35,8 @@ class CommunityChest:
             return "Go to jail"
         elif num == 7:
             #TODO make a list of players and remove the current player, iterate over the list and take 50 from each player
-            for player in playerList:
-                player.takeMoney(self, 50)
+            for p in playerList:
+                p.takeMoney(self, 50)
             return "Grand Opera Night Collect $50 from every player for opening night seats"
         elif num == 8:
             player.giveMoney(self, 100)
@@ -61,11 +61,11 @@ class CommunityChest:
             propertyList = player.getOwnedProperties()
             numHouses = 0
             numHotels = 0
-            for Properties in propertyList:
-                numHouses +=Properties.getNumHouses(self)
-                numHotels +=Properties.getNumHotels(self)
-            player.takeMoney(self, numHouses * 40)
-            player.takeMoney(self, numHotels * 115)
+            for property in propertyList:
+                numHouses += property.getNumHouses()
+                numHotels += property.getNumHotels()
+            player.takeMoney(numHouses * 40)
+            player.takeMoney(numHotels * 115)
             return "You are assessed for street repairs: Pay $40 per house and $115 per hotel you own"
         elif num == 15:
             player.giveMoney(self, 10)
