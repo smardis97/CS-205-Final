@@ -1,4 +1,5 @@
 import Player
+import CommunityChest
 
 class Tile:
     def onLand(self, player):
@@ -65,16 +66,31 @@ class Property(Tile):
     def onLand(self, player):
         print("You have reached " + self.getName())
         if self.owner == None:
-            playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N")
+            playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N ")
             if playerAnswer == 'Y':
-                player.add_property(self)
-                self.owner = player
-            if playerAnswer == 'N':
+                if player.getMoney() >= self.getPurchaseValue():
+                    player.takeMoney(self.getPurchaseValue())
+                    player.add_property(self)
+                    self.owner = player
+                else:
+                    print("You cannot afford this property.")
+            elif playerAnswer == 'N':
+                None
+        elif self.getOwner().getName() == player.getName():
+            playerAnswer2 = input("Would you like to build a house? Y/N ")
+            if playerAnswer2 == 'Y':
+                self.numHouses += 1;
+            else:
                 None
         else:
-            print("This property is owned by " + self.getOwner.getName())
-            player.takeMoney(self.rent)
-            self.getOwner.giveMoney(self.rent)
+            print("This property is owned by " + self.getOwner().getName())
+            debt = player.takeMoney(self.rent[self.getNumHouses()])
+            if debt == 0:
+                print("You paid rent!")
+            else:
+                print("You owe " + debt)
+                print("You must sell one of your properties back to the bank")
+            self.getOwner().giveMoney(self.rent[self.getNumHouses()])
 
             
         
@@ -86,7 +102,7 @@ class Go(Tile):
 
     def onLand(self, player):
         print("You passed GO")
-        return 200
+        player.giveMoney(200)
 
 
 class Parking(Tile):
@@ -94,7 +110,7 @@ class Parking(Tile):
         Tile.__init__(self)
 
     def onLand(self, player):
-        None
+        print("Free parking!")
 
 # TODO: flesh out functionality
 class GoToJail(Tile):
@@ -103,6 +119,11 @@ class GoToJail(Tile):
 
     def onLand(self, player):
         print("You've reached the Go to Jail tile")
+        if player.get_jail_card():
+            player.remove_jail_card()
+            print("You used your get out of jail card!")
+        else:
+            player.goToJail()        
         pass
 
 class CardTile(Tile):  # TODO: argument for card type
