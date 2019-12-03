@@ -10,6 +10,7 @@ class Board:
         self.players = {}  # {"identifier", [player_reference, position]}
         self.gameStarted = False
         self.constructBoard()
+        self.currentTurn = 0
 
     def constructBoard(self):
         self.addTile(Tile.Go())
@@ -103,6 +104,11 @@ class Board:
 
     def startGame(self):
         self.gameStarted = True
+
+    def progressTurn(self):
+        self.currentTurn += 1
+        if self.currentTurn >= len(self.turnOrder):
+            self.currentTurn = 0
 
 
     # TODO: only necessary for Jail?
