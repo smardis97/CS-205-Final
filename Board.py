@@ -1,9 +1,10 @@
 import Tile
 import Player
 import constants
+from New_GUI import *
 
 class Board:
-    def __init__(self):
+    def __init__(self, window):
         self.tileList = []
         self.properties = {}  # {property-name, property-reference}
         self.turnOrder = []
@@ -11,6 +12,7 @@ class Board:
         self.gameStarted = False
         self.constructBoard()
         self.currentTurn = 0
+        self.gui = GUI(window, self)
 
     def constructBoard(self):
         self.addTile(Tile.Go())
@@ -88,7 +90,7 @@ class Board:
         self.players[name][1] = destination
         if passGo:
             self.players[name][0].giveMoney(200)
-        self.tileList[destination].onLand(self.players[name][0])
+        self.turnEvent(self.tileList[destination].onLand(self.players[name][0]))
 
     def getTiles(self):
         return self.tileList
@@ -109,6 +111,12 @@ class Board:
         self.currentTurn += 1
         if self.currentTurn >= len(self.turnOrder):
             self.currentTurn = 0
+
+    def turnEvent(self, details):
+        pass
+
+    def update(self):
+        self.gui.draw_gui()
 
 
     # TODO: only necessary for Jail?
