@@ -183,39 +183,42 @@ class BUTTONS:
 
 
     def plainBase(self,username):
-        # background
-        # boardWidth=910
-        # boardDepth=910
-        # boardStartX=295
-        # margin_x = 295
-        # margin_y = 910
-        # corner_width = 140
-        # tile_width = 70
-        # tile0_corner_left_top = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth-margin_y)
-        # tile0_corner_right_bottom = (pygameWindowWidth-margin_x,pygameWindowDepth)
-        # tile_bounds = [(tile0_corner_left_top,tile0_corner_right_bottom)]
-        # tile1_left_top = (pygameWindowWidth-margin_x-corner_width-tile_width,pygameWindowDepth-margin_y)
-        # tile1_right_bottom = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth)
-        # tile_bounds.append((tile1_left_top,tile1_right_bottom))
-        # for i in range()
-        # print(tile_bounds)
-        # tile0=(tile1_left_top,tile1_right_bottom)
+        ####################################### tile_bounds list ###############################################################
+        margin_x = 295
+        margin_y = 910
+        corner_width = 140
+        tile_width = 70
 
+        first_corner_left_top = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth-corner_width)
+        first_corner_right_bottom = (pygameWindowWidth-margin_x,pygameWindowDepth)
+        tile_bounds = [(first_corner_left_top,first_corner_right_bottom)]
+        for i in range(0,9):
+            tile_bounds.append(((pygameWindowWidth-margin_x-corner_width-tile_width-tile_width*i,pygameWindowDepth-corner_width), (pygameWindowWidth-margin_x-corner_width-tile_width*i,pygameWindowDepth)))
+        second_corner_left_top = (margin_x,pygameWindowDepth-corner_width)
+        second_corner_right_bottom = (margin_x+corner_width,pygameWindowDepth)
+        tile_bounds.append((second_corner_left_top,second_corner_right_bottom))
+        for i in range(0,9):
+            left_tile_left_top = (margin_x, pygameWindowDepth - corner_width-tile_width-tile_width*i)
+            left_tile_right_bottom = (margin_x + corner_width, pygameWindowDepth-corner_width-tile_width*i)
+            tile_bounds.append((left_tile_left_top, left_tile_right_bottom))
+        third_corner_left_top = (margin_x,0)
+        third_corner_right_bottom = (margin_x+corner_width,corner_width)
+        tile_bounds.append((third_corner_left_top,third_corner_right_bottom))
+        for i in range(0,9):
+            top_tile_left_top = (margin_x+corner_width+tile_width*i, 0)
+            top_tile_right_bottom = (margin_x + corner_width + tile_width + tile_width*i, corner_width)
+            tile_bounds.append((top_tile_left_top, top_tile_right_bottom))
+        fourth_corner_left_top = (margin_x+pygameWindowDepth-corner_width,0)
+        fourth_corner_right_bottom = (margin_x+pygameWindowDepth,corner_width)
+        tile_bounds.append((fourth_corner_left_top,fourth_corner_right_bottom))
+        for i in range(0,9):
+            right_tile_left_top = (margin_x + pygameWindowDepth - corner_width, 0+corner_width+tile_width*i)
+            right_tile_right_bottom = (margin_x + pygameWindowDepth, corner_width+tile_width*(i+1))
+            tile_bounds.append((right_tile_left_top, right_tile_right_bottom))
+        print(len(tile_bounds))
+        print(tile_bounds)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        ##########################################################################################################################
 
         pygame.draw.rect(self.screen, backgroundGreen, (295, 0, 910, 910))
         # each rectangle 70*140
