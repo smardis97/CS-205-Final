@@ -1,16 +1,13 @@
 
-#import pygame
-
 
 class Player:
-    def __init__(self, money=1200, is_player=False, name=""):
+    def __init__(self, name="", is_player=False, money=1200):
         self.money = money
         self.isPlayer = is_player
         self.hasJailCard = False
         self.ownedProperties = []
         self.name = name
         self.inJail = False
-
 
     def getMoney(self):
         return self.money
