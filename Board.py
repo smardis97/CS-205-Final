@@ -132,7 +132,7 @@ class Board:
         return humanPlayers
 
     def rollDice(self):
-        dice = (random.randint(6) + 1, random.randint(6) + 1)
+        dice = (random.randint(1, 6), random.randint(1, 6))
         return dice
 
 
