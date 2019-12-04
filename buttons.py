@@ -162,6 +162,9 @@ class BUTTONS:
         return textSurface, textSurface.get_rect()
     def enterUserName(self,username):
         print(username)
+        graph = pygame.image.load('images/enterName.jpg')
+        graph = pygame.transform.scale(graph, (910, 700))
+        self.screen.blit(graph, (290, 100))
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         # start
@@ -179,11 +182,41 @@ class BUTTONS:
         self.screen.blit(startSurf, startRect)
 
 
-    def plainBase(self):
+    def plainBase(self,username):
         # background
         # boardWidth=910
         # boardDepth=910
         # boardStartX=295
+        # margin_x = 295
+        # margin_y = 910
+        # corner_width = 140
+        # tile_width = 70
+        # tile0_corner_left_top = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth-margin_y)
+        # tile0_corner_right_bottom = (pygameWindowWidth-margin_x,pygameWindowDepth)
+        # tile_bounds = [(tile0_corner_left_top,tile0_corner_right_bottom)]
+        # tile1_left_top = (pygameWindowWidth-margin_x-corner_width-tile_width,pygameWindowDepth-margin_y)
+        # tile1_right_bottom = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth)
+        # tile_bounds.append((tile1_left_top,tile1_right_bottom))
+        # for i in range()
+        # print(tile_bounds)
+        # tile0=(tile1_left_top,tile1_right_bottom)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         pygame.draw.rect(self.screen, backgroundGreen, (295, 0, 910, 910))
         # each rectangle 70*140
         for i in range(0,10):
@@ -233,3 +266,7 @@ class BUTTONS:
         pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70*3+1, smallDepth, 69))
         pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70*4+1, smallDepth, 69))
 
+        helloUser = "Hello "+ username
+        usernameFont = pygame.font.Font('freesansbold.ttf', 20)
+        welcome = usernameFont.render(helloUser,False,(0, 0, 0))
+        self.screen.blit(welcome,(20,20))
