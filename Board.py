@@ -6,7 +6,6 @@ from New_GUI import *
 
 class Board:
     def __init__(self, window):
-        print(self)
         self.tileList = []
         self.properties = {}  # {property-name, property-reference}
         self.turnOrder = []

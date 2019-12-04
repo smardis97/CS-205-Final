@@ -9,7 +9,6 @@ from Player import *
 class GUI:
     def __init__(self, window, board):
         self.board = board
-        print(self.board)
         self.window = window
         self.menu_state = MENU_MAIN
         self.menu_window = pygame.Surface(GUI_WINDOW_DIMENSIONS)
