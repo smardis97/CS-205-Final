@@ -1,5 +1,5 @@
-pygameWindowWidth = 1500
-pygameWindowDepth = 910
+pygameWindowWidth = 1280
+pygameWindowDepth = 768
 
 tileWidth = 20
 tileHeight = 40
