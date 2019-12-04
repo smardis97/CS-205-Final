@@ -220,12 +220,12 @@ class BUTTONS:
             right_tile_left_top = (margin_x + pygameWindowDepth - corner_width, 0+corner_width+tile_width*i)
             right_tile_right_bottom = (margin_x + pygameWindowDepth, corner_width+tile_width*(i+1))
             tile_bounds.append((right_tile_left_top, right_tile_right_bottom))
-        print(len(tile_bounds))
-        print(tile_bounds)
-        for i in range(0,40):
-            print(tile_bounds[i])
-            print(tile_bounds[i][0])
-            pygame.draw.line(self.screen,red,(tile_bounds[i][0]),(tile_bounds[i][1]))
+        # print(len(tile_bounds))
+        # print(tile_bounds)
+        # for i in range(0,40):
+        #     print(tile_bounds[i])
+        #     print(tile_bounds[i][0])
+        #     pygame.draw.line(self.screen,red,(tile_bounds[i][0]),(tile_bounds[i][1]))
 
         ##########################################################################################################################
         #
