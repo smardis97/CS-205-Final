@@ -95,13 +95,13 @@ while run:
                 buttons.programState = 2
 
     pygameWindow.Prepare()
-    if buttons.programState == 0:
+    if buttons.programState == 2:
         homePage()
     elif buttons.programState == 1:
         buttons.enterUserName(username)
-    elif buttons.programState == 2:
+    elif buttons.programState == 0:
         buttons.plainBase(username)
-        buttons.drawButtons()
-        userMovingPosition()
+        # buttons.drawButtons()
+        # userMovingPosition()
 
     pygameWindow.Reveal()

@@ -183,90 +183,124 @@ class BUTTONS:
 
 
     def plainBase(self,username):
-        # background
-        # boardWidth=910
-        # boardDepth=910
-        # boardStartX=295
-        # margin_x = 295
-        # margin_y = 910
-        # corner_width = 140
-        # tile_width = 70
-        # tile0_corner_left_top = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth-margin_y)
-        # tile0_corner_right_bottom = (pygameWindowWidth-margin_x,pygameWindowDepth)
-        # tile_bounds = [(tile0_corner_left_top,tile0_corner_right_bottom)]
-        # tile1_left_top = (pygameWindowWidth-margin_x-corner_width-tile_width,pygameWindowDepth-margin_y)
-        # tile1_right_bottom = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth)
-        # tile_bounds.append((tile1_left_top,tile1_right_bottom))
-        # for i in range()
+        ####################################### tile_bounds list ###############################################################
+        graph = pygame.image.load('images/monopoly_768*768.png')
+        self.screen.blit(graph, ((1280-768)/2, 0))
+
+
+        board_size = 768
+        margin_x = (pygameWindowWidth-board_size)/2
+        margin_y = 768
+        corner_width = 104
+        tile_width = 62
+
+        first_corner_left_top = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth-corner_width)
+        first_corner_right_bottom = (pygameWindowWidth-margin_x,pygameWindowDepth)
+        tile_bounds = [(first_corner_left_top,first_corner_right_bottom)]
+        for i in range(0,9):
+            tile_bounds.append(((pygameWindowWidth-margin_x-corner_width-tile_width-tile_width*i,pygameWindowDepth-corner_width), (pygameWindowWidth-margin_x-corner_width-tile_width*i,pygameWindowDepth)))
+        second_corner_left_top = (margin_x,pygameWindowDepth-corner_width)
+        second_corner_right_bottom = (margin_x+corner_width,pygameWindowDepth)
+        tile_bounds.append((second_corner_left_top,second_corner_right_bottom))
+        for i in range(0,9):
+            left_tile_left_top = (margin_x, pygameWindowDepth - corner_width-tile_width-tile_width*i)
+            left_tile_right_bottom = (margin_x + corner_width, pygameWindowDepth-corner_width-tile_width*i)
+            tile_bounds.append((left_tile_left_top, left_tile_right_bottom))
+        third_corner_left_top = (margin_x,0)
+        third_corner_right_bottom = (margin_x+corner_width,corner_width)
+        tile_bounds.append((third_corner_left_top,third_corner_right_bottom))
+        for i in range(0,9):
+            top_tile_left_top = (margin_x+corner_width+tile_width*i, 0)
+            top_tile_right_bottom = (margin_x + corner_width + tile_width + tile_width*i, corner_width)
+            tile_bounds.append((top_tile_left_top, top_tile_right_bottom))
+        fourth_corner_left_top = (margin_x+pygameWindowDepth-corner_width,0)
+        fourth_corner_right_bottom = (margin_x+pygameWindowDepth,corner_width)
+        tile_bounds.append((fourth_corner_left_top,fourth_corner_right_bottom))
+        for i in range(0,9):
+            right_tile_left_top = (margin_x + pygameWindowDepth - corner_width, 0+corner_width+tile_width*i)
+            right_tile_right_bottom = (margin_x + pygameWindowDepth, corner_width+tile_width*(i+1))
+            tile_bounds.append((right_tile_left_top, right_tile_right_bottom))
+        # print(len(tile_bounds))
         # print(tile_bounds)
-        # tile0=(tile1_left_top,tile1_right_bottom)
+        # for i in range(0,40):
+        #     print(tile_bounds[i])
+        #     print(tile_bounds[i][0])
+        #     pygame.draw.line(self.screen,red,(tile_bounds[i][0]),(tile_bounds[i][1]))
+
+        ##########################################################################################################################
+        #
+        # board_size = 768
+        # margin_x = (pygameWindowWidth-board_size)/2
+        # margin_y = board_size
+        # corner_width = 104
+        # tile_width = 64
+        # blank_tile_width = 59
+
+        # ## right-bottom corner tile
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width,board_size-corner_width),(margin_x+board_size,board_size))
+        # ## bottom 9 tiles
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width-tile_width,board_size-corner_width),(margin_x+board_size-corner_width,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width-tile_width-blank_tile_width,board_size-corner_width),(margin_x+board_size-corner_width-tile_width,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width-tile_width*2-blank_tile_width,board_size-corner_width),(margin_x+board_size-corner_width-tile_width-blank_tile_width,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width-tile_width*2-blank_tile_width*2,board_size-corner_width),(margin_x+board_size-corner_width-tile_width*2-blank_tile_width,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width-tile_width*3-blank_tile_width*2,board_size-corner_width),(margin_x+board_size-corner_width-tile_width*2-blank_tile_width*2,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width-tile_width*4-blank_tile_width*2+2,board_size-corner_width),(margin_x+board_size-corner_width-tile_width*3-blank_tile_width*2,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+board_size-corner_width-tile_width*5-blank_tile_width*2+3,board_size-corner_width),(margin_x+board_size-corner_width-tile_width*4-blank_tile_width*2,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+corner_width+tile_width,board_size-corner_width),(margin_x+corner_width+tile_width*2-4,board_size))
+        # pygame.draw.line(self.screen,red,(margin_x+corner_width,board_size-corner_width),(margin_x+corner_width+tile_width,board_size))
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        pygame.draw.rect(self.screen, backgroundGreen, (295, 0, 910, 910))
-        # each rectangle 70*140
-        for i in range(0,10):
-            pygame.draw.line(self.screen, (0, 0, 0), [295+140+i*70, 0], [295+140+i*70, 140])
-            pygame.draw.line(self.screen, (0, 0, 0), [295, 140+i*70], [295+140, 140+i*70])
-            pygame.draw.line(self.screen, (0, 0, 0), [295+140+i*70, 910-140], [295+140+i*70, 910])
-            pygame.draw.line(self.screen, (0, 0, 0), [295+910-140, 140+i*70], [pygameWindowWidth-295, 140+i*70])
-        pygame.draw.lines(self.screen, (0, 0, 0), True, [(295+140,140),(295+140,910-140),(295+910-140,910-140),(295+910-140,140)])
-        ## eight colors rectangles
-        ## small rectangle size 70*15
-        smallDepth = 35
-        # green
-        pygame.draw.rect(self.screen, green, (295+910-140-70+1, 910-140+1, 69, smallDepth))
-        pygame.draw.rect(self.screen, green, (295+910-140-70*2+1, 910-140+1, 69, smallDepth))
-        pygame.draw.rect(self.screen, green, (295+910-140-70*4+1, 910-140+1, 69, smallDepth))
-
-        # blue
-        pygame.draw.rect(self.screen, blue, (295+140+1, 910-140+1, 69, smallDepth))
-        pygame.draw.rect(self.screen, blue, (295+140+70*2+1, 910-140+1, 69, smallDepth))
-
-        # brown
-        pygame.draw.rect(self.screen, brown, (295+140-smallDepth, 910-140-70+1, smallDepth, 69))
-        pygame.draw.rect(self.screen, brown, (295+140-smallDepth, 910-140-70*3+1, smallDepth, 69))
-
-        # lightblue
-        pygame.draw.rect(self.screen, slightBlue, (295+140-smallDepth, 140+1, smallDepth, 69))
-        pygame.draw.rect(self.screen, slightBlue, (295+140-smallDepth, 140+70+1, smallDepth, 69))
-        pygame.draw.rect(self.screen, slightBlue, (295+140-smallDepth, 140+70*3+1, smallDepth, 69))
-
-        # purple
-        pygame.draw.rect(self.screen, purple, (295+140+1, 140-smallDepth, 69, smallDepth))
-        pygame.draw.rect(self.screen, purple, (295+140+70*2+1, 140-smallDepth, 69, smallDepth))
-        pygame.draw.rect(self.screen, purple, (295+140+70*3+1, 140-smallDepth, 69, smallDepth))
-
-        # orange
-        pygame.draw.rect(self.screen, orange, (295+910-140-70+1, 140-smallDepth, 69, smallDepth))
-        pygame.draw.rect(self.screen, orange, (295+910-140-70*2+1, 140-smallDepth, 69, smallDepth))
-        pygame.draw.rect(self.screen, orange, (295+910-140-70*4+1, 140-smallDepth, 69, smallDepth))
-
-        # red
-        pygame.draw.rect(self.screen, red, (295+910-140+1, 140+1, smallDepth, 69))
-        pygame.draw.rect(self.screen, red, (295+910-140+1, 140+70*2+1, smallDepth, 69))
-        pygame.draw.rect(self.screen, red, (295+910-140+1, 140+70*3+1, smallDepth, 69))
-
-        # yellow
-        pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70+1, smallDepth, 69))
-        pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70*3+1, smallDepth, 69))
-        pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70*4+1, smallDepth, 69))
-
-        helloUser = "Hello "+ username
-        usernameFont = pygame.font.Font('freesansbold.ttf', 20)
-        welcome = usernameFont.render(helloUser,False,(0, 0, 0))
-        self.screen.blit(welcome,(20,20))
+        # pygame.draw.rect(self.screen, backgroundGreen, (295, 0, 910, 910))
+        # # each rectangle 70*140
+        # for i in range(0,10):
+        #     pygame.draw.line(self.screen, (0, 0, 0), [295+140+i*70, 0], [295+140+i*70, 140])
+        #     pygame.draw.line(self.screen, (0, 0, 0), [295, 140+i*70], [295+140, 140+i*70])
+        #     pygame.draw.line(self.screen, (0, 0, 0), [295+140+i*70, 910-140], [295+140+i*70, 910])
+        #     pygame.draw.line(self.screen, (0, 0, 0), [295+910-140, 140+i*70], [pygameWindowWidth-295, 140+i*70])
+        # pygame.draw.lines(self.screen, (0, 0, 0), True, [(295+140,140),(295+140,910-140),(295+910-140,910-140),(295+910-140,140)])
+        # ## eight colors rectangles
+        # ## small rectangle size 70*15
+        # smallDepth = 35
+        # # green
+        # pygame.draw.rect(self.screen, green, (295+910-140-70+1, 910-140+1, 69, smallDepth))
+        # pygame.draw.rect(self.screen, green, (295+910-140-70*2+1, 910-140+1, 69, smallDepth))
+        # pygame.draw.rect(self.screen, green, (295+910-140-70*4+1, 910-140+1, 69, smallDepth))
+        #
+        # # blue
+        # pygame.draw.rect(self.screen, blue, (295+140+1, 910-140+1, 69, smallDepth))
+        # pygame.draw.rect(self.screen, blue, (295+140+70*2+1, 910-140+1, 69, smallDepth))
+        #
+        # # brown
+        # pygame.draw.rect(self.screen, brown, (295+140-smallDepth, 910-140-70+1, smallDepth, 69))
+        # pygame.draw.rect(self.screen, brown, (295+140-smallDepth, 910-140-70*3+1, smallDepth, 69))
+        #
+        # # lightblue
+        # pygame.draw.rect(self.screen, slightBlue, (295+140-smallDepth, 140+1, smallDepth, 69))
+        # pygame.draw.rect(self.screen, slightBlue, (295+140-smallDepth, 140+70+1, smallDepth, 69))
+        # pygame.draw.rect(self.screen, slightBlue, (295+140-smallDepth, 140+70*3+1, smallDepth, 69))
+        #
+        # # purple
+        # pygame.draw.rect(self.screen, purple, (295+140+1, 140-smallDepth, 69, smallDepth))
+        # pygame.draw.rect(self.screen, purple, (295+140+70*2+1, 140-smallDepth, 69, smallDepth))
+        # pygame.draw.rect(self.screen, purple, (295+140+70*3+1, 140-smallDepth, 69, smallDepth))
+        #
+        # # orange
+        # pygame.draw.rect(self.screen, orange, (295+910-140-70+1, 140-smallDepth, 69, smallDepth))
+        # pygame.draw.rect(self.screen, orange, (295+910-140-70*2+1, 140-smallDepth, 69, smallDepth))
+        # pygame.draw.rect(self.screen, orange, (295+910-140-70*4+1, 140-smallDepth, 69, smallDepth))
+        #
+        # # red
+        # pygame.draw.rect(self.screen, red, (295+910-140+1, 140+1, smallDepth, 69))
+        # pygame.draw.rect(self.screen, red, (295+910-140+1, 140+70*2+1, smallDepth, 69))
+        # pygame.draw.rect(self.screen, red, (295+910-140+1, 140+70*3+1, smallDepth, 69))
+        #
+        # # yellow
+        # pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70+1, smallDepth, 69))
+        # pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70*3+1, smallDepth, 69))
+        # pygame.draw.rect(self.screen, yellow, (295+910-140+1, 910-140-70*4+1, smallDepth, 69))
+        #
+        # helloUser = "Hello "+ username
+        # usernameFont = pygame.font.Font('freesansbold.ttf', 20)
+        # welcome = usernameFont.render(helloUser,False,(0, 0, 0))
+        # self.screen.blit(welcome,(20,20))

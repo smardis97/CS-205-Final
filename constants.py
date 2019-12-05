@@ -1,5 +1,5 @@
-pygameWindowWidth = 1500
-pygameWindowDepth = 910
+pygameWindowWidth = 1280
+pygameWindowDepth = 768
 
 board_file = "images/monopoly_910.png"
 BOARD_CENTERED_X = 295
