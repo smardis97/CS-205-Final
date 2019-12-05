@@ -1,9 +1,11 @@
+from constants import *
 
 
 class Player:
     def __init__(self, name="", is_player=False, money=1200):
         self.money = money
         self.isPlayer = is_player
+        self.color = WHITE
         self.hasJailCard = False
         self.ownedProperties = []
         self.name = name
@@ -52,3 +54,6 @@ class Player:
 
     def getOwnedProperties(self):
         return self.ownedProperties
+
+    def setColor(self, color):
+        self.color = color

@@ -26,7 +26,7 @@ def music():
     pygame.mixer.music.load("happyDreams.mp3")
     pygame.mixer.music.play(-1)
 def userMovingPosition():
-    pygame.draw.circle(pygameWindow.screen,black,(buttons.circleX,buttons.circleY),buttons.circleRadius)
+    pygame.draw.circle(pygameWindow.screen, BLACK, (buttons.circleX, buttons.circleY), buttons.circleRadius)
 
 
 music()

@@ -3,6 +3,7 @@ import pygame
 import abc
 import utility
 import Tile
+import math
 from Player import *
 
 
@@ -12,7 +13,9 @@ class GUI:
         self.window = window
         self.menu_state = MENU_MAIN
         self.menu_window = pygame.Surface(GUI_WINDOW_DIMENSIONS)
-        self.board_background = pygame.image.load(board_file)
+        self.left_menu = pygame.Surface((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH))
+        self.right_menu = pygame.Surface((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH))
+        self.board_background = pygame.image.load(BOARD_FILE)
         self.dice_results = (-1, -1)
         self.property_result = None
         self.current_player = None
@@ -38,7 +41,7 @@ class GUI:
         window_center_y = GUI_WINDOW_DIMENSIONS[1] / 2
         y_interval = BUTTON_DIMENSIONS[1] + 10
         if self.menu_state == MENU_MAIN:
-            self.labels.append(Label((window_center_x, 40), black, "Main Menu"))
+            self.labels.append(Label((window_center_x, 40), BLACK, "Main Menu"))
 
             self.interactable.append(Button((window_center_x, window_center_y),
                                             "Play", ButtonOperands.play, BUTTON_COLOR, BUTTON_HIGHLIGHT))
@@ -46,7 +49,7 @@ class GUI:
             self.interactable.append(Button((window_center_x, window_center_y + y_interval),
                                             "Quit", ButtonOperands.quit, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         elif self.menu_state == MENU_NAME:
-            self.labels.append(Label((window_center_x, 40), black, "Enter Name"))
+            self.labels.append(Label((window_center_x, 40), BLACK, "Enter Name"))
 
             self.interactable.append(TextBox((window_center_x, window_center_y - 2 * y_interval),
                                               TEXT_BOX_COLOR, TEXT_BOX_HIGHLIGHT, TEXT_BOX_ACTIVE))
@@ -56,8 +59,31 @@ class GUI:
 
             self.interactable.append(Button((window_center_x, window_center_y + y_interval),
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        elif self.menu_state == MENU_COLOR:
+            self.labels.append(Label((window_center_x, 40), BLACK, "Choose Color"))
+
+            self.interactable.append(Button((window_center_x, window_center_y - 2 * y_interval),
+                                            "Red", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, RED))
+
+            self.interactable.append(Button((window_center_x, window_center_y - 1 * y_interval),
+                                            "Blue", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, BLUE))
+
+            self.interactable.append(Button((window_center_x, window_center_y),
+                                            "Green", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, GREEN))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 1 * y_interval),
+                                            "Purple", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, PURPLE))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Orange", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, ORANGE))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval),
+                                            "Yellow", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, YELLOW))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 4 * y_interval),
+                                            "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         elif self.menu_state == MENU_OPP_SEL:
-            self.labels.append(Label((window_center_x, 40), black, "Select Opponents"))
+            self.labels.append(Label((window_center_x, 40), BLACK, "Select Opponents"))
 
             for i in range(1, 6):
                 self.interactable.append(Button((window_center_x,
@@ -68,12 +94,12 @@ class GUI:
             self.interactable.append(Button((window_center_x, window_center_y + 4 * y_interval),
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         elif self.menu_state == MENU_START:
-            self.labels.append(Label((window_center_x, 40), black, "Ready?"))
+            self.labels.append(Label((window_center_x, 40), BLACK, "Ready?"))
 
-            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval), black,
+            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval), BLACK,
                                      "Player: {}".format(self.board.getHumanPlayers()[0])))
 
-            self.labels.append(Label((window_center_x, window_center_y - y_interval), black,
+            self.labels.append(Label((window_center_x, window_center_y - y_interval), BLACK,
                                      "Opponents: {}".format(len(self.board.getPlayers()) - 1)))
 
             self.interactable.append(Button((window_center_x, window_center_y + y_interval),
@@ -83,14 +109,14 @@ class GUI:
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
 
         elif self.menu_state == MENU_WAIT:
-            self.labels.append(Label((window_center_x, window_center_y), black, "Waiting..."))
+            self.labels.append(Label((window_center_x, window_center_y), BLACK, "Waiting..."))
         elif self.menu_state == MENU_DICE:
-            self.labels.append(Label((window_center_x, 40), black, "Roll Dice"))
+            self.labels.append(Label((window_center_x, 40), BLACK, "Roll Dice"))
 
             self.interactable.append(Button((window_center_x, window_center_y),
                                             "Roll", ButtonOperands.roll, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         elif self.menu_state == MENU_RESULT:
-            self.labels.append(Label((window_center_x, 40), black, "Result"))
+            self.labels.append(Label((window_center_x, 40), BLACK, "Result"))
 
             self.labels.append(DiceGraphic((window_center_x - DICE_OFFSET, window_center_y - y_interval),
                                            self.dice_results[0]))
@@ -99,19 +125,20 @@ class GUI:
                                            self.dice_results[1]))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
-                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                            (self.current_player, self.dice_results)))
         elif self.menu_state == MENU_BUY:
             if self.property_result is not None:
-                self.labels.append(Label((window_center_x, 40), black, "Purchase?"))
+                self.labels.append(Label((window_center_x, 40), BLACK, "Purchase?"))
 
                 self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                         black, "{}".format(self.property_result.getName())))
+                                         BLACK, "{}".format(self.property_result.getName())))
 
                 self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
-                                         black, "$ - {}".format(self.property_result.getPurchaseValue())))
+                                         BLACK, "$ - {}".format(self.property_result.getPurchaseValue())))
 
                 self.labels.append(Label((window_center_x, window_center_y - y_interval),
-                                         black, "Group: {}".format(self.property_result.getGroup())))
+                                         BLACK, "Group: {}".format(self.property_result.getGroup())))
 
                 self.interactable.append(Button((window_center_x, window_center_y + y_interval),
                                                 "Yes", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT, True))
@@ -149,7 +176,11 @@ class GUI:
 
     def draw_gui(self):
         self.window.screen.blit(self.board_background, (BOARD_CENTERED_X, 0))
+        self.draw_players()
         self.menu_window.fill(GUI_WINDOW_COLOR)
+        self.left_menu.fill(GUI_WINDOW_COLOR)
+        self.right_menu.fill(GUI_WINDOW_COLOR)
+
         self.draw_border()
         for label in self.labels:
             self.menu_window.blit(label.draw(), label.get_position())
@@ -157,19 +188,45 @@ class GUI:
             self.menu_window.blit(inter.draw(), inter.get_position())
         if self.menu_state is not MENU_NONE:
             self.window.screen.blit(self.menu_window, GUI_WINDOW_POSITION)
+        self.window.screen.blit(self.left_menu, (0, 0))
+        self.window.screen.blit(self.right_menu, (PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, 0))
 
     def draw_border(self):
-        pygame.draw.line(self.menu_window, black, (0, GUI_BORDER_WIDTH / 2 - 1),
-                                                  (GUI_WINDOW_DIMENSIONS[0], GUI_BORDER_WIDTH / 2 - 1), 10)
-        pygame.draw.line(self.menu_window, black, (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, 0),
-                                                  (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, GUI_WINDOW_DIMENSIONS[1]), 10)
-        pygame.draw.line(self.menu_window, black, (GUI_WINDOW_DIMENSIONS[0], GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2),
-                                                  (0, GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2), 10)
-        pygame.draw.line(self.menu_window, black, (GUI_BORDER_WIDTH / 2 - 1, GUI_WINDOW_DIMENSIONS[1]),
-                                                  (GUI_BORDER_WIDTH / 2 - 1, 0), 10)
+        pygame.draw.line(self.menu_window, BLACK, (0, GUI_BORDER_WIDTH / 2 - 1),
+                         (GUI_WINDOW_DIMENSIONS[0], GUI_BORDER_WIDTH / 2 - 1), GUI_BORDER_WIDTH)
+        pygame.draw.line(self.menu_window, BLACK, (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, 0),
+                         (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, GUI_WINDOW_DIMENSIONS[1]), GUI_BORDER_WIDTH)
+        pygame.draw.line(self.menu_window, BLACK, (GUI_WINDOW_DIMENSIONS[0], GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2),
+                         (0, GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2), GUI_BORDER_WIDTH)
+        pygame.draw.line(self.menu_window, BLACK, (GUI_BORDER_WIDTH / 2 - 1, GUI_WINDOW_DIMENSIONS[1]),
+                         (GUI_BORDER_WIDTH / 2 - 1, 0), GUI_BORDER_WIDTH)
+
+        pygame.draw.line(self.left_menu, BLACK, (self.left_menu.get_size()[0] - GUI_BORDER_WIDTH / 2 - 1, 0),
+                         (self.left_menu.get_size()[0] - GUI_BORDER_WIDTH / 2 - 1, self.left_menu.get_size()[1]), GUI_BORDER_WIDTH)
+
+        pygame.draw.line(self.right_menu, BLACK, (GUI_BORDER_WIDTH / 2 - 1, 0),
+                         (GUI_BORDER_WIDTH / 2 - 1, self.right_menu.get_size()[1]), GUI_BORDER_WIDTH)
 
     def set_dice_result(self, dice):
         self.dice_results = dice
+
+    def draw_players(self):
+        board_state = [[] for i in range(40)]
+        for player, data in self.board.getPlayers().items():
+            board_state[data[1]].append(data[0])
+        for i in range(40):
+            tile_corners = TILE_BOUNDS[i]
+            fit_across = math.floor((tile_corners[1][0] - tile_corners[0][0]) / PLAYER_GRAPHIC_DIAMETER)
+            for player in board_state[i]:
+                horizontal_pos = board_state[i].index(player) % fit_across
+                vertical_pos = math.floor(board_state[i].index(player) / fit_across)
+                position = (tile_corners[0][0] + PlAYER_TILE_OFFSET + PlAYER_TILE_OFFSET * horizontal_pos,
+                            tile_corners[0][1] + PlAYER_TILE_OFFSET + PlAYER_TILE_OFFSET * vertical_pos)
+                pygame.draw.circle(self.window.screen, player.color, utility.vector_floor(position), PLAYER_GRAPHIC_RADIUS)
+                if player.getName() == self.current_player:
+                    pygame.draw.circle(self.window.screen, BLACK, utility.vector_floor(position), PLAYER_GRAPHIC_RADIUS, 2)
+
+
 
 
 class MenuObject:
@@ -345,6 +402,16 @@ class DiceGraphic(MenuObject):
 
 class ButtonOperands:
     @staticmethod
+    def end(board, **kwargs):
+        board.progressTurn()
+        return MENU_WAIT
+
+    @staticmethod
+    def color(value,board, gui, **kwargs):
+        board.getPlayers()[gui.current_player][0].setColor(value)
+        return MENU_OPP_SEL
+
+    @staticmethod
     def roll(board, gui, **kwargs):
         rolls = board.rollDice()
         gui.set_dice_result(rolls)
@@ -353,21 +420,22 @@ class ButtonOperands:
     @staticmethod
     def confirm(value, mstate, board, gui, **kwargs):
         if mstate == MENU_START:
-            return MENU_MAIN
+            board.startGame()
+            return MENU_WAIT
         elif mstate == MENU_NAME:
             for inter in gui.interactable:
                 if type(inter) is TextBox:
                     board.resetPlayers()
                     board.addPlayer(Player(inter.text_content, True))
                     break
-            return MENU_OPP_SEL
+            return MENU_COLOR
         elif mstate == MENU_OPP_SEL:
             for i in range(value):
                 board.addPlayer(Player("CPU_{}".format(i + 1)))
             return MENU_START
         elif mstate == MENU_RESULT:
-            # TODO: give result to Board
-            return MENU_DICE
+            board.playerStandardMove(value[0], value[1][0] + value[1][1])
+            return MENU_END
         elif mstate == MENU_BUY:
             if 'player' in kwargs and 'property' in kwargs:
                 if value:

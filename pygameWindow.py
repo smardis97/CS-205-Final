@@ -6,9 +6,9 @@ class PYGAME_WINDOW:
 
     def __init__(self):
         pygame.init()
-        self.width = pygameWindowWidth
-        self.depth = pygameWindowDepth
-        self.screen = pygame.display.set_mode((pygameWindowWidth, pygameWindowDepth))
+        self.width = PYGAME_WINDOW_WIDTH
+        self.depth = PYGAME_WINDOW_DEPTH
+        self.screen = pygame.display.set_mode((PYGAME_WINDOW_WIDTH, PYGAME_WINDOW_DEPTH))
 
     def Prepare(self):
         for event in pygame.event.get():

@@ -9,11 +9,16 @@ class Board:
         self.tileList = []
         self.properties = {}  # {property-name, property-reference}
         self.turnOrder = []
+        self.currentTurn = 0
         self.players = {}  # {"identifier", [player_reference, position]}
         self.gameStarted = False
+        self.color_options = COLOR_SELECT
         self.constructBoard()
         self.currentTurn = 0
+        self.nextEvent = False
         self.gui = GUI(window, self)
+
+        self.constructBoard()
 
     def constructBoard(self):
         self.addTile(Tile.Go())
@@ -64,6 +69,15 @@ class Board:
         if not self.gameStarted:
             self.players[player.getName()] = [player, 0]
             self.turnOrder.append(player.getName())
+            if not player.isPlayer:
+                for name, player_data in self.players.items():
+                    if player_data[0].color in self.color_options:
+                        self.color_options.remove(player_data[0].color)
+                if len(self.color_options) > 0:
+                    player.setColor(self.color_options[0])
+                else:
+                    player.setColor(BLACK)
+            self.color_options = COLOR_SELECT
             return True
         else:
             return False
@@ -74,7 +88,7 @@ class Board:
         return True
 
     def addTile(self, tile):
-        if len(self.tileList) >= constants.TILE_LIMIT:
+        if len(self.tileList) >= TILE_LIMIT:
             return False
         else:
             self.tileList.append(tile)
@@ -108,15 +122,11 @@ class Board:
     def startGame(self):
         self.gameStarted = True
 
-    def progressTurn(self):
-        self.currentTurn += 1
-        if self.currentTurn >= len(self.turnOrder):
-            self.currentTurn = 0
-
     def turnEvent(self, details):
         pass
 
     def update(self):
+        self.turnUpdate()
         self.gui.draw_gui()
 
     def resetPlayers(self):
@@ -133,6 +143,15 @@ class Board:
     def rollDice(self):
         dice = (random.randint(1, 6), random.randint(1, 6))
         return dice
+
+    def turnUpdate(self):
+        if len(self.turnOrder) > 0:
+            self.gui.current_player = self.turnOrder[self.currentTurn]
+        else:
+            self.gui.current_player = None
+
+    def progressTurn(self):
+        self.currentTurn = (self.currentTurn + 1) % len(self.players)
 
 
     # TODO: only necessary for Jail?
