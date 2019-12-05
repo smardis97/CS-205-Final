@@ -23,9 +23,9 @@ class Board:
 
     def constructBoard(self):
         self.addTile(Go())
-        self.addTile(Property(60, "Mediterranean Avenue", (2, 10, 30, 90, 160), "Brown", 50))
+        self.addTile(Property(60, "Mediterranean Avenue", (2, 10, 30, 90, 160), "Purple", 50))
         self.addTile(CardTile())
-        self.addTile(Property(60, "Baltic Avenue", (4, 20, 60, 180, 320, 450), "Brown", 50))
+        self.addTile(Property(60, "Baltic Avenue", (4, 20, 60, 180, 320, 450), "Purple", 50))
         self.addTile(Tax())
         self.addTile(Property(200, "Reading Railroad", (25, 50, 100, 200), "Railroad"))
         self.addTile(Property(100, "Oriental Avenue", (6, 30, 90, 270, 400, 550), "Light Blue", 50))
@@ -220,7 +220,12 @@ class Board:
         
     def runPurchase(self, player, prop):
         self.properties[prop].setOwner(player)
-        #self.players[player][0].takeMoney(self.properties[prop].getPurchaseValue())
+        self.players[player][0].addProperty(self.properties[prop])
+        self.players[player][0].takeMoney(self.properties[prop].getPurchaseValue())
+        if self.getHumanPlayers()[0] == player:
+            self.gui.prop_buttons.append(Button((-100, -100), "Build: {}".format(self.properties[prop].getHouseCost()),
+                                                ButtonOperands.build, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                                prop))
 
     def getRent(self, prop):
         if self.properties[prop].getGroup() is not "Railroad" and self.properties[prop].getGroup() is not "Utility":
@@ -234,9 +239,8 @@ class Board:
             return self.properties[prop].getRent()[owned_count - 1]
 
     def payRent(self, tenant, landlord, amount):
-        # self.players[tenant][0].takeMoney(amount)
-        # self.players[landlord][0].giveMoney(amount)
-        pass
+        self.players[tenant][0].takeMoney(amount)
+        self.players[landlord][0].giveMoney(amount)
 
 
     # TODO: only necessary for Jail?

@@ -9,7 +9,7 @@ class Player:
         self.hasJailCard = False
         self.ownedProperties = []
         self.name = name
-        self.inJail = True
+        self.inJail = False
         self.jailCount = 3
 
     def getMoney(self):

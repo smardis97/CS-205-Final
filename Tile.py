@@ -55,7 +55,8 @@ class Property(Tile):
         return self.house_cost
 
     def addHouse(self):
-        self.numHouses += 1
+        if self.numHouses < 4:
+            self.numHouses += 1
 
     def getNumHouses(self):
         if self.numHouses > 3:

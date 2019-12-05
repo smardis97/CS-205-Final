@@ -20,6 +20,7 @@ class GUI:
         self.property_result = None
         self.current_player = None
         self.interactable = []
+        self.prop_buttons = []
         self.labels = []
         self.build_gui()
 
@@ -72,7 +73,7 @@ class GUI:
             self.labels.append(Label((window_center_x, 40), BLACK, "Choose Color"))
 
             self.interactable.append(Button((window_center_x, window_center_y - 2 * y_interval),
-                                            "Red", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, RED))
+                                            "Red", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, DARK_RED))
 
             self.interactable.append(Button((window_center_x, window_center_y - 1 * y_interval),
                                             "Blue", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, BLUE))
@@ -81,13 +82,13 @@ class GUI:
                                             "Green", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, GREEN))
 
             self.interactable.append(Button((window_center_x, window_center_y + 1 * y_interval),
-                                            "Purple", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, PURPLE))
+                                            "Purple", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, LIGHT_PURPLE))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Orange", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, ORANGE))
 
             self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval),
-                                            "Yellow", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, YELLOW))
+                                            "Lime", ButtonOperands.color, BUTTON_COLOR, BUTTON_HIGHLIGHT, LIME_GREEN))
 
             self.interactable.append(Button((window_center_x, window_center_y + 4 * y_interval),
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
@@ -257,9 +258,18 @@ class GUI:
     def mouse_update(self, mouse_event):
         for button in self.interactable:
             button.contains_mouse(mouse_event.__dict__['pos'])
+        for button in self.prop_buttons:
+            button.contains_mouse(mouse_event.__dict__['pos'])
 
     def mouse_click(self, mouse_event):
         for inter in self.interactable:
+            self.state_change(inter.click(active=inter.contains_mouse(mouse_event.__dict__['pos']),
+                                          mstate=self.menu_state,
+                                          player=self.current_player,
+                                          property=self.property_result,
+                                          board=self.board,
+                                          gui=self))
+        for inter in self.prop_buttons:
             self.state_change(inter.click(active=inter.contains_mouse(mouse_event.__dict__['pos']),
                                           mstate=self.menu_state,
                                           player=self.current_player,
@@ -281,6 +291,7 @@ class GUI:
         self.left_menu.fill(GUI_WINDOW_COLOR)
         self.draw_left_menu()
         self.right_menu.fill(GUI_WINDOW_COLOR)
+        self.draw_right_menu()
 
         self.draw_border()
         for label in self.labels:
@@ -362,7 +373,7 @@ class GUI:
                 pygame.draw.circle(self.left_menu, cpu[0].color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
 
                 if cpu[0].getName() == self.current_player:
-                    pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
+                    pygame.draw.circle(self.left_menu, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
 
                 position = (position[0] + LEFT_MENU_TEXT_OFFSET[0],
                             position[1] + LEFT_MENU_TEXT_OFFSET[1])
@@ -382,7 +393,51 @@ class GUI:
                         "IN JAIL {}".format(cpu[0].jailCount), True, RED)
                     self.left_menu.blit(text, vector_floor(position))
 
+    def draw_right_menu(self):
+        if len(self.board.getHumanPlayers()) > 0:
+            player = self.board.getPlayers()[self.board.getHumanPlayers()[0]][0]
 
+            base_position = RIGHT_MENU_OFFSET
+
+            pygame.draw.circle(self.right_menu, player.color,
+                               vector_floor(base_position), PLAYER_GRAPHIC_RADIUS)
+            pygame.draw.circle(self.right_menu, BLACK, vector_floor(base_position), HUMAN_MARKER_RADIUS)
+
+            if player.getName() == self.current_player:
+                pygame.draw.circle(self.right_menu, BLACK, vector_floor(base_position), PLAYER_GRAPHIC_RADIUS + 1, 2)
+
+            base_text_position = vector_add(base_position, RIGHT_MENU_TEXT_OFFSET)
+            name_text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_TEXT_SIZE),
+                                                player.getName(), True, BLACK)
+            self.right_menu.blit(name_text, vector_floor(base_text_position))
+
+            base_position = vector_add(base_position, (0, RIGHT_MENU_MARGIN))
+            base_text_position = vector_add(base_position, RIGHT_MENU_TEXT_OFFSET)
+            text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_TEXT_SIZE),
+                                           "$ {}".format(player.getMoney()), True, BLACK)
+            self.right_menu.blit(text, vector_floor(base_text_position))
+
+            for property in player.getOwnedProperties():
+                index = player.getOwnedProperties().index(property)
+                icon_pos = vector_add(base_position, (- RIGHT_MENU_ICON_SIZE[0] / 2,
+                                                      RIGHT_MENU_MARGIN + index * RIGHT_MENU_PROP_MARGIN - RIGHT_MENU_ICON_SIZE[1] / 2))
+                text_pos = vector_add(base_text_position, (0, RIGHT_MENU_MARGIN + index * RIGHT_MENU_PROP_MARGIN))
+
+                button_pos = vector_add(text_pos, (0, RIGHT_MENU_BUTTON_MARGIN))
+
+                if property.getGroup() != "Railroad" and property.getGroup() != "Utility":
+                    button = self.prop_buttons[index]
+                    button.position = button_pos
+                    button.absolute_pos = vector_add((PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, 0), button.position)
+                    self.right_menu.blit(button.draw(), button_pos)
+
+                rect = pygame.Surface(RIGHT_MENU_ICON_SIZE)
+                rect.fill(PROPERTY_COLOR[property.getGroup()])
+                self.right_menu.blit(rect, icon_pos)
+
+                text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_SUBTEXT_SIZE),
+                                               property.getName(), True, BLACK)
+                self.right_menu.blit(text, text_pos)
 
 
 class MenuObject:
@@ -557,6 +612,15 @@ class DiceGraphic(MenuObject):
 
 
 class ButtonOperands:
+    @staticmethod
+    def build(value, board, gui, **kwargs):
+        prop = board.getProperties()[value]
+        if gui.current_player == prop.getOwner():
+            owner = board.getPlayers()[gui.current_player][0]
+            if owner.getMoney() >= prop.getHouseCost():
+                prop.addHouse()
+                owner.takeMoney(prop.getHouseCost())
+
     @staticmethod
     def end(board, **kwargs):
         board.progressTurn()
