@@ -1,6 +1,7 @@
 import Tile
 import Player
 import constants
+import random
 from New_GUI import *
 
 class Board:
@@ -117,6 +118,21 @@ class Board:
 
     def update(self):
         self.gui.draw_gui()
+
+    def resetPlayers(self):
+        self.turnOrder.clear()
+        self.players.clear()
+
+    def getHumanPlayers(self):
+        humanPlayers = []
+        for name, player in self.players.items():
+            if player[0].isPlayer:
+                humanPlayers.append(name)
+        return humanPlayers
+
+    def rollDice(self):
+        dice = (random.randint(1, 6), random.randint(1, 6))
+        return dice
 
 
     # TODO: only necessary for Jail?
