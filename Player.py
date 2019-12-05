@@ -9,7 +9,8 @@ class Player:
         self.hasJailCard = False
         self.ownedProperties = []
         self.name = name
-        self.inJail = False
+        self.inJail = True
+        self.jailCount = 3
 
     def getMoney(self):
         return self.money
@@ -51,9 +52,18 @@ class Player:
 
     def getOutOfJail(self):
         self.inJail = False
+        self.jailCount = 3
 
     def getOwnedProperties(self):
         return self.ownedProperties
 
     def setColor(self, color):
         self.color = color
+
+    def aiPurchase(self, prop):
+        return True
+
+    def jailCountDown(self):
+        self.jailCount -= 1
+        if self.jailCount == 0:
+            self.getOutOfJail()

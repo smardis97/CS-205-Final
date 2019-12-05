@@ -132,9 +132,11 @@ class Board:
         self.turnUpdate()
         self.gui.draw_gui()
         if self.next:
+            current_player = self.players[self.turnOrder[self.currentTurn]][0]
+            landed_tile = self.tileList[self.players[self.turnOrder[self.currentTurn]][1]]
             self.eventIndex()
             if self.e == 0:
-                if self.players[self.turnOrder[self.currentTurn]][0].isPlayer:
+                if current_player.isPlayer:
                     self.gui.state_change(MENU_DICE)
                     self.next = False
                 else:
@@ -143,18 +145,41 @@ class Board:
                     self.gui.state_change(MENU_AI_ROLL)
                     self.next = False
             elif self.e == 1:
-                if type(self.tileList[self.players[self.turnOrder[self.currentTurn]][1]]) is Property:
-                    if self.players[self.turnOrder[self.currentTurn]][0].isPlayer:
-                        self.gui.state_change(MENU_BUY)
-                        self.next = False
+                # if currently landed tile is a Property
+                if type(landed_tile) is Property:
+                    # if the current player is a human
+                    if current_player.isPlayer:
+                        # if landed tile in unowned
+                        if landed_tile.getOwner() is None:
+                            self.gui.state_change(MENU_BUY)
+                            self.next = False
+                        else:
+                            self.gui.state_change(MENU_PLR_AI)
+                            self.next = False
+                    # current player is ai
                     else:
-                        print(self.e)
+                        # if landed tile in unowned
+                        if landed_tile.getOwner() is None:
+                            # if ai wants to buy
+                            if current_player.aiPurchase(landed_tile):
+                                self.runPurchase(current_player.getName(),
+                                                 landed_tile.getName())
+                                self.gui.state_change(MENU_AI_BUY)
+                                self.next = False
+                            else:
+                                self.nextEvent()
+                        else:
+                            self.payRent(current_player.getName(), landed_tile.getOwner(),
+                                         self.getRent(landed_tile.getName()))
+                            self.gui.state_change(MENU_AI_RENT)
+                            self.next = False
+                # if not
                 else:
                     print("Not Property")
             elif self.e == 2:
                 print(self.e)
             elif self.e == 3:
-                if self.players[self.turnOrder[self.currentTurn]][0].isPlayer:
+                if current_player.isPlayer:
                     self.gui.state_change(MENU_END)
                     self.next = False
                 else:
@@ -196,6 +221,22 @@ class Board:
     def runPurchase(self, player, prop):
         self.properties[prop].setOwner(player)
         #self.players[player][0].takeMoney(self.properties[prop].getPurchaseValue())
+
+    def getRent(self, prop):
+        if self.properties[prop].getGroup() is not "Railroad" and self.properties[prop].getGroup() is not "Utility":
+            return self.properties[prop].getRent()[self.properties[prop].getNumHouses()]
+        else:
+            owned_count = 0
+            for name, property in self.properties.items():
+                if property.getOwner() == self.properties[prop].getOwner() and\
+                    property.getGroup() == self.properties[prop].getGroup():
+                    owned_count += 1
+            return self.properties[prop].getRent()[owned_count - 1]
+
+    def payRent(self, tenant, landlord, amount):
+        # self.players[tenant][0].takeMoney(amount)
+        # self.players[landlord][0].giveMoney(amount)
+        pass
 
 
     # TODO: only necessary for Jail?

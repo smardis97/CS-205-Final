@@ -40,6 +40,9 @@ class GUI:
         window_center_x = GUI_WINDOW_DIMENSIONS[0] / 2
         window_center_y = GUI_WINDOW_DIMENSIONS[1] / 2
         y_interval = BUTTON_DIMENSIONS[1] + 10
+        #
+        # MAIN MENU ------------------------------------------------------------------------------------------ MAIN MENU
+        #
         if self.menu_state == MENU_MAIN:
             self.labels.append(Label((window_center_x, 40), BLACK, "Main Menu"))
 
@@ -48,6 +51,9 @@ class GUI:
 
             self.interactable.append(Button((window_center_x, window_center_y + y_interval),
                                             "Quit", ButtonOperands.quit, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # NAME INPUT ---------------------------------------------------------------------------------------- NAME INPUT
+        #
         elif self.menu_state == MENU_NAME:
             self.labels.append(Label((window_center_x, 40), BLACK, "Enter Name"))
 
@@ -59,6 +65,9 @@ class GUI:
 
             self.interactable.append(Button((window_center_x, window_center_y + y_interval),
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # COLOR SELECT ------------------------------------------------------------------------------------ COLOR SELECT
+        #
         elif self.menu_state == MENU_COLOR:
             self.labels.append(Label((window_center_x, 40), BLACK, "Choose Color"))
 
@@ -82,6 +91,9 @@ class GUI:
 
             self.interactable.append(Button((window_center_x, window_center_y + 4 * y_interval),
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # OPPONENT SELECT ------------------------------------------------------------------------------ OPPONENT SELECT
+        #
         elif self.menu_state == MENU_OPP_SEL:
             self.labels.append(Label((window_center_x, 40), BLACK, "Select Opponents"))
 
@@ -93,6 +105,9 @@ class GUI:
 
             self.interactable.append(Button((window_center_x, window_center_y + 4 * y_interval),
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # START CONFIRMATION ------------------------------------------------------------------------ START CONFIRMATION
+        #
         elif self.menu_state == MENU_START:
             self.labels.append(Label((window_center_x, 40), BLACK, "Ready?"))
 
@@ -107,7 +122,9 @@ class GUI:
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Cancel", ButtonOperands.cancel, BUTTON_COLOR, BUTTON_HIGHLIGHT))
-
+        #
+        # WAIT SCREEN -------------------------------------------------------------------------------------- WAIT SCREEN
+        #
         elif self.menu_state == MENU_WAIT:
             self.labels.append(Label((window_center_x, window_center_y), BLACK, "Waiting..."))
         elif self.menu_state == MENU_DICE:
@@ -115,6 +132,9 @@ class GUI:
 
             self.interactable.append(Button((window_center_x, window_center_y),
                                             "Roll", ButtonOperands.roll, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # PLAYER DICE RESULT ------------------------------------------------------------------------ PLAYER DICE RESULT
+        #
         elif self.menu_state == MENU_RESULT:
             self.labels.append(Label((window_center_x, 40), BLACK, "Result"))
 
@@ -127,6 +147,9 @@ class GUI:
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
                                             (self.current_player, self.dice_results)))
+        #
+        # PLAYER BUY ---------------------------------------------------------------------------------------- PLAYER BUY
+        #
         elif self.menu_state == MENU_BUY:
             if self.property_result is not None:
                 self.labels.append(Label((window_center_x, 40), BLACK, "Purchase?"))
@@ -147,6 +170,9 @@ class GUI:
                                                 "No", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT, False))
             else:
                 self.state_change(MENU_WAIT)
+        #
+        # CPU DICE RESULT ------------------------------------------------------------------------------ CPU DICE RESULT
+        #
         elif self.menu_state == MENU_AI_ROLL:
             self.labels.append(Label((window_center_x, 40), BLACK, "{} Roll:".format(self.current_player)))
 
@@ -159,11 +185,67 @@ class GUI:
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
                                             (self.current_player, self.dice_results)))
+        #
+        # CPU BUY ---------------------------------------------------------------------------------------------- CPU BUY
+        #
+        elif self.menu_state == MENU_AI_BUY:
+            self.labels.append(Label((window_center_x, 40), BLACK, "{} Purchased:".format(self.current_player)))
+
+            self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
+                                     BLACK, "{}".format(self.property_result.getName())))
+
+            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                     BLACK, "Group: {}".format(self.property_result.getGroup())))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+
+        #
+        # CPU RENT RESULT ------------------------------------------------------------------------------ CPU RENT RESULT
+        #
+        elif self.menu_state == MENU_AI_RENT:
+            self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval),
+                                     BLACK, "{} paid".format(self.current_player)))
+
+            self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
+                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.getName()))))
+
+            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                     BLACK, "to"))
+
+            self.labels.append(Label((window_center_x, window_center_y - 1 * y_interval),
+                                     BLACK, "{}".format(self.property_result.getOwner())))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # PLAYER RENT -------------------------------------------------------------------------------------- PLAYER RENT
+        #
+        elif self.menu_state == MENU_PLR_AI:
+            self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval),
+                                     BLACK, "{}".format(self.property_result.getName())))
+
+            self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
+                                     BLACK, "You must pay:"))
+
+            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.getName()))))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Pay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                            (self.current_player, self.property_result.getOwner(),
+                                             self.board.getRent(self.property_result.getName()))))
+        #
+        # PLAYER END TURN ------------------------------------------------------------------------------ PLAYER END TURN
+        #
         elif self.menu_state == MENU_END:
             self.labels.append(Label((window_center_x, 40), BLACK, "End Turn?"))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "END TURN", ButtonOperands.end, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # GAME OVER ------------------------------------------------------------------------------------------ GAME OVER
+        #
         elif self.menu_state == MENU_OVER:
             pass
 
@@ -197,6 +279,7 @@ class GUI:
         self.draw_players()
         self.menu_window.fill(GUI_WINDOW_COLOR)
         self.left_menu.fill(GUI_WINDOW_COLOR)
+        self.draw_left_menu()
         self.right_menu.fill(GUI_WINDOW_COLOR)
 
         self.draw_border()
@@ -270,6 +353,35 @@ class GUI:
                     rect.blit(num, HOUSE_MARKER_TEXT_OFFSET)
                     self.window.screen.blit(rect, vector_floor(vector_add((tile_position[0][0], tile_position[1][1]),
                                                                     HOUSE_MARKER_POSITION)))
+
+    def draw_left_menu(self):
+        for name, cpu in self.board.getPlayers().items():
+            if not cpu[0].isPlayer:
+                position = (LEFT_MENU_OFFSET[0],
+                            LEFT_MENU_OFFSET[1] + LEFT_MENU_SEPARATION * (self.board.turnOrder.index(name) - 1))
+                pygame.draw.circle(self.left_menu, cpu[0].color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
+
+                if cpu[0].getName() == self.current_player:
+                    pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
+
+                position = (position[0] + LEFT_MENU_TEXT_OFFSET[0],
+                            position[1] + LEFT_MENU_TEXT_OFFSET[1])
+                name_text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_TEXT_SIZE),
+                                                    cpu[0].getName(), True, BLACK)
+                self.left_menu.blit(name_text, vector_floor(position))
+
+                position = (position[0], position[1] + LEFT_MENU_MARGIN)
+                text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_SUBTEXT_SIZE),
+                                               "$ {}".format(cpu[0].getMoney()), True, BLACK)
+                self.left_menu.blit(text, vector_floor(position))
+
+                if cpu[0].inJail:
+                    position = (position[0], position[1] + LEFT_MENU_MARGIN)
+                    text = pygame.font.Font.render(
+                        pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_SUBTEXT_SIZE),
+                        "IN JAIL {}".format(cpu[0].jailCount), True, RED)
+                    self.left_menu.blit(text, vector_floor(position))
+
 
 
 
@@ -482,6 +594,16 @@ class ButtonOperands:
             board.playerStandardMove(value[0], value[1][0] + value[1][1])
             board.nextEvent()
             return MENU_WAIT
+        elif mstate == MENU_AI_BUY:
+            board.nextEvent()
+            return MENU_WAIT
+        elif mstate == MENU_AI_RENT:
+            board.nextEvent()
+            return MENU_WAIT
+        elif mstate == MENU_PLR_AI:
+            board.payRent(value[0], value[1], value[2])
+            board.nextEvent()
+            return MENU_WAIT
         elif mstate == MENU_BUY:
             if 'player' in kwargs and 'property' in kwargs:
                 if value:
@@ -492,6 +614,7 @@ class ButtonOperands:
                     board.nextEvent()
             else:
                 raise AttributeError
+            return MENU_WAIT
 
     @staticmethod
     def cancel(board, **kwargs):
