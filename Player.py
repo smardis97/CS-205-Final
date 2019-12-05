@@ -52,3 +52,31 @@ class Player:
 
     def getOwnedProperties(self):
         return self.ownedProperties
+
+    def aiPurchase(self,property, purchase_cost,player):
+        if (property.getRent()<9):
+            return False
+
+        if (purchase_cost*1.5>=player.getMoney()):
+            return False
+
+        else:
+            return True
+
+
+    def aiBuild(self, build_bool,property,player):
+        numBuilt =0
+        if (player.getMoney()*3.5<property.getHouseCost()):
+            build_bool = False
+
+        while(player.getMoney()*3.5>=property.getHouseCost()):
+            numBuilt+=1
+            build_bool= False
+
+        build_dict = {
+            property:numBuilt
+        }
+
+        return build_dict
+
+
