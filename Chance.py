@@ -78,7 +78,8 @@ class Chance:
             return "Pay poor tax of $15"
 
         elif num == 12:
-            #TODO determine if player passes go
+
+
             Board.playerDirectMove(self,Player.getName(),5)
             return "Take a trip to Reading Railroad–If you pass Go, collect $200"
 
