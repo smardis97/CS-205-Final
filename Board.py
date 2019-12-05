@@ -1,4 +1,4 @@
-import Tile
+from Tile import *
 import Player
 import constants
 import random
@@ -15,55 +15,56 @@ class Board:
         self.color_options = COLOR_SELECT
         self.constructBoard()
         self.currentTurn = 0
-        self.nextEvent = False
+        self.next = False
         self.gui = GUI(window, self)
+        self.e = -1
 
         self.constructBoard()
 
     def constructBoard(self):
-        self.addTile(Tile.Go())
-        self.addTile(Tile.Property(60, "Mediterranean Avenue", (2, 10, 30, 90, 160), 50, "Brown"))
-        self.addTile(Tile.CardTile())
-        self.addTile(Tile.Property(60, "Baltic Avenue", (4, 20, 60, 180, 320, 450), 50, "Brown"))
-        self.addTile(Tile.Tax())
-        self.addTile(Tile.Property(200, "Reading Railroad", (25, 50, 100, 200), "Railroad"))
-        self.addTile(Tile.Property(100, "Oriental Avenue", (6, 30, 90, 270, 400, 550), 50, "Light Blue"))
-        self.addTile(Tile.CardTile())
-        self.addTile(Tile.Property(100, "Vermont Avenue", (6, 30, 90, 270, 400, 550), 50, "Light Blue"))
-        self.addTile(Tile.Property(120, "Connecticut Avenue", (8, 40, 100, 300, 450, 600), 50, "Light Blue"))
+        self.addTile(Go())
+        self.addTile(Property(60, "Mediterranean Avenue", (2, 10, 30, 90, 160), "Brown", 50))
+        self.addTile(CardTile())
+        self.addTile(Property(60, "Baltic Avenue", (4, 20, 60, 180, 320, 450), "Brown", 50))
+        self.addTile(Tax())
+        self.addTile(Property(200, "Reading Railroad", (25, 50, 100, 200), "Railroad"))
+        self.addTile(Property(100, "Oriental Avenue", (6, 30, 90, 270, 400, 550), "Light Blue", 50))
+        self.addTile(CardTile())
+        self.addTile(Property(100, "Vermont Avenue", (6, 30, 90, 270, 400, 550), "Light Blue", 50))
+        self.addTile(Property(120, "Connecticut Avenue", (8, 40, 100, 300, 450, 600), "Light Blue", 50))
 
-        self.addTile(Tile.Jail)
-        self.addTile(Tile.Property(140, "St. Charles Place", (10, 50, 150, 450, 625, 750), 100, "Pink"))
-        self.addTile(Tile.Property(150, "Electric Company", (4, 10), "Utility"))
-        self.addTile(Tile.Property(140, "States Avenue", (10, 50, 150, 450, 625), 100, "Pink"))
-        self.addTile(Tile.Property(160, "Virginia Avenue", (12, 60, 180, 500, 700), 100, "Pink"))
-        self.addTile(Tile.Property(200, "Pennsylvania Railroad", (25, 50, 100, 200), "Railroad"))
-        self.addTile(Tile.Property(180, "St. James Place", (14, 70, 200, 550, 750, 950), 100, "Orange"))
-        self.addTile(Tile.CardTile())
-        self.addTile(Tile.Property(180, "Tennessee Avenue", (14, 70, 200, 550, 750, 950), 100, "Orange"))
-        self.addTile(Tile.Property(200, "New York Avenue", (16, 80, 220, 600, 800, 1000), 100, "Orange"))
+        self.addTile(Jail)
+        self.addTile(Property(140, "St. Charles Place", (10, 50, 150, 450, 625, 750), "Pink", 100))
+        self.addTile(Property(150, "Electric Company", (4, 10), "Utility"))
+        self.addTile(Property(140, "States Avenue", (10, 50, 150, 450, 625), "Pink", 100))
+        self.addTile(Property(160, "Virginia Avenue", (12, 60, 180, 500, 700), "Pink", 100))
+        self.addTile(Property(200, "Pennsylvania Railroad", (25, 50, 100, 200), "Railroad"))
+        self.addTile(Property(180, "St. James Place", (14, 70, 200, 550, 750, 950), "Orange", 100))
+        self.addTile(CardTile())
+        self.addTile(Property(180, "Tennessee Avenue", (14, 70, 200, 550, 750, 950), "Orange", 100))
+        self.addTile(Property(200, "New York Avenue", (16, 80, 220, 600, 800, 1000), "Orange", 100))
 
-        self.addTile(Tile.FreeParking())
-        self.addTile(Tile.Property(220, "Kentucky Avenue", (18, 90, 250, 700, 875), 150, "Red"))
-        self.addTile(Tile.CardTile())
-        self.addTile(Tile.Property(220, "Indiana Avenue", (18, 90, 250, 700, 875), 150, "Red"))
-        self.addTile(Tile.Property(240, "Illinois Avenue", (20, 100, 300, 750, 925, 1100), 150, "Red"))
-        self.addTile(Tile.Property(200, "B. & O. Railroad", (25, 50, 100, 200), "Railroad"))
-        self.addTile(Tile.Property(260, "Atlantic Avenue", (22, 110, 330, 800, 975, 1150), 150, "Yellow"))
-        self.addTile(Tile.Property(260, "Ventnor Avenue", (22, 110, 330, 800, 975, 1150), 150, "Yellow"))
-        self.addTile(Tile.Property(150, "Water Works", (4, 10), "Utility"))
-        self.addTile(Tile.Property(280, "Marvin Gardens", (24, 120, 360, 850, 1025, 1200), 150, "Yellow"))
+        self.addTile(FreeParking())
+        self.addTile(Property(220, "Kentucky Avenue", (18, 90, 250, 700, 875), "Red", 150))
+        self.addTile(CardTile())
+        self.addTile(Property(220, "Indiana Avenue", (18, 90, 250, 700, 875), "Red", 150))
+        self.addTile(Property(240, "Illinois Avenue", (20, 100, 300, 750, 925, 1100), "Red", 150))
+        self.addTile(Property(200, "B. & O. Railroad", (25, 50, 100, 200), "Railroad"))
+        self.addTile(Property(260, "Atlantic Avenue", (22, 110, 330, 800, 975, 1150), "Yellow", 150))
+        self.addTile(Property(260, "Ventnor Avenue", (22, 110, 330, 800, 975, 1150), "Yellow", 150))
+        self.addTile(Property(150, "Water Works", (4, 10), "Utility"))
+        self.addTile(Property(280, "Marvin Gardens", (24, 120, 360, 850, 1025, 1200), "Yellow", 150))
 
-        self.addTile(Tile.GoToJail())
-        self.addTile(Tile.Property(300, "Pacific Avenue", (26, 130, 390, 900, 1100, 1275), 200, "Green"))
-        self.addTile(Tile.Property(300, "North Carolina Avenue", (26, 130, 390, 900, 1100, 1275), 200, "Green"))
-        self.addTile(Tile.CardTile())
-        self.addTile(Tile.Property(320, "Pennsylvania Avenue", (28, 150, 450, 1000, 1200, 1400), 200, "Green"))
-        self.addTile(Tile.Property(200, "Short Line", (25, 50, 100, 200), "Railroad"))
-        self.addTile(Tile.CardTile())
-        self.addTile(Tile.Property(350, "Park Place", (35, 175, 500, 1100, 1300, 1500), 200, "Blue"))
-        self.addTile(Tile.Tax())
-        self.addTile(Tile.Property(400, "Boardwalk", (50, 200, 600, 1400, 1700, 2000), 200, "Blue"))
+        self.addTile(GoToJail())
+        self.addTile(Property(300, "Pacific Avenue", (26, 130, 390, 900, 1100, 1275), "Green", 200))
+        self.addTile(Property(300, "North Carolina Avenue", (26, 130, 390, 900, 1100, 1275), "Green", 200))
+        self.addTile(CardTile())
+        self.addTile(Property(320, "Pennsylvania Avenue", (28, 150, 450, 1000, 1200, 1400), "Green", 200))
+        self.addTile(Property(200, "Short Line", (25, 50, 100, 200), "Railroad"))
+        self.addTile(CardTile())
+        self.addTile(Property(350, "Park Place", (35, 175, 500, 1100, 1300, 1500), "Blue", 200))
+        self.addTile(Tax())
+        self.addTile(Property(400, "Boardwalk", (50, 200, 600, 1400, 1700, 2000), "Blue", 200))
 
     def addPlayer(self, player):
         if not self.gameStarted:
@@ -92,7 +93,7 @@ class Board:
             return False
         else:
             self.tileList.append(tile)
-            if isinstance(tile, Tile.Property):
+            if isinstance(tile, Property):
                 self.properties[tile.getName()] = tile
             return True
 
@@ -105,7 +106,7 @@ class Board:
         self.players[name][1] = destination
         if passGo:
             self.players[name][0].giveMoney(200)
-        self.turnEvent(self.tileList[destination].onLand(self.players[name][0]))
+        self.turnEvent(self.tileList[destination])
 
     def getTiles(self):
         return self.tileList
@@ -122,12 +123,43 @@ class Board:
     def startGame(self):
         self.gameStarted = True
 
-    def turnEvent(self, details):
-        pass
+    def turnEvent(self, tile):
+        if type(tile) is Property:
+            self.gui.set_property(tile)
+
 
     def update(self):
         self.turnUpdate()
         self.gui.draw_gui()
+        if self.next:
+            self.eventIndex()
+            if self.e == 0:
+                if self.players[self.turnOrder[self.currentTurn]][0].isPlayer:
+                    self.gui.state_change(MENU_DICE)
+                    self.next = False
+                else:
+                    rolls = self.rollDice()
+                    self.gui.set_dice_result(rolls)
+                    self.gui.state_change(MENU_AI_ROLL)
+                    self.next = False
+            elif self.e == 1:
+                if type(self.tileList[self.players[self.turnOrder[self.currentTurn]][1]]) is Property:
+                    if self.players[self.turnOrder[self.currentTurn]][0].isPlayer:
+                        self.gui.state_change(MENU_BUY)
+                        self.next = False
+                    else:
+                        print(self.e)
+                else:
+                    print("Not Property")
+            elif self.e == 2:
+                print(self.e)
+            elif self.e == 3:
+                if self.players[self.turnOrder[self.currentTurn]][0].isPlayer:
+                    self.gui.state_change(MENU_END)
+                    self.next = False
+                else:
+                    self.progressTurn()
+
 
     def resetPlayers(self):
         self.turnOrder.clear()
@@ -152,6 +184,18 @@ class Board:
 
     def progressTurn(self):
         self.currentTurn = (self.currentTurn + 1) % len(self.players)
+        self.e = -1
+        self.nextEvent()
+
+    def eventIndex(self):
+        self.e = (self.e + 1) % EVENT_COUNT
+
+    def nextEvent(self):
+        self.next = True
+        
+    def runPurchase(self, player, prop):
+        self.properties[prop].setOwner(player)
+        #self.players[player][0].takeMoney(self.properties[prop].getPurchaseValue())
 
 
     # TODO: only necessary for Jail?

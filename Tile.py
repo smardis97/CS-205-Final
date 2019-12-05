@@ -8,7 +8,7 @@ class Tile:
 
 # initialize numHouses to 0 in main
 class Property(Tile):
-    def __init__(self, purchaseValue, name, rent, house_cost=None, group=None):
+    def __init__(self, purchaseValue, name, rent, group, house_cost=None):
         self.name = name
         self.purchaseValue = purchaseValue
         self.group = group
@@ -66,33 +66,34 @@ class Property(Tile):
         return max([self.numHouses - 3, 0])
 
     def onLand(self, player):
-        print("You have reached " + self.getName())
-        if self.owner is None:
-            playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N ")
-            if playerAnswer == 'Y':
-                if player.getMoney() >= self.getPurchaseValue():
-                    player.takeMoney(self.getPurchaseValue())
-                    player.addProperty(self)
-                    self.owner = player
-                else:
-                    print("You cannot afford this property.")
-            elif playerAnswer == 'N':
-                None
-        elif self.getOwner().getName() == player.getName():
-            playerAnswer2 = input("Would you like to build a house? Y/N ")
-            if playerAnswer2 == 'Y':
-                self.numHouses += 1;
-            else:
-                None
-        else:
-            print("This property is owned by " + self.getOwner().getName())
-            debt = player.takeMoney(self.rent[self.getNumHouses()])
-            if debt == 0:
-                print("You paid rent!")
-            else:
-                print("You owe " + debt)
-                print("You must sell one of your properties back to the bank")
-            self.getOwner().giveMoney(self.rent[self.getNumHouses()])
+        return self
+        # print("You have reached " + self.getName())
+        # if self.owner is None:
+        #     playerAnswer = input("Would you like to purchase " + self.getName() + " ? Y/N ")
+        #     if playerAnswer == 'Y':
+        #         if player.getMoney() >= self.getPurchaseValue():
+        #             player.takeMoney(self.getPurchaseValue())
+        #             player.addProperty(self)
+        #             self.owner = player
+        #         else:
+        #             print("You cannot afford this property.")
+        #     elif playerAnswer == 'N':
+        #         None
+        # elif self.getOwner().getName() == player.getName():
+        #     playerAnswer2 = input("Would you like to build a house? Y/N ")
+        #     if playerAnswer2 == 'Y':
+        #         self.numHouses += 1;
+        #     else:
+        #         None
+        # else:
+        #     print("This property is owned by " + self.getOwner().getName())
+        #     debt = player.takeMoney(self.rent[self.getNumHouses()])
+        #     if debt == 0:
+        #         print("You paid rent!")
+        #     else:
+        #         print("You owe " + debt)
+        #         print("You must sell one of your properties back to the bank")
+        #     self.getOwner().giveMoney(self.rent[self.getNumHouses()])
 
             
         

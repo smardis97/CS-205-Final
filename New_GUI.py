@@ -1,7 +1,7 @@
 from constants import *
 import pygame
 import abc
-import utility
+from utility import *
 import Tile
 import math
 from Player import *
@@ -147,6 +147,23 @@ class GUI:
                                                 "No", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT, False))
             else:
                 self.state_change(MENU_WAIT)
+        elif self.menu_state == MENU_AI_ROLL:
+            self.labels.append(Label((window_center_x, 40), BLACK, "{} Roll:".format(self.current_player)))
+
+            self.labels.append(DiceGraphic((window_center_x - DICE_OFFSET, window_center_y - y_interval),
+                                           self.dice_results[0]))
+
+            self.labels.append(DiceGraphic((window_center_x + DICE_OFFSET, window_center_y - y_interval),
+                                           self.dice_results[1]))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                            (self.current_player, self.dice_results)))
+        elif self.menu_state == MENU_END:
+            self.labels.append(Label((window_center_x, 40), BLACK, "End Turn?"))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "END TURN", ButtonOperands.end, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         elif self.menu_state == MENU_OVER:
             pass
 
@@ -176,6 +193,7 @@ class GUI:
 
     def draw_gui(self):
         self.window.screen.blit(self.board_background, (BOARD_CENTERED_X, 0))
+        self.draw_tile_details_on_board()
         self.draw_players()
         self.menu_window.fill(GUI_WINDOW_COLOR)
         self.left_menu.fill(GUI_WINDOW_COLOR)
@@ -210,6 +228,9 @@ class GUI:
     def set_dice_result(self, dice):
         self.dice_results = dice
 
+    def set_property(self, prop):
+        self.property_result = prop
+
     def draw_players(self):
         board_state = [[] for i in range(40)]
         for player, data in self.board.getPlayers().items():
@@ -222,10 +243,33 @@ class GUI:
                 vertical_pos = math.floor(board_state[i].index(player) / fit_across)
                 position = (tile_corners[0][0] + PlAYER_TILE_OFFSET + PlAYER_TILE_OFFSET * horizontal_pos,
                             tile_corners[0][1] + PlAYER_TILE_OFFSET + PlAYER_TILE_OFFSET * vertical_pos)
-                pygame.draw.circle(self.window.screen, player.color, utility.vector_floor(position), PLAYER_GRAPHIC_RADIUS)
+                pygame.draw.circle(self.window.screen, player.color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
                 if player.getName() == self.current_player:
-                    pygame.draw.circle(self.window.screen, BLACK, utility.vector_floor(position), PLAYER_GRAPHIC_RADIUS, 2)
+                    pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
+                if self.board.getPlayers()[player.getName()][0].isPlayer:
+                    pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), HUMAN_MARKER_RADIUS)
 
+    def draw_tile_details_on_board(self):
+        for name, details in self.board.getProperties().items():
+            tile_position = TILE_BOUNDS[self.board.tileList.index(details)]
+            if details.getOwner() is not None:
+                owner = self.board.getPlayers()[details.getOwner()][0]
+                pygame.draw.circle(self.window.screen, owner.color,
+                                   vector_floor(vector_add(tile_position[1], OWNER_MARKER_POSITION)),
+                                   OWNER_MARKER_RADIUS)
+                if details.getNumHotels() > 0:
+                    rect = pygame.Surface(HOUSE_MARKER_DIMENSIONS)
+                    rect.fill(RED)
+                    self.window.screen.blit(rect, vector_floor(vector_add((tile_position[0][0], tile_position[1][1]),
+                                                                          HOUSE_MARKER_POSITION)))
+                elif details.getNumHouses() > 0:
+                    rect = pygame.Surface(HOUSE_MARKER_DIMENSIONS)
+                    rect.fill(GREEN)
+                    num = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), HOUSE_MARKER_TEXT_SIZE),
+                                                  str(details.getNumHouses()), True, BLACK)
+                    rect.blit(num, HOUSE_MARKER_TEXT_OFFSET)
+                    self.window.screen.blit(rect, vector_floor(vector_add((tile_position[0][0], tile_position[1][1]),
+                                                                    HOUSE_MARKER_POSITION)))
 
 
 
@@ -256,7 +300,7 @@ class MenuObject:
 class Button(MenuObject):
     def __init__(self, position, text, func, color, highlight, value=None):
         MenuObject.__init__(self, position, color)
-        self.absolute_pos = utility.vector_add(GUI_WINDOW_POSITION, self.get_position())
+        self.absolute_pos = vector_add(GUI_WINDOW_POSITION, self.get_position())
         self.rect = pygame.Surface(BUTTON_DIMENSIONS)
         self.text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(),
                                                              BUTTON_TEXT_SIZE
@@ -284,7 +328,7 @@ class Button(MenuObject):
 
     def contains_mouse(self, mouse_pos):
         top_left_corner = self.absolute_pos
-        bottom_right_corner = utility.vector_add(self.absolute_pos, self.rect.get_size())
+        bottom_right_corner = vector_add(self.absolute_pos, self.rect.get_size())
         x_contains = top_left_corner[0] <= mouse_pos[0] <= bottom_right_corner[0]
         y_contains = top_left_corner[1] <= mouse_pos[1] <= bottom_right_corner[1]
         self.hover = x_contains and y_contains
@@ -317,7 +361,7 @@ class Label(MenuObject):
 class TextBox(MenuObject):
     def __init__(self, position, color=TEXT_BOX_COLOR, highlight=TEXT_BOX_HIGHLIGHT, activec=TEXT_BOX_ACTIVE):
         MenuObject.__init__(self, position, color)
-        self.absolute_pos = utility.vector_add(GUI_WINDOW_POSITION, self.get_position())
+        self.absolute_pos = vector_add(GUI_WINDOW_POSITION, self.get_position())
         self.rect = pygame.Surface(TEXT_BOX_DIMENSIONS)
         self.text_content = ""
         self.highlight = highlight
@@ -362,7 +406,7 @@ class TextBox(MenuObject):
 
     def contains_mouse(self, mouse_pos):
         top_left_corner = self.absolute_pos
-        bottom_right_corner = utility.vector_add(self.absolute_pos, self.rect.get_size())
+        bottom_right_corner = vector_add(self.absolute_pos, self.rect.get_size())
         x_contains = top_left_corner[0] <= mouse_pos[0] <= bottom_right_corner[0]
         y_contains = top_left_corner[1] <= mouse_pos[1] <= bottom_right_corner[1]
         self.hover = x_contains and y_contains
@@ -421,6 +465,7 @@ class ButtonOperands:
     def confirm(value, mstate, board, gui, **kwargs):
         if mstate == MENU_START:
             board.startGame()
+            board.nextEvent()
             return MENU_WAIT
         elif mstate == MENU_NAME:
             for inter in gui.interactable:
@@ -433,17 +478,18 @@ class ButtonOperands:
             for i in range(value):
                 board.addPlayer(Player("CPU_{}".format(i + 1)))
             return MENU_START
-        elif mstate == MENU_RESULT:
+        elif mstate == MENU_RESULT or mstate == MENU_AI_ROLL:
             board.playerStandardMove(value[0], value[1][0] + value[1][1])
-            return MENU_END
+            board.nextEvent()
+            return MENU_WAIT
         elif mstate == MENU_BUY:
             if 'player' in kwargs and 'property' in kwargs:
                 if value:
-                    pass
-                    # board.runPurchase(kwargs['player'], kwargs['property'].getName())
+                    board.runPurchase(kwargs['player'], kwargs['property'].getName())
+                    board.nextEvent()
                 else:
-                    pass
                     # board.startAuction(kwargs['property'].getName(), exclude=kwargs['player'])
+                    board.nextEvent()
             else:
                 raise AttributeError
 
