@@ -106,7 +106,7 @@ class Go(Tile):
 
     def onLand(self, player):
         print("You passed GO")
-        player.giveMoney(200)
+        player.give_money(200)
 
 
 class Parking(Tile):
@@ -123,11 +123,11 @@ class GoToJail(Tile):
 
     def onLand(self, player):
         print("You've reached the Go to Jail tile")
-        if player.getJailCard():
-            player.removeJailCard()
+        if player.get_jail_card():
+            player.remove_jail_card()
             print("You used your get out of jail card!")
         else:
-            player.goToJail()        
+            player.go_to_jail()
         pass
 
 class CardTile(Tile):  # TODO: argument for card type

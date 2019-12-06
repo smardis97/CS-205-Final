@@ -4,19 +4,36 @@ from constants import *
 class Player:
     def __init__(self, name="", is_player=False, money=1200):
         self.money = money
-        self.isPlayer = is_player
+        self.is_player = is_player
         self.debt = 0
         self.color = WHITE
-        self.hasJailCard = False
-        self.ownedProperties = []
+        self.has_jail_card = False
+        self.owned_properties = []
         self.name = name
-        self.inJail = False
-        self.jailCount = 3
+        self.in_jail = False
+        self.jail_counter = 3
 
-    def getMoney(self):
-        return self.money
+    def ai_purchase(self, prop):
+        return True
 
-    def takeMoney(self, amount):
+    def ai_sell_property(self):
+        saleAmounts = []
+        for prop in self.owned_properties:
+            amount = (prop.getPurchaseValue() + prop.getNumHouses() * prop.getHouseCose()) / 2
+            saleAmounts.append(amount)
+        sell = min(saleAmounts)
+        return self.owned_properties[saleAmounts.index(sell)]
+
+    def has_property(self, prop):
+        for p in self.owned_properties:
+            if p == prop:
+                return True
+        return False
+
+    def give_money(self, amount):
+        self.money += amount
+
+    def take_money(self, amount):
         if self.money >= amount:
             self.money -= amount
             return 0
@@ -24,68 +41,51 @@ class Player:
             self.money = 0
             return -1 * (self.money - amount)
 
-    def giveMoney(self, amount):
-        self.money += amount
+    def add_property(self, prop):
+        self.owned_properties.append(prop)
 
-    def hasProperty(self, prop):
-        for p in self.ownedProperties:
-            if p == prop:
-                return True
-        return False
+    def add_jail_card(self):
+        self.has_jail_card = True
 
-    def getName(self):
-        return self.name
+    def remove_jail_card(self):
+        self.has_jail_card = False
 
-    def addProperty(self, prop):
-        self.ownedProperties.append(prop)
-        
-    def getJailCard(self):
-        return self.hasJailCard
+    def go_to_jail(self):
+        self.in_jail = True
 
-    def addJailCard(self):
-        self.hasJailCard = True
+    def get_out_of_jail(self):
+        self.in_jail = False
+        self.jail_counter = 3
 
-    def removeJailCard(self):
-        self.hasJailCard = False
-
-    def goToJail(self):
-        self.inJail = True
-
-    def getOutOfJail(self):
-        self.inJail = False
-        self.jailCount = 3
-
-    def getOwnedProperties(self):
-        return self.ownedProperties
-
-    def setColor(self, color):
+    def set_color(self, color):
         self.color = color
 
-    def aiPurchase(self, prop):
-        return True
+    def jail_count_down(self):
+        self.jail_counter -= 1
+        if self.jail_counter == 0:
+            self.get_out_of_jail()
 
-    def jailCountDown(self):
-        self.jailCount -= 1
-        if self.jailCount == 0:
-            self.getOutOfJail()
-
-    def addDebt(self, amount):
+    def add_debt(self, amount):
         self.debt += amount
 
-    def removeDebt(self, amount):
+    def remove_debt(self, amount):
         if self.debt < amount:
-            self.giveMoney(amount - self.debt)
+            self.give_money(amount - self.debt)
             self.debt = 0
         else:
             self.debt -= amount
 
-    def getDebt(self):
-        return self.debt
+    def get_name(self):
+        return self.name
 
-    def aiDebt(self):
-        saleAmounts = []
-        for prop in self.ownedProperties:
-            amount = (prop.getPurchaseValue() + prop.getNumHouses() * prop.getHouseCose()) / 2
-            saleAmounts.append(amount)
-        sell = min(saleAmounts)
-        return self.ownedProperties[saleAmounts.index(sell)]
+    def get_money(self):
+        return self.money
+
+    def get_owned_properties(self):
+        return self.owned_properties
+
+    def get_jail_card(self):
+        return self.has_jail_card
+
+    def get_debt(self):
+        return self.debt

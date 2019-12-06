@@ -179,7 +179,7 @@ class GUI:
                 self.labels.append(Label((window_center_x, 40), BLACK, "Purchase?"))
 
                 self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                         BLACK, "{}".format(self.property_result.getName())))
+                                         BLACK, "{}".format(self.property_result.get_name())))
 
                 self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
                                          BLACK, "$ - {}".format(self.property_result.getPurchaseValue())))
@@ -216,7 +216,7 @@ class GUI:
             self.labels.append(Label((window_center_x, 40), BLACK, "{} Purchased:".format(self.current_player)))
 
             self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                     BLACK, "{}".format(self.property_result.getName())))
+                                     BLACK, "{}".format(self.property_result.get_name())))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
                                      BLACK, "Group: {}".format(self.property_result.getGroup())))
@@ -232,7 +232,7 @@ class GUI:
                                      BLACK, "{} paid".format(self.current_player)))
 
             self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.getName()))))
+                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.get_name()))))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
                                      BLACK, "to"))
@@ -265,24 +265,24 @@ class GUI:
         #
         elif self.menu_state == MENU_PLR_AI:
             self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval),
-                                     BLACK, "{}".format(self.property_result.getName())))
+                                     BLACK, "{}".format(self.property_result.get_name())))
 
             self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
                                      BLACK, "You must pay:"))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
-                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.getName()))))
+                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.get_name()))))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Pay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
                                             (self.current_player, self.property_result.getOwner(),
-                                             self.board.getRent(self.property_result.getName()))))
+                                             self.board.getRent(self.property_result.get_name()))))
         #
         # PLAYER SPECIAL RENT ---------------------------------------------------------------------- PLAYER SPECIAL RENT
         #
         elif self.menu_state == MENU_SE_PLR_RENT:
             self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval),
-                                     BLACK, "{}".format(self.property_result.getName())))
+                                     BLACK, "{}".format(self.property_result.get_name())))
 
             self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
                                      BLACK, "You must pay:"))
@@ -316,7 +316,7 @@ class GUI:
                                                 ">>>", ButtonOperands.page_right, BUTTON_COLOR, BUTTON_HIGHLIGHT))
             else:
                 self.labels.append(Label((window_center_x, window_center_y - 5 * y_interval), BLACK,
-                                         "{}".format(player.ownedProperties[self.page_number].getName())))
+                                         "{}".format(player.ownedProperties[self.page_number].get_name())))
 
                 self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval), BLACK,
                                          "Sells for:"))
@@ -460,9 +460,9 @@ class GUI:
                 position = (tile_corners[0][0] + PlAYER_TILE_OFFSET + PlAYER_TILE_OFFSET * horizontal_pos,
                             tile_corners[0][1] + PlAYER_TILE_OFFSET + PlAYER_TILE_OFFSET * vertical_pos)
                 pygame.draw.circle(self.window.screen, player.color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
-                if player.getName() == self.current_player:
+                if player.get_name() == self.current_player:
                     pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
-                if self.board.getPlayers()[player.getName()][0].isPlayer:
+                if self.board.getPlayers()[player.get_name()][0].isPlayer:
                     pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), HUMAN_MARKER_RADIUS)
 
     def draw_tile_details_on_board(self):
@@ -494,18 +494,18 @@ class GUI:
                             LEFT_MENU_OFFSET[1] + LEFT_MENU_SEPARATION * (self.board.turnOrder.index(name) - 1))
                 pygame.draw.circle(self.left_menu, cpu[0].color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
 
-                if cpu[0].getName() == self.current_player:
+                if cpu[0].get_name() == self.current_player:
                     pygame.draw.circle(self.left_menu, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
 
                 position = (position[0] + LEFT_MENU_TEXT_OFFSET[0],
                             position[1] + LEFT_MENU_TEXT_OFFSET[1])
                 name_text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_TEXT_SIZE),
-                                                    cpu[0].getName(), True, BLACK)
+                                                    cpu[0].get_name(), True, BLACK)
                 self.left_menu.blit(name_text, vector_floor(position))
 
                 position = (position[0], position[1] + LEFT_MENU_MARGIN)
                 text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_SUBTEXT_SIZE),
-                                               "$ {}".format(cpu[0].getMoney()), True, BLACK)
+                                               "$ {}".format(cpu[0].get_money()), True, BLACK)
                 self.left_menu.blit(text, vector_floor(position))
 
                 if cpu[0].inJail:
@@ -525,22 +525,22 @@ class GUI:
                                vector_floor(base_position), PLAYER_GRAPHIC_RADIUS)
             pygame.draw.circle(self.right_menu, BLACK, vector_floor(base_position), HUMAN_MARKER_RADIUS)
 
-            if player.getName() == self.current_player:
+            if player.get_name() == self.current_player:
                 pygame.draw.circle(self.right_menu, BLACK, vector_floor(base_position), PLAYER_GRAPHIC_RADIUS + 1, 2)
 
             base_text_position = vector_add(base_position, RIGHT_MENU_TEXT_OFFSET)
             name_text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_TEXT_SIZE),
-                                                player.getName(), True, BLACK)
+                                                player.get_name(), True, BLACK)
             self.right_menu.blit(name_text, vector_floor(base_text_position))
 
             base_position = vector_add(base_position, (0, RIGHT_MENU_MARGIN))
             base_text_position = vector_add(base_position, RIGHT_MENU_TEXT_OFFSET)
             text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_TEXT_SIZE),
-                                           "$ {}".format(player.getMoney()), True, BLACK)
+                                           "$ {}".format(player.get_money()), True, BLACK)
             self.right_menu.blit(text, vector_floor(base_text_position))
 
-            for property in player.getOwnedProperties():
-                index = player.getOwnedProperties().index(property)
+            for property in player.get_owned_properties():
+                index = player.get_owned_properties().index(property)
                 icon_pos = vector_add(base_position, (- RIGHT_MENU_ICON_SIZE[0] / 2,
                                                       RIGHT_MENU_MARGIN + index * RIGHT_MENU_PROP_MARGIN - RIGHT_MENU_ICON_SIZE[1] / 2))
                 text_pos = vector_add(base_text_position, (0, RIGHT_MENU_MARGIN + index * RIGHT_MENU_PROP_MARGIN))
@@ -558,7 +558,7 @@ class GUI:
                 self.right_menu.blit(rect, icon_pos)
 
                 text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_SUBTEXT_SIZE),
-                                               property.getName(), True, BLACK)
+                                               property.get_name(), True, BLACK)
                 self.right_menu.blit(text, text_pos)
 
 
@@ -739,14 +739,14 @@ class ButtonOperands:
         print("Chance {}".format(value))
         current_player = board.getPlayers()[gui.current_player][0]
         if value == 1:
-            board.playerDirectMove(current_player.getName(), 0)
+            board.playerDirectMove(current_player.get_name(), 0)
             board.nextEvent()
         elif value == 2:
-            board.playerDirectMove(current_player.getName(),
+            board.playerDirectMove(current_player.get_name(),
                                    board.tileList.index(board.getProperties()["Illinois Ave"]))
             board.specialEvent(1)
         elif value == 3:
-            board.playerDirectMove(current_player.getName(),
+            board.playerDirectMove(current_player.get_name(),
                                    board.tileList.index(board.getProperties()["St. Charles Place"]))
 
             board.specialEvent(1)
@@ -755,17 +755,17 @@ class ButtonOperands:
         elif value == 5:
             board.specialEvent(3)
         elif value == 6:
-            current_player.giveMoney(50)
+            current_player.give_money(50)
             board.nextEvent()
         elif value == 7:
             current_player.giveJailCard()
             board.nextEvent()
         elif value == 8:
-            board.playerStandardMove(current_player.getName, -3)
+            board.playerStandardMove(current_player.get_name, -3)
             board.nextEvent()
         elif value == 9:
-            current_player.goToJail()
-            board.playerDirectMove(current_player.getName(), 10, False)
+            current_player.go_to_jail()
+            board.playerDirectMove(current_player.get_name(), 10, False)
             board.nextEvent()
         elif value == 10:
             hotels = 0
@@ -774,30 +774,30 @@ class ButtonOperands:
                 hotels += property.getNumHotels()
                 houses += property.getNumHouses()
             houses -= hotels
-            board.takeMoney(current_player.getName(), 25 * houses + 100 * hotels)
+            board.take_money(current_player.get_name(), 25 * houses + 100 * hotels)
 
         elif value == 11:
-            board.takeMoney(current_player.getName(), 15)
+            board.take_money(current_player.get_name(), 15)
             board.nextEvent()
         elif value == 12:
-            board.playerDirectMove(current_player.getName(),
+            board.playerDirectMove(current_player.get_name(),
                                    board.tileList.index(board.getProperties()["Reading Railroad"]))
             board.specialEvent(1)
         elif value == 13:
-            board.playerDirectMove(current_player.getName(),
+            board.playerDirectMove(current_player.get_name(),
                                    board.tileList.index(board.getProperties()["Boardwalk"]))
             board.specialEvent(1)
         elif value == 14:
             for player in board.getPlayers():
-                if player[0] is not current_player.getName():
-                    board.takeMoney(current_player.getName(), 50)
-                    player[0].giveMoney(50)
+                if player[0] is not current_player.get_name():
+                    board.take_money(current_player.get_name(), 50)
+                    player[0].give_money(50)
             board.nextEvent()
         elif value == 15:
-            current_player.giveMoney(150)
+            current_player.give_money(150)
             board.nextEvent()
         elif value == 16:
-            current_player.giveMoney(100)
+            current_player.give_money(100)
             board.nextEvent()
         gui.unset_card()
         return MENU_WAIT
@@ -807,45 +807,45 @@ class ButtonOperands:
         print("Community Chest {}".format(value))
         current_player = board.getPlayers()[gui.current_player][0]
         if value == 1:
-            board.playerDirectMove(current_player.getName(), 0)
+            board.playerDirectMove(current_player.get_name(), 0)
             board.nextEvent()
         elif value == 2:
-            current_player.giveMoney(200)
+            current_player.give_money(200)
             board.nextEvent()
         elif value == 3:
-            board.takeMoney(current_player.getName(), 50)
+            board.take_money(current_player.get_name(), 50)
             board.nextEvent()
         elif value == 4:
-            current_player.giveMoney(50)
+            current_player.give_money(50)
             board.nextEvent()
         elif value == 5:
             current_player.giveJailCard()
             board.nextEvent()
         elif value == 6:
-            board.playerDirectMove(current_player.getName(), 10, False)
+            board.playerDirectMove(current_player.get_name(), 10, False)
         elif value == 7:
             for player in board.getPlayers():
-                if player[0] is not current_player.getName():
-                    board.takeMoney(player[0], 50)
-                    current_player.giveMoney(50)
+                if player[0] is not current_player.get_name():
+                    board.take_money(player[0], 50)
+                    current_player.give_money(50)
             board.nextEvent()
         elif value == 8:
-            current_player.giveMoney(100)
+            current_player.give_money(100)
             board.nextEvent()
         elif value == 9:
-            current_player.giveMoney(20)
+            current_player.give_money(20)
             board.nextEvent()
         elif value == 10:
-            current_player.giveMoney(100)
+            current_player.give_money(100)
             board.nextEvent()
         elif value == 11:
-            board.takeMoney(current_player.getName(), 50)
+            board.take_money(current_player.get_name(), 50)
             board.nextEvent()
         elif value == 12:
-            board.takeMoney(current_player.getName(), 50)
+            board.take_money(current_player.get_name(), 50)
             board.nextEvent()
         elif value == 13:
-            current_player.giveMoney(25)
+            current_player.give_money(25)
             board.nextEvent()
         elif value == 14:
             hotels = 0
@@ -854,13 +854,13 @@ class ButtonOperands:
                 hotels += property.getNumHotels()
                 houses += property.getNumHouses()
             houses -= hotels
-            board.takeMoney(current_player.getName(), 40 * houses + 115 * hotels)
+            board.take_money(current_player.get_name(), 40 * houses + 115 * hotels)
             board.nextEvent()
         elif value == 15:
-            current_player.giveMoney(10)
+            current_player.give_money(10)
             board.nextEvent()
         elif value == 16:
-            current_player.giveMoney(100)
+            current_player.give_money(100)
             board.nextEvent()
         gui.unset_card()
         return MENU_WAIT
@@ -870,9 +870,9 @@ class ButtonOperands:
         prop = board.getProperties()[value]
         if gui.current_player == prop.getOwner():
             owner = board.getPlayers()[gui.current_player][0]
-            if owner.getMoney() >= prop.getHouseCost():
+            if owner.get_money() >= prop.getHouseCost():
                 prop.addHouse()
-                owner.takeMoney(prop.getHouseCost())
+                owner.take_money(prop.getHouseCost())
 
     @staticmethod
     def end(board, **kwargs):
@@ -881,7 +881,7 @@ class ButtonOperands:
 
     @staticmethod
     def color(value,board, gui, **kwargs):
-        board.getPlayers()[gui.current_player][0].setColor(value)
+        board.getPlayers()[gui.current_player][0].set_color(value)
         return MENU_OPP_SEL
 
     @staticmethod
@@ -933,7 +933,7 @@ class ButtonOperands:
         elif mstate == MENU_BUY:
             if 'player' in kwargs and 'property' in kwargs:
                 if value:
-                    board.runPurchase(kwargs['player'], kwargs['property'].getName())
+                    board.runPurchase(kwargs['player'], kwargs['property'].get_name())
                     board.nextEvent()
                 else:
                     # board.startAuction(kwargs['property'].getName(), exclude=kwargs['player'])

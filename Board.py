@@ -69,16 +69,16 @@ class Board:
 
     def addPlayer(self, player):
         if not self.gameStarted:
-            self.players[player.getName()] = [player, 0]
-            self.turnOrder.append(player.getName())
+            self.players[player.get_name()] = [player, 0]
+            self.turnOrder.append(player.get_name())
             if not player.isPlayer:
                 for name, player_data in self.players.items():
                     if player_data[0].color in self.color_options:
                         self.color_options.remove(player_data[0].color)
                 if len(self.color_options) > 0:
-                    player.setColor(self.color_options[0])
+                    player.set_color(self.color_options[0])
                 else:
-                    player.setColor(BLACK)
+                    player.set_color(BLACK)
             self.color_options = COLOR_SELECT
             return True
         else:
@@ -106,7 +106,7 @@ class Board:
             passGo = True
         self.players[name][1] = destination
         if passGo:
-            self.players[name][0].giveMoney(200)
+            self.players[name][0].give_money(200)
         self.turnEvent(self.tileList[destination])
 
     def getTiles(self):
@@ -142,7 +142,7 @@ class Board:
 
         if self.spEvent == 7:  # player has lost
             self.turnOrder.remove(current_player.getName())
-            del self.players[current_player.player.getName()]
+            del self.players[current_player.player.get_name()]
             if current_player.isPlayer:
                 self.gui.state_change(MENU_OVER)
             self.progressTurn()
@@ -160,6 +160,7 @@ class Board:
             if current_player.isPlayer:
                 self.gui.state_change(MENU_SE_PLR_RENT)
             else:
+                # TODO: Case for unowned property
                 self.payRent(current_player.getName(), landed_tile.getOwner(), self.getRent(landed_tile.getName()))
                 self.gui.state_change(MENU_SE_AI_RENT)
             self.specialEvent(0)
@@ -167,6 +168,7 @@ class Board:
             if current_player.isPlayer:
                 self.gui.state_change(MENU_SE_DICE)
             else:
+                # TODO: Case for unowned property
                 rolls = self.rollDice()
                 self.gui.set_sp_ev(10 * sum(rolls))
                 self.payRent(current_player.getName(), landed_tile.getOwner(), 10 * sum(rolls))
@@ -182,7 +184,6 @@ class Board:
             self.nextEvent()
         elif self.next:
             self.eventIndex()
-            print(self.e)
             if self.e == 0:
                 if current_player.isPlayer:
                     self.gui.state_change(MENU_DICE)
@@ -288,7 +289,7 @@ class Board:
         
     def runPurchase(self, player, prop):
         self.properties[prop].setOwner(player)
-        self.players[player][0].addProperty(self.properties[prop])
+        self.players[player][0].add_property(self.properties[prop])
         self.takeMoney(player, self.properties[prop].getPurchaseValue())
         if self.getHumanPlayers()[0] == player:
             self.gui.prop_buttons.append(Button((-100, -100), "Build: {}".format(self.properties[prop].getHouseCost()),
@@ -308,7 +309,7 @@ class Board:
 
     def payRent(self, tenant, landlord, amount):
         self.takeMoney(tenant, amount)
-        self.players[landlord][0].giveMoney(amount)
+        self.players[landlord][0].give_money(amount)
 
     def specialEvent(self, se):
         self.spEvent = se
@@ -334,29 +335,29 @@ class Board:
                 if self.tileList[destination].getGroup() == "Railroad":
                     break
         self.playerDirectMove(player_name, destination)
-        self.gui.set_sp_ev(2 * self.getRent(self.tileList[destination].getName()))
+        self.gui.set_sp_ev(2 * self.getRent(self.tileList[destination].get_name()))
         self.specialEvent(5)
 
     def takeMoney(self, player_name, amount):
         player = self.players[player_name][0]
-        if player.getMoney() < amount:
-            debt = amount - player.getMoney()
-            player.takeMoney(amount)
-            player.addDebt(debt)
+        if player.get_money() < amount:
+            debt = amount - player.get_money()
+            player.take_money(amount)
+            player.add_debt(debt)
             self.specialEvent(6)
         else:
-            player.takeMoney(amount)
+            player.take_money(amount)
 
     def propertySale(self, player_name, property):
         player = self.players[player_name][0]
         prop_index = player.ownedProperties.index(property)
         if player.isPlayer:
             self.gui.prop_buttons.pop(prop_index)
-        player.removeDebt((property.getPurchaseValue() + property.getHouseCost() * property.getNumHouses()) / 2)
+        player.remove_debt((property.getPurchaseValue() + property.getHouseCost() * property.getNumHouses()) / 2)
         player.ownedProperties.remove(property)
         property.setOwner(None)
         property.numHouses = 0
-        if player.getDebt() == 0:
+        if player.get_debt() == 0:
             self.specialEvent(0)
             self.nextEvent()
         else:
@@ -371,5 +372,5 @@ class Board:
         self.players[name][1] = destination
         if current_pos > destination:  # must pass go
             if passGo:
-                player.giveMoney(200)
+                player.give_money(200)
         self.turnEvent(self.tileList[destination])
