@@ -1,5 +1,5 @@
 import pygame
-import New_GUI
+import GUI
 import Board
 from pygameWindow import PYGAME_WINDOW
 

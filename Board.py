@@ -2,7 +2,7 @@ from Tile import *
 import Player
 import constants
 import random
-from New_GUI import *
+from GUI import *
 
 class Board:
     def __init__(self, window):
