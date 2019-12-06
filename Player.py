@@ -1,13 +1,17 @@
+from constants import *
 
 
 class Player:
     def __init__(self, name="", is_player=False, money=1200):
         self.money = money
         self.isPlayer = is_player
+        self.debt = 0
+        self.color = WHITE
         self.hasJailCard = False
         self.ownedProperties = []
         self.name = name
         self.inJail = False
+        self.jailCount = 3
 
     def getMoney(self):
         return self.money
@@ -49,6 +53,31 @@ class Player:
 
     def getOutOfJail(self):
         self.inJail = False
+        self.jailCount = 3
 
     def getOwnedProperties(self):
         return self.ownedProperties
+
+    def setColor(self, color):
+        self.color = color
+
+    def aiPurchase(self, prop):
+        return True
+
+    def jailCountDown(self):
+        self.jailCount -= 1
+        if self.jailCount == 0:
+            self.getOutOfJail()
+
+    def addDebt(self, amount):
+        self.debt += amount
+
+    def removeDebt(self, amount):
+        if self.debt < amount:
+            self.giveMoney(amount - self.debt)
+            self.debt = 0
+        else:
+            self.debt -= amount
+
+    def getDebt(self):
+        return self.debt

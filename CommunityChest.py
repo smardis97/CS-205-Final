@@ -49,7 +49,7 @@ class CommunityChest:
             return "Life insurance matures – Collect $100"
         elif num == 11:
             player.takeMoney(self, 50)
-            return"Hospital Fees. Pay $50"
+            return "Hospital Fees. Pay $50"
         elif num == 12:
             player.takeMoney(self, 50)
             return "School fees. Pay $50"

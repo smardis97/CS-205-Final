@@ -12,9 +12,9 @@ class BUTTONS:
     def __init__(self):
         pygame.init()
         self.smallFont = pygame.font.Font('freesansbold.ttf', 20)
-        self.width = pygameWindowWidth
-        self.depth = pygameWindowDepth
-        self.screen = pygame.display.set_mode((pygameWindowWidth, pygameWindowDepth))
+        self.width = PYGAME_WINDOW_WIDTH
+        self.depth = PYGAME_WINDOW_DEPTH
+        self.screen = pygame.display.set_mode((PYGAME_WINDOW_WIDTH, PYGAME_WINDOW_DEPTH))
         self.programState = 0
         self.musicState = True
         self.dice1 = random.randint(1,6)
@@ -32,12 +32,12 @@ class BUTTONS:
         click = pygame.mouse.get_pressed()
         # start
         if self.width / 2 + 50 > mouse[0] > self.width / 2 - 50 and 250 > mouse[1] > 200:
-            pygame.draw.rect(self.screen, lightGreen, (self.width / 2 - 50, 200, 100, 50))
+            pygame.draw.rect(self.screen, LIGHT_GREEN, (self.width / 2 - 50, 200, 100, 50))
         else:
-            pygame.draw.rect(self.screen, green, (self.width / 2 - 50, 200, 100, 50))
+            pygame.draw.rect(self.screen, GREEN, (self.width / 2 - 50, 200, 100, 50))
         # dice button
         if self.width / 2 + 50 > mouse[0] > self.width / 2 - 50 and 325 > mouse[1] > 275:
-            pygame.draw.rect(self.screen, lightBlue, (self.width/2-50, 275, 100, 50))
+            pygame.draw.rect(self.screen, LIGHT_BLUE, (self.width / 2 - 50, 275, 100, 50))
             if click[0] == 1:
                 sumDice = self.dice1 + self.dice2
                 print("sumdice is",sumDice)
@@ -81,20 +81,20 @@ class BUTTONS:
                 self.dice1 = random.randint(1, 6)
                 self.dice2 = random.randint(1, 6)
         else:
-            pygame.draw.rect(self.screen, blue, (self.width / 2 - 50, 275, 100, 50))
+            pygame.draw.rect(self.screen, BLUE, (self.width / 2 - 50, 275, 100, 50))
         # reset
         if self.width / 2 + 50 > mouse[0] > self.width / 2 - 50 and 400 > mouse[1] > 350:
-            pygame.draw.rect(self.screen, lightGreen, (self.width / 2 - 50, 350, 100, 50))
+            pygame.draw.rect(self.screen, LIGHT_GREEN, (self.width / 2 - 50, 350, 100, 50))
             if click[0] == 1:
                 self.circleX = 295 + 910 - 140 - 70 + 1 + 69 + self.distance
                 self.circleY = 910 - 140 + 1 + self.distance
         else:
-            pygame.draw.rect(self.screen, green, (self.width / 2 - 50, 350, 100, 50))
+            pygame.draw.rect(self.screen, GREEN, (self.width / 2 - 50, 350, 100, 50))
         # quit
         if self.width / 2 + 50 > mouse[0] > self.width / 2 - 50 and 475 > mouse[1] > 425:
-            pygame.draw.rect(self.screen, lightBlue, (self.width / 2 - 50, 425, 100, 50))
+            pygame.draw.rect(self.screen, LIGHT_BLUE, (self.width / 2 - 50, 425, 100, 50))
         else:
-            pygame.draw.rect(self.screen, blue, (self.width / 2 - 50, 425, 100, 50))
+            pygame.draw.rect(self.screen, BLUE, (self.width / 2 - 50, 425, 100, 50))
 
         startSurf, startRect = self.textObjects("Start",self.smallFont)
         diceSurf, diceRect = self.textObjects("Dice",self.smallFont)
@@ -117,14 +117,14 @@ class BUTTONS:
         click = pygame.mouse.get_pressed()
         # start
         if self.width / 2 + 100 > mouse[0] > self.width / 2 - 100 and 570 > mouse[1] > 470:
-            pygame.draw.rect(self.screen, lightGreen, (self.width / 2 - 100, 470, 200, 100))
+            pygame.draw.rect(self.screen, LIGHT_GREEN, (self.width / 2 - 100, 470, 200, 100))
             if click[0] == 1:
                 self.programState = 1
         else:
-            pygame.draw.rect(self.screen, green, (self.width / 2 - 100, 470, 200, 100))
+            pygame.draw.rect(self.screen, GREEN, (self.width / 2 - 100, 470, 200, 100))
         # music
         if self.width / 2 - 200 > mouse[0] > self.width / 2 - 400 and 570 > mouse[1] > 470:
-            pygame.draw.rect(self.screen, lightBlue, (self.width / 2 - 400, 470, 200, 100))
+            pygame.draw.rect(self.screen, LIGHT_BLUE, (self.width / 2 - 400, 470, 200, 100))
             if click[0] == 1 and self.musicState:
                 pygame.mixer.music.pause()
                 self.musicState = False
@@ -133,16 +133,16 @@ class BUTTONS:
                 self.musicState = True
 
         else:
-            pygame.draw.rect(self.screen, blue, (self.width / 2 - 400, 470, 200, 100))
+            pygame.draw.rect(self.screen, BLUE, (self.width / 2 - 400, 470, 200, 100))
         # quit
         if self.width / 2 + 400 > mouse[0] > self.width / 2 + 200 and 570 > mouse[1] > 470:
-            pygame.draw.rect(self.screen, lightBlue, (self.width / 2 + 200, 470, 200, 100))
+            pygame.draw.rect(self.screen, LIGHT_BLUE, (self.width / 2 + 200, 470, 200, 100))
             if click[0] == 1:
                 pygame.display.quit()
                 pygame.quit()
                 exit()
         else:
-            pygame.draw.rect(self.screen, blue, (self.width / 2 + 200, 470, 200, 100))
+            pygame.draw.rect(self.screen, BLUE, (self.width / 2 + 200, 470, 200, 100))
 
         startSurf, startRect = self.textObjects("Start",self.smallFont)
         musicSurf, musicRect = self.textObjects("Music",self.smallFont)
@@ -158,7 +158,7 @@ class BUTTONS:
         self.screen.blit(quitSurf, quitRect)
 
     def textObjects(self,text,font):
-        textSurface = font.render(text, True, black)
+        textSurface = font.render(text, True, BLACK)
         return textSurface, textSurface.get_rect()
     def enterUserName(self,username):
         print(username)
@@ -169,11 +169,11 @@ class BUTTONS:
         click = pygame.mouse.get_pressed()
         # start
         if self.width / 2 + 100 > mouse[0] > self.width / 2 - 100 and 470 > mouse[1] > 370:
-            pygame.draw.rect(self.screen, lightGreen, (self.width / 2 - 100, 370, 200, 100))
+            pygame.draw.rect(self.screen, LIGHT_GREEN, (self.width / 2 - 100, 370, 200, 100))
             if click[0] == 1:
                 self.enterSwitch = True
         else:
-            pygame.draw.rect(self.screen, green, (self.width / 2 - 100, 370, 200, 100))
+            pygame.draw.rect(self.screen, GREEN, (self.width / 2 - 100, 370, 200, 100))
         if self.enterSwitch:
             self.enterYourName = username
 
@@ -189,22 +189,22 @@ class BUTTONS:
 
 
         board_size = 768
-        margin_x = (pygameWindowWidth-board_size)/2
+        margin_x = (PYGAME_WINDOW_WIDTH - board_size) / 2
         margin_y = 768
         corner_width = 104
         tile_width = 62
 
-        first_corner_left_top = (pygameWindowWidth-margin_x-corner_width,pygameWindowDepth-corner_width)
-        first_corner_right_bottom = (pygameWindowWidth-margin_x,pygameWindowDepth)
+        first_corner_left_top = (PYGAME_WINDOW_WIDTH - margin_x - corner_width, PYGAME_WINDOW_DEPTH - corner_width)
+        first_corner_right_bottom = (PYGAME_WINDOW_WIDTH - margin_x, PYGAME_WINDOW_DEPTH)
         tile_bounds = [(first_corner_left_top,first_corner_right_bottom)]
         for i in range(0,9):
-            tile_bounds.append(((pygameWindowWidth-margin_x-corner_width-tile_width-tile_width*i,pygameWindowDepth-corner_width), (pygameWindowWidth-margin_x-corner_width-tile_width*i,pygameWindowDepth)))
-        second_corner_left_top = (margin_x,pygameWindowDepth-corner_width)
-        second_corner_right_bottom = (margin_x+corner_width,pygameWindowDepth)
+            tile_bounds.append(((PYGAME_WINDOW_WIDTH - margin_x - corner_width - tile_width - tile_width * i, PYGAME_WINDOW_DEPTH - corner_width), (PYGAME_WINDOW_WIDTH - margin_x - corner_width - tile_width * i, PYGAME_WINDOW_DEPTH)))
+        second_corner_left_top = (margin_x, PYGAME_WINDOW_DEPTH - corner_width)
+        second_corner_right_bottom = (margin_x + corner_width, PYGAME_WINDOW_DEPTH)
         tile_bounds.append((second_corner_left_top,second_corner_right_bottom))
         for i in range(0,9):
-            left_tile_left_top = (margin_x, pygameWindowDepth - corner_width-tile_width-tile_width*i)
-            left_tile_right_bottom = (margin_x + corner_width, pygameWindowDepth-corner_width-tile_width*i)
+            left_tile_left_top = (margin_x, PYGAME_WINDOW_DEPTH - corner_width - tile_width - tile_width * i)
+            left_tile_right_bottom = (margin_x + corner_width, PYGAME_WINDOW_DEPTH - corner_width - tile_width * i)
             tile_bounds.append((left_tile_left_top, left_tile_right_bottom))
         third_corner_left_top = (margin_x,0)
         third_corner_right_bottom = (margin_x+corner_width,corner_width)
@@ -213,12 +213,12 @@ class BUTTONS:
             top_tile_left_top = (margin_x+corner_width+tile_width*i, 0)
             top_tile_right_bottom = (margin_x + corner_width + tile_width + tile_width*i, corner_width)
             tile_bounds.append((top_tile_left_top, top_tile_right_bottom))
-        fourth_corner_left_top = (margin_x+pygameWindowDepth-corner_width,0)
-        fourth_corner_right_bottom = (margin_x+pygameWindowDepth,corner_width)
+        fourth_corner_left_top = (margin_x + PYGAME_WINDOW_DEPTH - corner_width, 0)
+        fourth_corner_right_bottom = (margin_x + PYGAME_WINDOW_DEPTH, corner_width)
         tile_bounds.append((fourth_corner_left_top,fourth_corner_right_bottom))
         for i in range(0,9):
-            right_tile_left_top = (margin_x + pygameWindowDepth - corner_width, 0+corner_width+tile_width*i)
-            right_tile_right_bottom = (margin_x + pygameWindowDepth, corner_width+tile_width*(i+1))
+            right_tile_left_top = (margin_x + PYGAME_WINDOW_DEPTH - corner_width, 0 + corner_width + tile_width * i)
+            right_tile_right_bottom = (margin_x + PYGAME_WINDOW_DEPTH, corner_width + tile_width * (i + 1))
             tile_bounds.append((right_tile_left_top, right_tile_right_bottom))
         # print(len(tile_bounds))
         # print(tile_bounds)
