@@ -19,6 +19,10 @@ class GUI:
         self.dice_results = (-1, -1)
         self.property_result = None
         self.current_player = None
+        self.card_result = None
+        self.event_type = None
+        self.page_number = -1
+        self.card_content = []
         self.interactable = []
         self.prop_buttons = []
         self.labels = []
@@ -28,6 +32,18 @@ class GUI:
         if new_state is not None:
             self.menu_state = new_state
             self.build_gui()
+
+    def set_card(self, content):
+        self.card_content = content
+
+    def unset_card(self):
+        self.card_content = []
+
+    def set_sp_ev(self, event):
+        self.event_type = event
+
+    def unset_sp_ev(self):
+        self.event_type = None
 
     def offer_purchase(self, property):
         self.property_result = property
@@ -41,6 +57,10 @@ class GUI:
         window_center_x = GUI_WINDOW_DIMENSIONS[0] / 2
         window_center_y = GUI_WINDOW_DIMENSIONS[1] / 2
         y_interval = BUTTON_DIMENSIONS[1] + 10
+        if self.current_player is not None:
+            player = self.board.getPlayers()[self.current_player][0]
+        else:
+            player = None
         #
         # MAIN MENU ------------------------------------------------------------------------------------------ MAIN MENU
         #
@@ -128,7 +148,10 @@ class GUI:
         #
         elif self.menu_state == MENU_WAIT:
             self.labels.append(Label((window_center_x, window_center_y), BLACK, "Waiting..."))
-        elif self.menu_state == MENU_DICE:
+        #
+        # PLAYER DICE ROLL ---------------------------------------------------------------------------- PLAYER DICE ROLL
+        #
+        elif self.menu_state == MENU_DICE or self.menu_state == MENU_SE_DICE:
             self.labels.append(Label((window_center_x, 40), BLACK, "Roll Dice"))
 
             self.interactable.append(Button((window_center_x, window_center_y),
@@ -136,7 +159,7 @@ class GUI:
         #
         # PLAYER DICE RESULT ------------------------------------------------------------------------ PLAYER DICE RESULT
         #
-        elif self.menu_state == MENU_RESULT:
+        elif self.menu_state == MENU_RESULT or self.menu_state == MENU_SE_RESULT:
             self.labels.append(Label((window_center_x, 40), BLACK, "Result"))
 
             self.labels.append(DiceGraphic((window_center_x - DICE_OFFSET, window_center_y - y_interval),
@@ -220,6 +243,24 @@ class GUI:
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         #
+        # CPU SPECIAL RENT RESULT -------------------------------------------------------------- CPU SPECIAL RENT RESULT
+        #
+        elif self.menu_state == MENU_SE_AI_RENT:
+            self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval),
+                                     BLACK, "{} paid".format(self.current_player)))
+
+            self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
+                                     BLACK, "$ {}".format(self.event_type)))
+
+            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                     BLACK, "to"))
+
+            self.labels.append(Label((window_center_x, window_center_y - 1 * y_interval),
+                                     BLACK, "{}".format(self.property_result.getOwner())))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
         # PLAYER RENT -------------------------------------------------------------------------------------- PLAYER RENT
         #
         elif self.menu_state == MENU_PLR_AI:
@@ -236,6 +277,84 @@ class GUI:
                                             "Pay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
                                             (self.current_player, self.property_result.getOwner(),
                                              self.board.getRent(self.property_result.getName()))))
+        #
+        # PLAYER SPECIAL RENT ---------------------------------------------------------------------- PLAYER SPECIAL RENT
+        #
+        elif self.menu_state == MENU_SE_PLR_RENT:
+            self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval),
+                                     BLACK, "{}".format(self.property_result.getName())))
+
+            self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
+                                     BLACK, "You must pay:"))
+
+            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                     BLACK, "$ {}".format(self.event_type)))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Pay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                            (self.current_player, self.property_result.getOwner(),
+                                             self.event_type)))
+        #
+        # PLAYER DEBT -------------------------------------------------------------------------------------- PLAYER DEBT
+        #
+        elif self.menu_state == MENU_DEBT:
+            current_property = player.ownedProperties[self.page_number]
+            sale_value = (current_property.getPurchaseValue() +
+                         current_property.getNumHouses() * current_property.getHouseCost()) / 2
+            if self.page_number == -1:
+                self.labels.append(Label((window_center_x, 40), BLACK, "You are in Debt"))
+
+                self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval), BLACK, "You owe:"))
+
+                self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
+                                         BLACK, "$ {}".format(player.getDebt())))
+
+                self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                         BLACK, "Choose a property to sell:"))
+
+                self.interactable.append(Button((window_center_x + window_center_x / 2, window_center_y + 4 * y_interval),
+                                                ">>>", ButtonOperands.page_right, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+            else:
+                self.labels.append(Label((window_center_x, window_center_y - 5 * y_interval), BLACK,
+                                         "{}".format(player.ownedProperties[self.page_number].getName())))
+
+                self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval), BLACK,
+                                         "Sells for:"))
+
+                self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval), BLACK,
+                                         "$ {}".format(sale_value)))
+
+                self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval), "Sell",
+                                                ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT, current_property))
+
+                if self.page_number < len(player.ownedProperties) - 1:
+                    self.interactable.append(Button((window_center_x + window_center_x / 2, window_center_y + 4 * y_interval),
+                                                    ">>>", ButtonOperands.page_right, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+
+                    self.interactable.append(Button((window_center_x - window_center_x / 2, window_center_y + 4 * y_interval),
+                                                    "<<<", ButtonOperands.page_left, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # PLAYER CHANCE ---------------------------------------------------------------------------------- PLAYER CHANCE
+        #
+        elif self.menu_state == MENU_CHANCE:
+            for message in self.card_content[1]:
+                self.labels.append(Label((window_center_x, window_center_y - (5 - self.card_content[1].index(message)) * y_interval),
+                                         BLACK, message))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval),
+                                            "Okay", ButtonOperands.chance, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                            self.card_content[0]))
+        #
+        # PLAYER COMMUNITY CHEST ---------------------------------------------------------------- PLAYER COMMUNITY CHEST
+        #
+        elif self.menu_state == MENU_COM_CH:
+            for message in self.card_content[1]:
+                self.labels.append(Label((window_center_x, window_center_y - (5 - self.card_content[1].index(message)) * y_interval),
+                                         BLACK, message))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval),
+                                            "Okay", ButtonOperands.community_chest, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                            self.card_content[0]))
         #
         # PLAYER END TURN ------------------------------------------------------------------------------ PLAYER END TURN
         #
@@ -324,6 +443,9 @@ class GUI:
 
     def set_property(self, prop):
         self.property_result = prop
+
+    def set_card_result(self, result):
+        self.card_result = result
 
     def draw_players(self):
         board_state = [[] for i in range(40)]
@@ -613,6 +735,135 @@ class DiceGraphic(MenuObject):
 
 class ButtonOperands:
     @staticmethod
+    def chance(value, board, gui, **kwargs):
+        current_player = board.getPlayers()[gui.current_player][0]
+        if value == 1:
+            board.playerDirectMove(current_player.getName(), 0)
+            board.nextEvent()
+        elif value == 2:
+            board.playerDirectMove(current_player.getName(),
+                                   board.tileList.index(board.getProperties()["Illinois Ave"]))
+            board.specialEvent(1)
+        elif value == 3:
+            board.playerDirectMove(current_player.getName(),
+                                   board.tileList.index(board.getProperties()["St. Charles Place"]))
+
+            board.specialEvent(1)
+        elif value == 4:
+            board.specialEvent(2)
+        elif value == 5:
+            board.specialEvent(3)
+        elif value == 6:
+            current_player.giveMoney(50)
+            board.nextEvent()
+        elif value == 7:
+            current_player.giveJailCard()
+            board.nextEvent()
+        elif value == 8:
+            board.playerStandardMove(current_player.getName, -3)
+            board.nextEvent()
+        elif value == 9:
+            current_player.goToJail()
+            board.playerDirectMove(current_player.getName(), 10, False)
+            board.nextEvent()
+        elif value == 10:
+            hotels = 0
+            houses = 0
+            for property in current_player.ownedProperties:
+                hotels += property.getNumHotels()
+                houses += property.getNumHouses()
+            houses -= hotels
+            board.takeMoney(current_player, 25 * houses + 100 * hotels)
+
+        elif value == 11:
+            board.takeMoney(current_player, 15)
+            board.nextEvent()
+        elif value == 12:
+            board.playerDirectMove(current_player.getName(),
+                                   board.tileList.index(board.getProperties()["Reading Railroad"]))
+            board.specialEvent(1)
+        elif value == 13:
+            board.playerDirectMove(current_player.getName(),
+                                   board.tileList.index(board.getProperties()["Boardwalk"]))
+            board.specialEvent(1)
+        elif value == 14:
+            for player in board.getPlayers():
+                if player[0] is not current_player:
+                    board.takeMoney(current_player, 50)
+                    player[0].giveMoney(50)
+            board.nextEvent()
+        elif value == 15:
+            current_player.giveMoney(150)
+            board.nextEvent()
+        elif value == 16:
+            current_player.giveMoney(100)
+            board.nextEvent()
+        gui.unset_card()
+        return MENU_WAIT
+
+    @staticmethod
+    def community_chest(value, board, gui, **kwargs):
+        current_player = board.getPlayers()[gui.current_player][0]
+        if value == 1:
+            board.playerDirectMove(current_player.getName(), 0)
+            board.nextEvent()
+        elif value == 2:
+            current_player.giveMoney(200)
+            board.nextEvent()
+        elif value == 3:
+            board.takeMoney(current_player, 50)
+            board.nextEvent()
+        elif value == 4:
+            current_player.giveMoney(50)
+            board.nextEvent()
+        elif value == 5:
+            current_player.giveJailCard()
+            board.nextEvent()
+        elif value == 6:
+            board.playerDirectMove(current_player.getName(), 10, False)
+        elif value == 7:
+            for player in board.getPlayers():
+                if player[0] is not current_player.getName():
+                    board.takeMoney(player[0], 50)
+                    current_player.giveMoney(50)
+            board.nextEvent()
+        elif value == 8:
+            current_player.giveMoney(100)
+            board.nextEvent()
+        elif value == 9:
+            current_player.giveMoney(20)
+            board.nextEvent()
+        elif value == 10:
+            current_player.giveMoney(100)
+            board.nextEvent()
+        elif value == 11:
+            board.takeMoney(current_player, 50)
+            board.nextEvent()
+        elif value == 12:
+            board.takeMoney(current_player, 50)
+            board.nextEvent()
+        elif value == 13:
+            current_player.giveMoney(25)
+            board.nextEvent()
+        elif value == 14:
+            hotels = 0
+            houses = 0
+            for property in current_player.ownedProperties:
+                hotels += property.getNumHotels()
+                houses += property.getNumHouses()
+            houses -= hotels
+            board.takeMoney(current_player, 40 * houses + 115 * hotels)
+            board.nextEvent()
+        elif value == 15:
+            current_player.giveMoney(10)
+            board.nextEvent()
+        elif value == 16:
+            current_player.giveMoney(100)
+            board.nextEvent()
+        gui.unset_card()
+        return MENU_WAIT
+
+    @staticmethod
     def build(value, board, gui, **kwargs):
         prop = board.getProperties()[value]
         if gui.current_player == prop.getOwner():
@@ -632,10 +883,13 @@ class ButtonOperands:
         return MENU_OPP_SEL
 
     @staticmethod
-    def roll(board, gui, **kwargs):
+    def roll(board, gui, mstate, **kwargs):
         rolls = board.rollDice()
         gui.set_dice_result(rolls)
-        return MENU_RESULT
+        if mstate == MENU_SE_DICE:
+            return MENU_SE_RESULT
+        else:
+            return MENU_RESULT
 
     @staticmethod
     def confirm(value, mstate, board, gui, **kwargs):
@@ -658,15 +912,21 @@ class ButtonOperands:
             board.playerStandardMove(value[0], value[1][0] + value[1][1])
             board.nextEvent()
             return MENU_WAIT
+        elif mstate == MENU_SE_RESULT:
+            gui.set_sp_ev(10 * (value[1][0] + value[1][1]))
+            return MENU_SE_PLR_RENT
         elif mstate == MENU_AI_BUY:
             board.nextEvent()
             return MENU_WAIT
         elif mstate == MENU_AI_RENT:
             board.nextEvent()
             return MENU_WAIT
-        elif mstate == MENU_PLR_AI:
+        elif mstate == MENU_PLR_AI or mstate == MENU_SE_PLR_RENT:
             board.payRent(value[0], value[1], value[2])
             board.nextEvent()
+            return MENU_WAIT
+        elif mstate == MENU_DEBT:
+            board.propertySale(gui.current_player, value)
             return MENU_WAIT
         elif mstate == MENU_BUY:
             if 'player' in kwargs and 'property' in kwargs:
@@ -684,6 +944,16 @@ class ButtonOperands:
     def cancel(board, **kwargs):
         board.resetPlayers()
         return MENU_MAIN
+
+    @staticmethod
+    def page_right(gui, **kwargs):
+        gui.page_number += 1
+        return MENU_WAIT
+
+    @staticmethod
+    def page_left(gui, **kwargs):
+        gui.page_number -= 1
+        return MENU_WAIT
 
     @staticmethod
     def play(**kwargs):

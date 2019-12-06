@@ -5,6 +5,7 @@ class Player:
     def __init__(self, name="", is_player=False, money=1200):
         self.money = money
         self.isPlayer = is_player
+        self.debt = 0
         self.color = WHITE
         self.hasJailCard = False
         self.ownedProperties = []
@@ -67,3 +68,16 @@ class Player:
         self.jailCount -= 1
         if self.jailCount == 0:
             self.getOutOfJail()
+
+    def addDebt(self, amount):
+        self.debt += amount
+
+    def removeDebt(self, amount):
+        if self.debt < amount:
+            self.giveMoney(amount - self.debt)
+            self.debt = 0
+        else:
+            self.debt -= amount
+
+    def getDebt(self):
+        return self.debt
