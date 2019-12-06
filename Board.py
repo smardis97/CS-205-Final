@@ -182,6 +182,7 @@ class Board:
             self.nextEvent()
         elif self.next:
             self.eventIndex()
+            print(self.e)
             if self.e == 0:
                 if current_player.isPlayer:
                     self.gui.state_change(MENU_DICE)
@@ -232,10 +233,9 @@ class Board:
                     else:
                         choice = landed_tile.pickCard()[0]
                         if landed_tile.cardType == "Community Chest":
-                            ButtonOperands.community_chest(choice, self, self.gui)
+                            self.gui.state_change(ButtonOperands.community_chest(choice, self, self.gui))
                         else:
-                            ButtonOperands.chance(choice, self, self.gui)
-                        self.next = False
+                            self.gui.state_change(ButtonOperands.chance(choice, self, self.gui))
                 elif type(landed_tile) is Tax:
                     if landed_tile.getType() == "Luxury":
                         self.takeMoney(current_player.getName(), 75)
@@ -244,8 +244,8 @@ class Board:
                 elif type(landed_tile) is GoToJail:
                     current_player.goToJail()
                     self.playerDirectMove(current_player.getName(), 10, False)
-            elif self.e == 2:
-                print(self.e)
+            elif self.e == 2:  # AI build houses
+                pass
             elif self.e == 3:
                 if current_player.isPlayer:
                     self.gui.state_change(MENU_END)

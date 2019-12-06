@@ -367,7 +367,7 @@ class GUI:
         # GAME OVER ------------------------------------------------------------------------------------------ GAME OVER
         #
         elif self.menu_state == MENU_OVER:
-            pass
+            self.labels.append(Label((window_center_x, window_center_y), BLACK, "You are Bankrupt"))
 
     def key_listener(self, event):
         for inter in self.interactable:
@@ -736,6 +736,7 @@ class DiceGraphic(MenuObject):
 class ButtonOperands:
     @staticmethod
     def chance(value, board, gui, **kwargs):
+        print("Chance {}".format(value))
         current_player = board.getPlayers()[gui.current_player][0]
         if value == 1:
             board.playerDirectMove(current_player.getName(), 0)
@@ -803,6 +804,7 @@ class ButtonOperands:
 
     @staticmethod
     def community_chest(value, board, gui, **kwargs):
+        print("Community Chest {}".format(value))
         current_player = board.getPlayers()[gui.current_player][0]
         if value == 1:
             board.playerDirectMove(current_player.getName(), 0)
