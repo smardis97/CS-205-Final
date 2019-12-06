@@ -81,3 +81,11 @@ class Player:
 
     def getDebt(self):
         return self.debt
+
+    def aiDebt(self):
+        saleAmounts = []
+        for prop in self.ownedProperties:
+            amount = (prop.getPurchaseValue() + prop.getNumHouses() * prop.getHouseCose()) / 2
+            saleAmounts.append(amount)
+        sell = min(saleAmounts)
+        return self.ownedProperties[saleAmounts.index(sell)]

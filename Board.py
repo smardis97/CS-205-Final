@@ -140,24 +140,38 @@ class Board:
             current_player = None
             landed_tile = None
 
-        if self.spEvent == 7:
-            pass
-        elif self.spEvent == 6:  # player owes money
+        if self.spEvent == 7:  # player has lost
+            self.turnOrder.remove(current_player.getName())
+            del self.players[current_player.player.getName()]
             if current_player.isPlayer:
-                self.gui.state_change(MENU_DEBT)
+                self.gui.state_change(MENU_OVER)
+            self.progressTurn()
+        elif self.spEvent == 6:  # player owes money
+            if len(current_player.ownedProperties) > 0:
+                if current_player.isPlayer:
+                    self.gui.state_change(MENU_DEBT)
+                else:
+                    sell_off = current_player.aiDebt()
+                    self.propertySale(current_player.getName(), sell_off)
+                    self.gui.state_change(MENU_AI_SELL)
             else:
-                pass
+                self.specialEvent(7)
         elif self.spEvent == 5:  # chance 5 pt2
             if current_player.isPlayer:
                 self.gui.state_change(MENU_SE_PLR_RENT)
             else:
                 self.payRent(current_player.getName(), landed_tile.getOwner(), self.getRent(landed_tile.getName()))
                 self.gui.state_change(MENU_SE_AI_RENT)
+            self.specialEvent(0)
         elif self.spEvent == 4:  # chance 4 pt2
             if current_player.isPlayer:
                 self.gui.state_change(MENU_SE_DICE)
             else:
-                pass
+                rolls = self.rollDice()
+                self.gui.set_sp_ev(10 * sum(rolls))
+                self.payRent(current_player.getName(), landed_tile.getOwner(), 10 * sum(rolls))
+                self.gui.state_change(MENU_SE_AI_RENT)
+            self.specialEvent(0)
         elif self.spEvent == 3:  # chance 5 pt1
             self.nextRailroad(current_player.getName())
         elif self.spEvent == 2:  # chance 4 pt1
@@ -343,6 +357,7 @@ class Board:
         property.setOwner(None)
         property.numHouses = 0
         if player.getDebt() == 0:
+            self.specialEvent(0)
             self.nextEvent()
         else:
             self.specialEvent(6)

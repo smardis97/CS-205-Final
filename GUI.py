@@ -338,7 +338,7 @@ class GUI:
         #
         elif self.menu_state == MENU_CHANCE:
             for message in self.card_content[1]:
-                self.labels.append(Label((window_center_x, window_center_y - (5 - self.card_content[1].index(message)) * y_interval),
+                self.labels.append(Label((window_center_x, window_center_y - (4 - self.card_content[1].index(message)) * y_interval),
                                          BLACK, message))
 
             self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval),
@@ -349,7 +349,7 @@ class GUI:
         #
         elif self.menu_state == MENU_COM_CH:
             for message in self.card_content[1]:
-                self.labels.append(Label((window_center_x, window_center_y - (5 - self.card_content[1].index(message)) * y_interval),
+                self.labels.append(Label((window_center_x, window_center_y - (4 - self.card_content[1].index(message)) * y_interval),
                                          BLACK, message))
 
             self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval),
@@ -773,10 +773,10 @@ class ButtonOperands:
                 hotels += property.getNumHotels()
                 houses += property.getNumHouses()
             houses -= hotels
-            board.takeMoney(current_player, 25 * houses + 100 * hotels)
+            board.takeMoney(current_player.getName(), 25 * houses + 100 * hotels)
 
         elif value == 11:
-            board.takeMoney(current_player, 15)
+            board.takeMoney(current_player.getName(), 15)
             board.nextEvent()
         elif value == 12:
             board.playerDirectMove(current_player.getName(),
@@ -788,8 +788,8 @@ class ButtonOperands:
             board.specialEvent(1)
         elif value == 14:
             for player in board.getPlayers():
-                if player[0] is not current_player:
-                    board.takeMoney(current_player, 50)
+                if player[0] is not current_player.getName():
+                    board.takeMoney(current_player.getName(), 50)
                     player[0].giveMoney(50)
             board.nextEvent()
         elif value == 15:
@@ -811,7 +811,7 @@ class ButtonOperands:
             current_player.giveMoney(200)
             board.nextEvent()
         elif value == 3:
-            board.takeMoney(current_player, 50)
+            board.takeMoney(current_player.getName(), 50)
             board.nextEvent()
         elif value == 4:
             current_player.giveMoney(50)
@@ -837,10 +837,10 @@ class ButtonOperands:
             current_player.giveMoney(100)
             board.nextEvent()
         elif value == 11:
-            board.takeMoney(current_player, 50)
+            board.takeMoney(current_player.getName(), 50)
             board.nextEvent()
         elif value == 12:
-            board.takeMoney(current_player, 50)
+            board.takeMoney(current_player.getName(), 50)
             board.nextEvent()
         elif value == 13:
             current_player.giveMoney(25)
@@ -852,7 +852,7 @@ class ButtonOperands:
                 hotels += property.getNumHotels()
                 houses += property.getNumHouses()
             houses -= hotels
-            board.takeMoney(current_player, 40 * houses + 115 * hotels)
+            board.takeMoney(current_player.getName(), 40 * houses + 115 * hotels)
             board.nextEvent()
         elif value == 15:
             current_player.giveMoney(10)
