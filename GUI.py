@@ -8,24 +8,29 @@ from Player import *
 
 
 class GUI:
+    #
+    #
+    #  TODO: Docstrings and readability comments
+    #
+    #
     def __init__(self, window, board):
-        self.board = board
         self.window = window
+        self.board = board
         self.menu_state = MENU_MAIN
         self.menu_window = pygame.Surface(GUI_WINDOW_DIMENSIONS)
-        self.left_menu = pygame.Surface((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH))
-        self.right_menu = pygame.Surface((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH))
+        self.left_display = pygame.Surface((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH))
+        self.right_display = pygame.Surface((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH))
         self.board_background = pygame.image.load(BOARD_FILE)
+        self.page_number = -1
+        self.interactable = []
+        self.labels = []
+        self.prop_buttons = []
+        self.card_content = []
         self.dice_results = (-1, -1)
         self.property_result = None
         self.current_player = None
         self.card_result = None
-        self.event_type = None
-        self.page_number = -1
-        self.card_content = []
-        self.interactable = []
-        self.prop_buttons = []
-        self.labels = []
+        self.special_event_type = None
         self.build_gui()
 
     def state_change(self, new_state):
@@ -33,32 +38,13 @@ class GUI:
             self.menu_state = new_state
             self.build_gui()
 
-    def set_card(self, content):
-        self.card_content = content
-
-    def unset_card(self):
-        self.card_content = []
-
-    def set_sp_ev(self, event):
-        self.event_type = event
-
-    def unset_sp_ev(self):
-        self.event_type = None
-
-    def offer_purchase(self, property):
-        self.property_result = property
-        self.state_change(MENU_BUY)
-
-    def prompt_dice_roll(self):
-        self.state_change(MENU_DICE)
-
     def build_gui(self):
         self.clear_gui()
         window_center_x = GUI_WINDOW_DIMENSIONS[0] / 2
         window_center_y = GUI_WINDOW_DIMENSIONS[1] / 2
         y_interval = BUTTON_DIMENSIONS[1] + 10
         if self.current_player is not None:
-            player = self.board.getPlayers()[self.current_player][0]
+            player = self.board.get_players()[self.current_player][0]
         else:
             player = None
         #
@@ -133,10 +119,10 @@ class GUI:
             self.labels.append(Label((window_center_x, 40), BLACK, "Ready?"))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval), BLACK,
-                                     "Player: {}".format(self.board.getHumanPlayers()[0])))
+                                     "Player: {}".format(self.board.get_human_players()[0])))
 
             self.labels.append(Label((window_center_x, window_center_y - y_interval), BLACK,
-                                     "Opponents: {}".format(len(self.board.getPlayers()) - 1)))
+                                     "Opponents: {}".format(len(self.board.get_players()) - 1)))
 
             self.interactable.append(Button((window_center_x, window_center_y + y_interval),
                                             "Confirm", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
@@ -182,10 +168,10 @@ class GUI:
                                          BLACK, "{}".format(self.property_result.get_name())))
 
                 self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
-                                         BLACK, "$ - {}".format(self.property_result.getPurchaseValue())))
+                                         BLACK, "$ - {}".format(self.property_result.get_purchase_value())))
 
                 self.labels.append(Label((window_center_x, window_center_y - y_interval),
-                                         BLACK, "Group: {}".format(self.property_result.getGroup())))
+                                         BLACK, "Group: {}".format(self.property_result.get_group())))
 
                 self.interactable.append(Button((window_center_x, window_center_y + y_interval),
                                                 "Yes", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT, True))
@@ -219,7 +205,7 @@ class GUI:
                                      BLACK, "{}".format(self.property_result.get_name())))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
-                                     BLACK, "Group: {}".format(self.property_result.getGroup())))
+                                     BLACK, "Group: {}".format(self.property_result.get_group())))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
@@ -232,13 +218,13 @@ class GUI:
                                      BLACK, "{} paid".format(self.current_player)))
 
             self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.get_name()))))
+                                     BLACK, "$ {}".format(self.board.get_rent_value(self.property_result.get_name()))))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
                                      BLACK, "to"))
 
             self.labels.append(Label((window_center_x, window_center_y - 1 * y_interval),
-                                     BLACK, "{}".format(self.property_result.getOwner())))
+                                     BLACK, "{}".format(self.property_result.get_owner())))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
@@ -250,13 +236,13 @@ class GUI:
                                      BLACK, "{} paid".format(self.current_player)))
 
             self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                     BLACK, "$ {}".format(self.event_type)))
+                                     BLACK, "$ {}".format(self.special_event_type)))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
                                      BLACK, "to"))
 
             self.labels.append(Label((window_center_x, window_center_y - 1 * y_interval),
-                                     BLACK, "{}".format(self.property_result.getOwner())))
+                                     BLACK, "{}".format(self.property_result.get_owner())))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
@@ -271,12 +257,12 @@ class GUI:
                                      BLACK, "You must pay:"))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
-                                     BLACK, "$ {}".format(self.board.getRent(self.property_result.get_name()))))
+                                     BLACK, "$ {}".format(self.board.get_rent_value(self.property_result.get_name()))))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Pay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
-                                            (self.current_player, self.property_result.getOwner(),
-                                             self.board.getRent(self.property_result.get_name()))))
+                                            (self.current_player, self.property_result.get_owner(),
+                                             self.board.get_rent_value(self.property_result.get_name()))))
         #
         # PLAYER SPECIAL RENT ---------------------------------------------------------------------- PLAYER SPECIAL RENT
         #
@@ -288,19 +274,19 @@ class GUI:
                                      BLACK, "You must pay:"))
 
             self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
-                                     BLACK, "$ {}".format(self.event_type)))
+                                     BLACK, "$ {}".format(self.special_event_type)))
 
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Pay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
-                                            (self.current_player, self.property_result.getOwner(),
-                                             self.event_type)))
+                                            (self.current_player, self.property_result.get_owner(),
+                                             self.special_event_type)))
         #
         # PLAYER DEBT -------------------------------------------------------------------------------------- PLAYER DEBT
         #
         elif self.menu_state == MENU_DEBT:
-            current_property = player.ownedProperties[self.page_number]
-            sale_value = (current_property.getPurchaseValue() +
-                         current_property.getNumHouses() * current_property.getHouseCost()) / 2
+            current_property = player.get_owned_properties()[self.page_number]
+            sale_value = (current_property.get_purchase_value() +
+                          current_property.get_num_houses() * current_property.get_house_cost()) / 2
             if self.page_number == -1:
                 self.labels.append(Label((window_center_x, 40), BLACK, "You are in Debt"))
 
@@ -316,7 +302,7 @@ class GUI:
                                                 ">>>", ButtonOperands.page_right, BUTTON_COLOR, BUTTON_HIGHLIGHT))
             else:
                 self.labels.append(Label((window_center_x, window_center_y - 5 * y_interval), BLACK,
-                                         "{}".format(player.ownedProperties[self.page_number].get_name())))
+                                         "{}".format(player.get_owned_properties()[self.page_number].get_name())))
 
                 self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval), BLACK,
                                          "Sells for:"))
@@ -327,7 +313,7 @@ class GUI:
                 self.interactable.append(Button((window_center_x, window_center_y + 3 * y_interval), "Sell",
                                                 ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT, current_property))
 
-                if self.page_number < len(player.ownedProperties) - 1:
+                if self.page_number < len(player.get_owned_properties()) - 1:
                     self.interactable.append(Button((window_center_x + window_center_x / 2, window_center_y + 4 * y_interval),
                                                     ">>>", ButtonOperands.page_right, BUTTON_COLOR, BUTTON_HIGHLIGHT))
 
@@ -396,21 +382,15 @@ class GUI:
                                           board=self.board,
                                           gui=self))
 
-    def clear_gui(self):
-        del self.interactable[:]
-        self.interactable = []
-        del self.labels[:]
-        self.labels = []
-
     def draw_gui(self):
         self.window.screen.blit(self.board_background, (BOARD_CENTERED_X, 0))
         self.draw_tile_details_on_board()
         self.draw_players()
         self.menu_window.fill(GUI_WINDOW_COLOR)
-        self.left_menu.fill(GUI_WINDOW_COLOR)
-        self.draw_left_menu()
-        self.right_menu.fill(GUI_WINDOW_COLOR)
-        self.draw_right_menu()
+        self.left_display.fill(GUI_WINDOW_COLOR)
+        self.draw_left_display()
+        self.right_display.fill(GUI_WINDOW_COLOR)
+        self.draw_right_display()
 
         self.draw_border()
         for label in self.labels:
@@ -419,37 +399,12 @@ class GUI:
             self.menu_window.blit(inter.draw(), inter.get_position())
         if self.menu_state is not MENU_NONE:
             self.window.screen.blit(self.menu_window, GUI_WINDOW_POSITION)
-        self.window.screen.blit(self.left_menu, (0, 0))
-        self.window.screen.blit(self.right_menu, (PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, 0))
-
-    def draw_border(self):
-        pygame.draw.line(self.menu_window, BLACK, (0, GUI_BORDER_WIDTH / 2 - 1),
-                         (GUI_WINDOW_DIMENSIONS[0], GUI_BORDER_WIDTH / 2 - 1), GUI_BORDER_WIDTH)
-        pygame.draw.line(self.menu_window, BLACK, (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, 0),
-                         (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, GUI_WINDOW_DIMENSIONS[1]), GUI_BORDER_WIDTH)
-        pygame.draw.line(self.menu_window, BLACK, (GUI_WINDOW_DIMENSIONS[0], GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2),
-                         (0, GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2), GUI_BORDER_WIDTH)
-        pygame.draw.line(self.menu_window, BLACK, (GUI_BORDER_WIDTH / 2 - 1, GUI_WINDOW_DIMENSIONS[1]),
-                         (GUI_BORDER_WIDTH / 2 - 1, 0), GUI_BORDER_WIDTH)
-
-        pygame.draw.line(self.left_menu, BLACK, (self.left_menu.get_size()[0] - GUI_BORDER_WIDTH / 2 - 1, 0),
-                         (self.left_menu.get_size()[0] - GUI_BORDER_WIDTH / 2 - 1, self.left_menu.get_size()[1]), GUI_BORDER_WIDTH)
-
-        pygame.draw.line(self.right_menu, BLACK, (GUI_BORDER_WIDTH / 2 - 1, 0),
-                         (GUI_BORDER_WIDTH / 2 - 1, self.right_menu.get_size()[1]), GUI_BORDER_WIDTH)
-
-    def set_dice_result(self, dice):
-        self.dice_results = dice
-
-    def set_property(self, prop):
-        self.property_result = prop
-
-    def set_card_result(self, result):
-        self.card_result = result
+        self.window.screen.blit(self.left_display, (0, 0))
+        self.window.screen.blit(self.right_display, (PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, 0))
 
     def draw_players(self):
         board_state = [[] for i in range(40)]
-        for player, data in self.board.getPlayers().items():
+        for player, data in self.board.get_players().items():
             board_state[data[1]].append(data[0])
         for i in range(40):
             tile_corners = TILE_BOUNDS[i]
@@ -462,82 +417,82 @@ class GUI:
                 pygame.draw.circle(self.window.screen, player.color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
                 if player.get_name() == self.current_player:
                     pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
-                if self.board.getPlayers()[player.get_name()][0].isPlayer:
+                if self.board.get_players()[player.get_name()][0].is_human:
                     pygame.draw.circle(self.window.screen, BLACK, vector_floor(position), HUMAN_MARKER_RADIUS)
 
     def draw_tile_details_on_board(self):
-        for name, details in self.board.getProperties().items():
-            tile_position = TILE_BOUNDS[self.board.tileList.index(details)]
-            if details.getOwner() is not None:
-                owner = self.board.getPlayers()[details.getOwner()][0]
+        for name, details in self.board.get_properties().items():
+            tile_position = TILE_BOUNDS[self.board.get_tiles().index(details)]
+            if details.get_owner() is not None:
+                owner = self.board.get_players()[details.get_owner()][0]
                 pygame.draw.circle(self.window.screen, owner.color,
                                    vector_floor(vector_add(tile_position[1], OWNER_MARKER_POSITION)),
                                    OWNER_MARKER_RADIUS)
-                if details.getNumHotels() > 0:
+                if details.get_num_hotels() > 0:
                     rect = pygame.Surface(HOUSE_MARKER_DIMENSIONS)
                     rect.fill(RED)
                     self.window.screen.blit(rect, vector_floor(vector_add((tile_position[0][0], tile_position[1][1]),
                                                                           HOUSE_MARKER_POSITION)))
-                elif details.getNumHouses() > 0:
+                elif details.get_num_houses() > 0:
                     rect = pygame.Surface(HOUSE_MARKER_DIMENSIONS)
                     rect.fill(GREEN)
                     num = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), HOUSE_MARKER_TEXT_SIZE),
-                                                  str(details.getNumHouses()), True, BLACK)
+                                                  str(details.get_num_houses()), True, BLACK)
                     rect.blit(num, HOUSE_MARKER_TEXT_OFFSET)
                     self.window.screen.blit(rect, vector_floor(vector_add((tile_position[0][0], tile_position[1][1]),
                                                                     HOUSE_MARKER_POSITION)))
 
-    def draw_left_menu(self):
-        for name, cpu in self.board.getPlayers().items():
-            if not cpu[0].isPlayer:
+    def draw_left_display(self):
+        for name, cpu in self.board.get_players().items():
+            if not cpu[0].is_human:
                 position = (LEFT_MENU_OFFSET[0],
-                            LEFT_MENU_OFFSET[1] + LEFT_MENU_SEPARATION * (self.board.turnOrder.index(name) - 1))
-                pygame.draw.circle(self.left_menu, cpu[0].color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
+                            LEFT_MENU_OFFSET[1] + LEFT_MENU_SEPARATION * (self.board.turn_order.index(name) - 1))
+                pygame.draw.circle(self.left_display, cpu[0].color, vector_floor(position), PLAYER_GRAPHIC_RADIUS)
 
                 if cpu[0].get_name() == self.current_player:
-                    pygame.draw.circle(self.left_menu, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
+                    pygame.draw.circle(self.left_display, BLACK, vector_floor(position), PLAYER_GRAPHIC_RADIUS + 1, 2)
 
                 position = (position[0] + LEFT_MENU_TEXT_OFFSET[0],
                             position[1] + LEFT_MENU_TEXT_OFFSET[1])
                 name_text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_TEXT_SIZE),
                                                     cpu[0].get_name(), True, BLACK)
-                self.left_menu.blit(name_text, vector_floor(position))
+                self.left_display.blit(name_text, vector_floor(position))
 
                 position = (position[0], position[1] + LEFT_MENU_MARGIN)
                 text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_SUBTEXT_SIZE),
                                                "$ {}".format(cpu[0].get_money()), True, BLACK)
-                self.left_menu.blit(text, vector_floor(position))
+                self.left_display.blit(text, vector_floor(position))
 
-                if cpu[0].inJail:
+                if cpu[0].is_in_jail():
                     position = (position[0], position[1] + LEFT_MENU_MARGIN)
                     text = pygame.font.Font.render(
                         pygame.font.Font(pygame.font.get_default_font(), LEFT_MENU_SUBTEXT_SIZE),
-                        "IN JAIL {}".format(cpu[0].jailCount), True, RED)
-                    self.left_menu.blit(text, vector_floor(position))
+                        "IN JAIL {}".format(cpu[0].jail_counter), True, RED)
+                    self.left_display.blit(text, vector_floor(position))
 
-    def draw_right_menu(self):
-        if len(self.board.getHumanPlayers()) > 0:
-            player = self.board.getPlayers()[self.board.getHumanPlayers()[0]][0]
+    def draw_right_display(self):
+        if len(self.board.get_human_players()) > 0:
+            player = self.board.get_players()[self.board.get_human_players()[0]][0]
 
             base_position = RIGHT_MENU_OFFSET
 
-            pygame.draw.circle(self.right_menu, player.color,
+            pygame.draw.circle(self.right_display, player.color,
                                vector_floor(base_position), PLAYER_GRAPHIC_RADIUS)
-            pygame.draw.circle(self.right_menu, BLACK, vector_floor(base_position), HUMAN_MARKER_RADIUS)
+            pygame.draw.circle(self.right_display, BLACK, vector_floor(base_position), HUMAN_MARKER_RADIUS)
 
             if player.get_name() == self.current_player:
-                pygame.draw.circle(self.right_menu, BLACK, vector_floor(base_position), PLAYER_GRAPHIC_RADIUS + 1, 2)
+                pygame.draw.circle(self.right_display, BLACK, vector_floor(base_position), PLAYER_GRAPHIC_RADIUS + 1, 2)
 
             base_text_position = vector_add(base_position, RIGHT_MENU_TEXT_OFFSET)
             name_text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_TEXT_SIZE),
                                                 player.get_name(), True, BLACK)
-            self.right_menu.blit(name_text, vector_floor(base_text_position))
+            self.right_display.blit(name_text, vector_floor(base_text_position))
 
             base_position = vector_add(base_position, (0, RIGHT_MENU_MARGIN))
             base_text_position = vector_add(base_position, RIGHT_MENU_TEXT_OFFSET)
             text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_TEXT_SIZE),
                                            "$ {}".format(player.get_money()), True, BLACK)
-            self.right_menu.blit(text, vector_floor(base_text_position))
+            self.right_display.blit(text, vector_floor(base_text_position))
 
             for property in player.get_owned_properties():
                 index = player.get_owned_properties().index(property)
@@ -547,19 +502,62 @@ class GUI:
 
                 button_pos = vector_add(text_pos, (0, RIGHT_MENU_BUTTON_MARGIN))
 
-                if property.getGroup() != "Railroad" and property.getGroup() != "Utility":
+                if property.get_group() != "Railroad" and property.get_group() != "Utility":
                     button = self.prop_buttons[index]
                     button.position = button_pos
                     button.absolute_pos = vector_add((PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, 0), button.position)
-                    self.right_menu.blit(button.draw(), button_pos)
+                    self.right_display.blit(button.draw(), button_pos)
 
                 rect = pygame.Surface(RIGHT_MENU_ICON_SIZE)
-                rect.fill(PROPERTY_COLOR[property.getGroup()])
-                self.right_menu.blit(rect, icon_pos)
+                rect.fill(PROPERTY_COLOR[property.get_group()])
+                self.right_display.blit(rect, icon_pos)
 
                 text = pygame.font.Font.render(pygame.font.Font(pygame.font.get_default_font(), RIGHT_MENU_SUBTEXT_SIZE),
                                                property.get_name(), True, BLACK)
-                self.right_menu.blit(text, text_pos)
+                self.right_display.blit(text, text_pos)
+
+    def draw_border(self):
+        pygame.draw.line(self.menu_window, BLACK, (0, GUI_BORDER_WIDTH / 2 - 1),
+                         (GUI_WINDOW_DIMENSIONS[0], GUI_BORDER_WIDTH / 2 - 1), GUI_BORDER_WIDTH)
+        pygame.draw.line(self.menu_window, BLACK, (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, 0),
+                         (GUI_WINDOW_DIMENSIONS[0] - GUI_BORDER_WIDTH / 2, GUI_WINDOW_DIMENSIONS[1]), GUI_BORDER_WIDTH)
+        pygame.draw.line(self.menu_window, BLACK, (GUI_WINDOW_DIMENSIONS[0], GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2),
+                         (0, GUI_WINDOW_DIMENSIONS[1] - GUI_BORDER_WIDTH / 2), GUI_BORDER_WIDTH)
+        pygame.draw.line(self.menu_window, BLACK, (GUI_BORDER_WIDTH / 2 - 1, GUI_WINDOW_DIMENSIONS[1]),
+                         (GUI_BORDER_WIDTH / 2 - 1, 0), GUI_BORDER_WIDTH)
+
+        pygame.draw.line(self.left_display, BLACK, (self.left_display.get_size()[0] - GUI_BORDER_WIDTH / 2 - 1, 0),
+                         (self.left_display.get_size()[0] - GUI_BORDER_WIDTH / 2 - 1, self.left_display.get_size()[1]), GUI_BORDER_WIDTH)
+
+        pygame.draw.line(self.right_display, BLACK, (GUI_BORDER_WIDTH / 2 - 1, 0),
+                         (GUI_BORDER_WIDTH / 2 - 1, self.right_display.get_size()[1]), GUI_BORDER_WIDTH)
+
+    def set_card(self, content):
+        self.card_content = content
+
+    def unset_card(self):
+        self.card_content = []
+
+    def set_special_event(self, event):
+        self.special_event_type = event
+
+    def unset_special_event(self):
+        self.special_event_type = None
+
+    def set_dice_result(self, dice):
+        self.dice_results = dice
+
+    def set_property(self, prop):
+        self.property_result = prop
+
+    def set_card_result(self, result):
+        self.card_result = result
+
+    def clear_gui(self):
+        del self.interactable[:]
+        self.interactable = []
+        del self.labels[:]
+        self.labels = []
 
 
 class MenuObject:
@@ -737,156 +735,156 @@ class ButtonOperands:
     @staticmethod
     def chance(value, board, gui, **kwargs):
         print("Chance {}".format(value))
-        current_player = board.getPlayers()[gui.current_player][0]
+        current_player = board.get_players()[gui.current_player][0]
         if value == 1:
-            board.playerDirectMove(current_player.get_name(), 0)
-            board.nextEvent()
+            board.player_direct_move(current_player.get_name(), 0)
+            board.next_turn_phase()
         elif value == 2:
-            board.playerDirectMove(current_player.get_name(),
-                                   board.tileList.index(board.getProperties()["Illinois Ave"]))
-            board.specialEvent(1)
+            board.player_direct_move(current_player.get_name(),
+                                     board.tileList.index(board.get_properties()["Illinois Ave"]))
+            board.set_special_event(1)
         elif value == 3:
-            board.playerDirectMove(current_player.get_name(),
-                                   board.tileList.index(board.getProperties()["St. Charles Place"]))
+            board.player_direct_move(current_player.get_name(),
+                                     board.tileList.index(board.get_properties()["St. Charles Place"]))
 
-            board.specialEvent(1)
+            board.set_special_event(1)
         elif value == 4:
-            board.specialEvent(2)
+            board.set_special_event(2)
         elif value == 5:
-            board.specialEvent(3)
+            board.set_special_event(3)
         elif value == 6:
             current_player.give_money(50)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 7:
-            current_player.giveJailCard()
-            board.nextEvent()
+            current_player.give_jail_card()
+            board.next_turn_phase()
         elif value == 8:
-            board.playerStandardMove(current_player.get_name, -3)
-            board.nextEvent()
+            board.player_standard_move(current_player.get_name, -3)
+            board.next_turn_phase()
         elif value == 9:
             current_player.go_to_jail()
-            board.playerDirectMove(current_player.get_name(), 10, False)
-            board.nextEvent()
+            board.player_direct_move(current_player.get_name(), 10, False)
+            board.next_turn_phase()
         elif value == 10:
             hotels = 0
             houses = 0
-            for property in current_player.ownedProperties:
-                hotels += property.getNumHotels()
-                houses += property.getNumHouses()
+            for property in current_player.get_owned_properties():
+                hotels += property.get_num_hotels()
+                houses += property.get_num_houses()
             houses -= hotels
             board.take_money(current_player.get_name(), 25 * houses + 100 * hotels)
 
         elif value == 11:
             board.take_money(current_player.get_name(), 15)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 12:
-            board.playerDirectMove(current_player.get_name(),
-                                   board.tileList.index(board.getProperties()["Reading Railroad"]))
-            board.specialEvent(1)
+            board.player_direct_move(current_player.get_name(),
+                                     board.tileList.index(board.get_properties()["Reading Railroad"]))
+            board.set_special_event(1)
         elif value == 13:
-            board.playerDirectMove(current_player.get_name(),
-                                   board.tileList.index(board.getProperties()["Boardwalk"]))
-            board.specialEvent(1)
+            board.player_direct_move(current_player.get_name(),
+                                     board.tileList.index(board.get_properties()["Boardwalk"]))
+            board.set_special_event(1)
         elif value == 14:
-            for player in board.getPlayers():
+            for player in board.get_players():
                 if player[0] is not current_player.get_name():
-                    board.take_money(current_player.get_name(), 50)
+                    board.take_money_from_player(current_player.get_name(), 50)
                     player[0].give_money(50)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 15:
             current_player.give_money(150)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 16:
             current_player.give_money(100)
-            board.nextEvent()
+            board.next_turn_phase()
         gui.unset_card()
         return MENU_WAIT
 
     @staticmethod
     def community_chest(value, board, gui, **kwargs):
         print("Community Chest {}".format(value))
-        current_player = board.getPlayers()[gui.current_player][0]
+        current_player = board.get_players()[gui.current_player][0]
         if value == 1:
-            board.playerDirectMove(current_player.get_name(), 0)
-            board.nextEvent()
+            board.player_direct_move(current_player.get_name(), 0)
+            board.next_turn_phase()
         elif value == 2:
             current_player.give_money(200)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 3:
             board.take_money(current_player.get_name(), 50)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 4:
             current_player.give_money(50)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 5:
-            current_player.giveJailCard()
-            board.nextEvent()
+            current_player.give_jail_card()
+            board.next_turn_phase()
         elif value == 6:
-            board.playerDirectMove(current_player.get_name(), 10, False)
+            board.player_direct_move(current_player.get_name(), 10, False)
         elif value == 7:
-            for player in board.getPlayers():
+            for player in board.get_players():
                 if player[0] is not current_player.get_name():
                     board.take_money(player[0], 50)
                     current_player.give_money(50)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 8:
             current_player.give_money(100)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 9:
             current_player.give_money(20)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 10:
             current_player.give_money(100)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 11:
             board.take_money(current_player.get_name(), 50)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 12:
             board.take_money(current_player.get_name(), 50)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 13:
             current_player.give_money(25)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 14:
             hotels = 0
             houses = 0
-            for property in current_player.ownedProperties:
-                hotels += property.getNumHotels()
-                houses += property.getNumHouses()
+            for property in current_player.get_owned_properties():
+                hotels += property.get_num_hotels()
+                houses += property.get_num_houses()
             houses -= hotels
             board.take_money(current_player.get_name(), 40 * houses + 115 * hotels)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 15:
             current_player.give_money(10)
-            board.nextEvent()
+            board.next_turn_phase()
         elif value == 16:
             current_player.give_money(100)
-            board.nextEvent()
+            board.next_turn_phase()
         gui.unset_card()
         return MENU_WAIT
 
     @staticmethod
     def build(value, board, gui, **kwargs):
-        prop = board.getProperties()[value]
-        if gui.current_player == prop.getOwner():
-            owner = board.getPlayers()[gui.current_player][0]
-            if owner.get_money() >= prop.getHouseCost():
-                prop.addHouse()
-                owner.take_money(prop.getHouseCost())
+        prop = board.get_properties()[value]
+        if gui.current_player == prop.get_owner():
+            owner = board.get_players()[gui.current_player][0]
+            if owner.get_money() >= prop.get_house_cost():
+                prop.add_house()
+                owner.take_money(prop.get_house_cost())
 
     @staticmethod
     def end(board, **kwargs):
-        board.progressTurn()
+        board.progress_turn()
         return MENU_WAIT
 
     @staticmethod
     def color(value,board, gui, **kwargs):
-        board.getPlayers()[gui.current_player][0].set_color(value)
+        board.get_players()[gui.current_player][0].set_color(value)
         return MENU_OPP_SEL
 
     @staticmethod
     def roll(board, gui, mstate, **kwargs):
-        rolls = board.rollDice()
+        rolls = board.roll_dice()
         gui.set_dice_result(rolls)
         if mstate == MENU_SE_DICE:
             return MENU_SE_RESULT
@@ -896,55 +894,55 @@ class ButtonOperands:
     @staticmethod
     def confirm(value, mstate, board, gui, **kwargs):
         if mstate == MENU_START:
-            board.startGame()
-            board.nextEvent()
+            board.start_game()
+            board.next_turn_phase()
             return MENU_WAIT
         elif mstate == MENU_NAME:
             for inter in gui.interactable:
                 if type(inter) is TextBox:
-                    board.resetPlayers()
-                    board.addPlayer(Player(inter.text_content, True))
+                    board.reset_players()
+                    board.add_player(Player(inter.text_content, True))
                     break
             return MENU_COLOR
         elif mstate == MENU_OPP_SEL:
             for i in range(value):
-                board.addPlayer(Player("CPU_{}".format(i + 1)))
+                board.add_player(Player("CPU_{}".format(i + 1)))
             return MENU_START
         elif mstate == MENU_RESULT or mstate == MENU_AI_ROLL:
-            board.playerStandardMove(value[0], value[1][0] + value[1][1])
-            board.nextEvent()
+            board.player_standard_move(value[0], value[1][0] + value[1][1])
+            board.next_turn_phase()
             return MENU_WAIT
         elif mstate == MENU_SE_RESULT:
-            gui.set_sp_ev(10 * (value[1][0] + value[1][1]))
+            gui.set_special_event(10 * (value[1][0] + value[1][1]))
             return MENU_SE_PLR_RENT
         elif mstate == MENU_AI_BUY:
-            board.nextEvent()
+            board.next_turn_phase()
             return MENU_WAIT
         elif mstate == MENU_AI_RENT:
-            board.nextEvent()
+            board.next_turn_phase()
             return MENU_WAIT
         elif mstate == MENU_PLR_AI or mstate == MENU_SE_PLR_RENT:
-            board.payRent(value[0], value[1], value[2])
-            board.nextEvent()
+            board.pay_rent(value[0], value[1], value[2])
+            board.next_turn_phase()
             return MENU_WAIT
         elif mstate == MENU_DEBT:
-            board.propertySale(gui.current_player, value)
+            board.property_sale(gui.current_player, value)
             return MENU_WAIT
         elif mstate == MENU_BUY:
             if 'player' in kwargs and 'property' in kwargs:
                 if value:
-                    board.runPurchase(kwargs['player'], kwargs['property'].get_name())
-                    board.nextEvent()
+                    board.run_purchase(kwargs['player'], kwargs['property'].get_name())
+                    board.next_turn_phase()
                 else:
                     # board.startAuction(kwargs['property'].getName(), exclude=kwargs['player'])
-                    board.nextEvent()
+                    board.next_turn_phase()
             else:
                 raise AttributeError
             return MENU_WAIT
 
     @staticmethod
     def cancel(board, **kwargs):
-        board.resetPlayers()
+        board.reset_players()
         return MENU_MAIN
 
     @staticmethod

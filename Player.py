@@ -2,14 +2,19 @@ from constants import *
 
 
 class Player:
-    def __init__(self, name="", is_player=False, money=1200):
+    #
+    #
+    #  TODO: Docstrings and readability comments
+    #
+    #
+    def __init__(self, name="", is_human=False, money=1200):
         self.money = money
-        self.is_player = is_player
         self.debt = 0
+        self.is_human = is_human
+        self.name = name
+        self.owned_properties = []
         self.color = WHITE
         self.has_jail_card = False
-        self.owned_properties = []
-        self.name = name
         self.in_jail = False
         self.jail_counter = 3
 
@@ -19,7 +24,7 @@ class Player:
     def ai_sell_property(self):
         saleAmounts = []
         for prop in self.owned_properties:
-            amount = (prop.getPurchaseValue() + prop.getNumHouses() * prop.getHouseCose()) / 2
+            amount = (prop.get_purchase_value() + prop.get_num_houses() * prop.getHouseCose()) / 2
             saleAmounts.append(amount)
         sell = min(saleAmounts)
         return self.owned_properties[saleAmounts.index(sell)]
@@ -83,6 +88,9 @@ class Player:
 
     def get_owned_properties(self):
         return self.owned_properties
+
+    def is_in_jail(self):
+        return self.in_jail
 
     def get_jail_card(self):
         return self.has_jail_card
