@@ -210,6 +210,18 @@ class GUI:
             self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
                                             "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
 
+        elif self.menu_state == MENU_AI_SELL:
+            self.labels.append(Label((window_center_x, 40), BLACK, "{} Sold:".format(self.current_player)))
+
+            self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
+                                     BLACK, "{}".format(self.property_result.get_name())))
+
+            self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                     BLACK, "Group: {}".format(self.property_result.get_group())))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 2 * y_interval),
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+
         #
         # CPU RENT RESULT ------------------------------------------------------------------------------ CPU RENT RESULT
         #
@@ -285,8 +297,7 @@ class GUI:
         #
         elif self.menu_state == MENU_DEBT:
             current_property = player.get_owned_properties()[self.page_number]
-            sale_value = (current_property.get_purchase_value() +
-                          current_property.get_num_houses() * current_property.get_house_cost()) / 2
+            sale_value = current_property.get_sale_value()
             if self.page_number == -1:
                 self.labels.append(Label((window_center_x, 40), BLACK, "You are in Debt"))
 
@@ -319,6 +330,25 @@ class GUI:
 
                     self.interactable.append(Button((window_center_x - window_center_x / 2, window_center_y + 4 * y_interval),
                                                     "<<<", ButtonOperands.page_left, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+        #
+        # PLAYER OUT OF JAIL ------------------------------------------------------------------------ PLAYER OUT OF JAIL
+        #
+        elif self.menu_state == MENU_OUT:
+
+            self.labels.append(Label((window_center_x, window_center_y), BLACK, "You got out of Jail."))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 4 * y_interval),
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT,
+                                            self.dice_results))
+        #
+        # PLAYER STUCK IN JAIL -------------------------------------------------------------------- PLAYER STUCK IN JAIL
+        #
+        elif self.menu_state == MENU_JAIL:
+
+            self.labels.append(Label((window_center_x, window_center_y), BLACK, "You are stuck in Jail."))
+
+            self.interactable.append(Button((window_center_x, window_center_y + 4 * y_interval),
+                                            "Okay", ButtonOperands.confirm, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         #
         # PLAYER CHANCE ---------------------------------------------------------------------------------- PLAYER CHANCE
         #
@@ -772,10 +802,10 @@ class ButtonOperands:
                 hotels += property.get_num_hotels()
                 houses += property.get_num_houses()
             houses -= hotels
-            board.take_money(current_player.get_name(), 25 * houses + 100 * hotels)
+            board.take_money_from_player(current_player.get_name(), 25 * houses + 100 * hotels)
 
         elif value == 11:
-            board.take_money(current_player.get_name(), 15)
+            board.take_money_from_player(current_player.get_name(), 15)
             board.next_turn_phase()
         elif value == 12:
             board.player_direct_move(current_player.get_name(),
@@ -811,7 +841,7 @@ class ButtonOperands:
             current_player.give_money(200)
             board.next_turn_phase()
         elif value == 3:
-            board.take_money(current_player.get_name(), 50)
+            board.take_money_from_player(current_player.get_name(), 50)
             board.next_turn_phase()
         elif value == 4:
             current_player.give_money(50)
@@ -824,7 +854,7 @@ class ButtonOperands:
         elif value == 7:
             for player in board.get_players():
                 if player[0] is not current_player.get_name():
-                    board.take_money(player[0], 50)
+                    board.take_money_from_player(player[0], 50)
                     current_player.give_money(50)
             board.next_turn_phase()
         elif value == 8:
@@ -837,10 +867,10 @@ class ButtonOperands:
             current_player.give_money(100)
             board.next_turn_phase()
         elif value == 11:
-            board.take_money(current_player.get_name(), 50)
+            board.take_money_from_player(current_player.get_name(), 50)
             board.next_turn_phase()
         elif value == 12:
-            board.take_money(current_player.get_name(), 50)
+            board.take_money_from_player(current_player.get_name(), 50)
             board.next_turn_phase()
         elif value == 13:
             current_player.give_money(25)
@@ -852,7 +882,7 @@ class ButtonOperands:
                 hotels += property.get_num_hotels()
                 houses += property.get_num_houses()
             houses -= hotels
-            board.take_money(current_player.get_name(), 40 * houses + 115 * hotels)
+            board.take_money_from_player(current_player.get_name(), 40 * houses + 115 * hotels)
             board.next_turn_phase()
         elif value == 15:
             current_player.give_money(10)
@@ -909,9 +939,26 @@ class ButtonOperands:
                 board.add_player(Player("CPU_{}".format(i + 1)))
             return MENU_START
         elif mstate == MENU_RESULT or mstate == MENU_AI_ROLL:
-            board.player_standard_move(value[0], value[1][0] + value[1][1])
-            board.next_turn_phase()
-            return MENU_WAIT
+            player = value[0]
+            if player.is_in_jail():
+                if value[1][0] == value[1][1] or player.get_jail_card():
+                    player.get_out_of_jail()
+                    if player.is_human:
+                        return MENU_OUT
+                    else:
+                        board.player_standard_move(player, value[1][0] + value[1][1])
+                        board.next_turn_phase()
+                        return MENU_WAIT
+                else:
+                    player.jail_count_down()
+                    if player.is_in_jail():
+                        return MENU_JAIL
+                    else:
+                        return MENU_OUT
+            else:
+                board.player_standard_move(player, value[1][0] + value[1][1])
+                board.next_turn_phase()
+                return MENU_WAIT
         elif mstate == MENU_SE_RESULT:
             gui.set_special_event(10 * (value[1][0] + value[1][1]))
             return MENU_SE_PLR_RENT

@@ -22,12 +22,12 @@ class Player:
         return True
 
     def ai_sell_property(self):
-        saleAmounts = []
+        sale_amounts = []
         for prop in self.owned_properties:
-            amount = (prop.get_purchase_value() + prop.get_num_houses() * prop.getHouseCose()) / 2
-            saleAmounts.append(amount)
-        sell = min(saleAmounts)
-        return self.owned_properties[saleAmounts.index(sell)]
+            amount = prop.get_sale_price()
+            sale_amounts.append(amount)
+        sell = min(sale_amounts)
+        return self.owned_properties[sale_amounts.index(sell)]
 
     def has_property(self, prop):
         for p in self.owned_properties:

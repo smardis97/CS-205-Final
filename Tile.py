@@ -59,6 +59,9 @@ class Property(Tile):
     def get_num_hotels(self):
         return max([self.num_houses - 3, 0])
 
+    def get_sale_price(self):
+        return (self.purchase_value + self.num_houses * self.house_cost) / 2
+
 class Go(Tile):
     def __init__(self):
         Tile.__init__(self)
@@ -120,7 +123,7 @@ class CardTile(Tile):
             elif choice == 3:
                 return choice, ["Chance:", "Advance to", "St. Charles Place", "If you pass Go", "Collect $ 200"]
             elif choice == 4:
-                return choice, ["Chance:", "Advance to", "nearest Utility", "If owned, throw dice", "Pay the owner 10 time", "the amount rolled"]
+                return choice, ["Chance:", "Advance to", "nearest Utility", "If owned, throw dice", "Pay the owner 10 times", "the amount rolled"]
             elif choice == 5:
                 return choice, ["Chance:", "Advance to", "nearest Railroad", "Pay the owner twice", "the usual rent."]
             elif choice == 6:
