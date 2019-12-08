@@ -170,7 +170,7 @@ class Player:
         """
         Removes the specified amount of debt.
         """
-        if self.debt < amount:
+        if self.debt <= amount:
             self.give_money(amount - self.debt)
             self.debt = 0
         else:

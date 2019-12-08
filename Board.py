@@ -590,6 +590,8 @@ class Board:
 
         player.get_owned_properties().remove(property_tile)
 
+        self.gui.set_property(property_tile)
+
         # reset owner and num_houses for property
         property_tile.set_owner(None)
         property_tile.num_houses = 0

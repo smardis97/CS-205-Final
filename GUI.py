@@ -1707,7 +1707,7 @@ class ButtonOperands:
         # From Out of Jail ---------------------------------------------------------------------------- From Out of Jail
         #
         elif mstate == MENU_OUT:
-            board.player_standard_move(gui.current_player, value[1][0] + value[1][1])
+            board.player_standard_move(gui.current_player, value[0] + value[1])
             board.next_turn_phase()
             return MENU_WAIT
 
@@ -1724,6 +1724,7 @@ class ButtonOperands:
         Returns:
             str: The next menu_state to be displayed on the gui.
         """
+        gui.current_player = None
         board.reset_players()
         return MENU_MAIN
 
