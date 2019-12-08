@@ -1699,7 +1699,12 @@ class ButtonOperands:
         #
         # From In Jail or Jail Escape ------------------------------------------------------ From In Jail or Jail Escape
         #
-        elif mstate == MENU_JAIL or mstate == MENU_OUT:
+        elif mstate == MENU_JAIL:
+            board.next_turn_phase()
+            return MENU_WAIT
+
+        elif mstate == MENU_OUT:
+            board.player_standard_move(gui.current_player, value[1][0] + value[1][1])
             board.next_turn_phase()
             return MENU_WAIT
 
