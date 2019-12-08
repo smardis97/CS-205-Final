@@ -39,7 +39,10 @@ class Player:
         Returns:
             bool:           Whether the player will buy this property.
         """
-        return True
+        if property_tile.get_purchase_value() < self.money / 2:
+            return True
+        else:
+            return False
 
     def ai_sell_property(self):
         """

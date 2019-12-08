@@ -147,6 +147,7 @@ class Board:
                     sell_off = current_player.ai_sell_property()
                     self.property_sale(current_player.get_name(), sell_off)
                     self.gui.state_change(MENU_AI_SELL)
+                    self.next_phase = False
             else:  # current_player has no more properties to sell
                 self.set_special_event(7)
         ################################################################################################################
@@ -162,10 +163,12 @@ class Board:
             #
             if landed_tile.get_owner() is not None:
                 if current_player.is_human:
-                    self.gui.state_change(MENU_SE_PLR_RENT)
+                    if landed_tile.get_owner() is not current_player.get_name():
+                        self.gui.state_change(MENU_SE_PLR_RENT)
                 else:
-                    self.pay_rent(current_player.get_name(), landed_tile.get_owner(), 2 * self.get_rent_value(landed_tile.get_name()))
-                    self.gui.state_change(MENU_SE_AI_RENT)
+                    if landed_tile.get_owner() is not current_player.get_name():
+                        self.pay_rent(current_player.get_name(), landed_tile.get_owner(), 2 * self.get_rent_value(landed_tile.get_name()))
+                        self.gui.state_change(MENU_SE_AI_RENT)
             #
             # Tile is not owned
             #
@@ -195,12 +198,14 @@ class Board:
             #
             if landed_tile.get_owner() is not None:
                 if current_player.is_human:
-                    self.gui.state_change(MENU_SE_DICE)
+                    if landed_tile.get_owner() is not current_player.get_name():
+                        self.gui.state_change(MENU_SE_DICE)
                 else:
-                    rolls = self.roll_dice()
-                    self.gui.set_special_event(10 * sum(rolls))
-                    self.pay_rent(current_player.get_name(), landed_tile.get_owner(), 10 * sum(rolls))
-                    self.gui.state_change(MENU_SE_AI_RENT)
+                    if landed_tile.get_owner() is not current_player.get_name():
+                        rolls = self.roll_dice()
+                        self.gui.set_special_event(10 * sum(rolls))
+                        self.pay_rent(current_player.get_name(), landed_tile.get_owner(), 10 * sum(rolls))
+                        self.gui.state_change(MENU_SE_AI_RENT)
                 self.set_special_event(0)
             #
             # Tile is not owned
@@ -247,7 +252,7 @@ class Board:
         # SECOND TILE LAND -------------------------------------------------------------------------- SECOND TILE LAND #
         ################################################################################################################
         elif self.special_event == 1:
-            self.current_turn_phase -= 1
+            self.current_turn_phase = 0
             self.set_special_event(0)
             self.next_turn_phase()
         ################################################################################################################
@@ -287,8 +292,9 @@ class Board:
                         # Tile is already owned
                         #
                         else:
-                            self.gui.state_change(MENU_PLR_AI)
-                            self.next_phase = False
+                            if landed_tile.get_owner() is not current_player.get_name():
+                                self.gui.state_change(MENU_PLR_AI)
+                                self.next_phase = False
 
                     # current player is ai
                     else:
@@ -308,10 +314,11 @@ class Board:
                         # Tile is already owned
                         #
                         else:
-                            self.pay_rent(current_player.get_name(), landed_tile.get_owner(),
-                                          self.get_rent_value(landed_tile.get_name()))
-                            self.gui.state_change(MENU_AI_RENT)
-                            self.next_phase = False
+                            if landed_tile.get_owner() is not current_player.get_name():
+                                self.pay_rent(current_player.get_name(), landed_tile.get_owner(),
+                                              self.get_rent_value(landed_tile.get_name()))
+                                self.gui.state_change(MENU_AI_RENT)
+                                self.next_phase = False
                 # =====================================
                 # LANDED ON CHANCE OR COMMUNITY CHEST                                                          card tile
                 # =====================================
@@ -572,7 +579,7 @@ class Board:
         """
         # set variables for better readability
         player = self.players[player_name][0]
-        property_index = player.get_owned_properties.index(property_tile)  # index of property in player's properties
+        property_index = player.get_owned_properties().index(property_tile)  # index of property in player's properties
 
         # remove the build button for property if player is human
         if player.is_human:
@@ -581,7 +588,7 @@ class Board:
         # remove debt corresponding to the value of the sold property
         player.remove_debt(property_tile.get_sale_price())
 
-        player.get_owned_properties.remove(property_tile)
+        player.get_owned_properties().remove(property_tile)
 
         # reset owner and num_houses for property
         property_tile.set_owner(None)

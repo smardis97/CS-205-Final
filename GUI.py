@@ -333,7 +333,7 @@ class GUI:
         #
         elif self.menu_state == MENU_DEBT:
             current_property = player.get_owned_properties()[self.page_number]
-            sale_value = current_property.get_sale_value()
+            sale_value = current_property.get_sale_price()
             if self.page_number == -1:
                 self.labels.append(Label((window_center_x, 40), BLACK, "You are in Debt"))
 
@@ -1338,7 +1338,8 @@ class ButtonOperands:
             houses = 0
             for property in current_player.get_owned_properties():
                 hotels += property.get_num_hotels()
-                houses += property.get_num_houses()
+                if property.get_num_hotels() < 1:
+                    houses += property.get_num_houses()
             board.take_money_from_player(current_player.get_name(), 25 * houses + 100 * hotels)
             board.next_turn_phase()
 
@@ -1361,10 +1362,10 @@ class ButtonOperands:
 
         # You have been have been elected Chairman of the Board. Pay each player $50.
         elif value == 14:
-            for player in board.get_players():
-                if player[0] is not current_player.get_name():
+            for player_name in board.get_players():
+                if player_name is not current_player.get_name():
                     board.take_money_from_player(current_player.get_name(), 50)
-                    player[0][0].give_money(50)
+                    board.get_players()[player_name][0].give_money(50)
             board.next_turn_phase()
 
         # Your building and loan matures. Collect $150.
@@ -1429,9 +1430,9 @@ class ButtonOperands:
 
         # Grand Opera Night. Collect $50 from every player for opening night seats.
         elif value == 7:
-            for player in board.get_players():
-                if player is not current_player.get_name():
-                    board.take_money_from_player(player, 50)
+            for player_name in board.get_players():
+                if player_name is not current_player.get_name():
+                    board.take_money_from_player(player_name, 50)
                     current_player.give_money(50)
             board.next_turn_phase()
 
@@ -1471,7 +1472,8 @@ class ButtonOperands:
             houses = 0
             for property in current_player.get_owned_properties():
                 hotels += property.get_num_hotels()
-                houses += property.get_num_houses()
+                if property.get_num_hotels() < 1:
+                    houses += property.get_num_houses()
             board.take_money_from_player(current_player.get_name(), 40 * houses + 115 * hotels)
             board.next_turn_phase()
 
@@ -1647,6 +1649,13 @@ class ButtonOperands:
         # From AI Purchase Menu ------------------------------------------------------------------ From AI Purchase Menu
         #
         elif mstate == MENU_AI_BUY:
+            board.next_turn_phase()
+            return MENU_WAIT
+
+        #
+        # From AI Sell Menu -------------------------------------------------------------------------- From AI Sell Menu
+        #
+        elif mstate == MENU_AI_SELL:
             board.next_turn_phase()
             return MENU_WAIT
 

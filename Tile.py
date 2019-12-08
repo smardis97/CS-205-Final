@@ -90,8 +90,6 @@ class Property(Tile):
         """
         Getter for the number of houses on this property.
         """
-        if self.num_houses > 3:
-            return 0
         return self.num_houses
 
     def get_num_hotels(self):
@@ -104,7 +102,10 @@ class Property(Tile):
         """
         Getter for the sale price of this property.
         """
-        return (self.purchase_value + self.num_houses * self.house_cost) / 2
+        if self.group is not "Railroad" and self.group is not "Utility":
+            return (self.purchase_value + self.num_houses * self.house_cost) / 2
+        else:
+            return self.purchase_value / 2
 
 class Go(Tile):
     """
