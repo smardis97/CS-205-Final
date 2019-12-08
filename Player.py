@@ -1,4 +1,5 @@
 from constants import *
+import random
 
 
 class Player:
@@ -28,6 +29,16 @@ class Player:
             sale_amounts.append(amount)
         sell = min(sale_amounts)
         return self.owned_properties[sale_amounts.index(sell)]
+
+    def ai_build(self):
+        if len(self.owned_properties) > 0:
+            choice = random.randint(0, len(self.owned_properties) - 1)
+            choice_prop = self.owned_properties[choice]
+            if choice_prop.get_group() is not "Railroad" and choice_prop.get_group() is not "Utility":
+                if self.money / 2 > choice_prop.get_house_cost():
+                    chance = random.randint(0, 100)
+                    if chance > 50:
+                        return choice_prop
 
     def has_property(self, prop):
         for p in self.owned_properties:

@@ -96,7 +96,7 @@ class CardTile(Tile):
             elif choice == 6:
                 return choice, ["Community Chest:", "Go to Jail"]
             elif choice == 7:
-                return choice, ["Community Chest:", "Grand Opera Night", "Collect $ 50 form every", "player for opening night", "seats"]
+                return choice, ["Community Chest:", "Grand Opera Night", "Collect $ 50 from every", "player for opening night", "seats"]
             elif choice == 8:
                 return choice, ["Community Chest:", "Holiday fund matures", "receive $ 100"]
             elif choice == 9:
@@ -135,7 +135,7 @@ class CardTile(Tile):
             elif choice == 9:
                 return choice, ["Chance:", "Go to Jail"]
             elif choice == 10:
-                return choice, ["Chance:", "Make general repairs", "on all you properties", "$ 25 for each house", "$ 100 for each hotel"]
+                return choice, ["Chance:", "Make general repairs", "on all your properties", "$ 25 for each house", "$ 100 for each hotel"]
             elif choice == 11:
                 return choice, ["Chance:", "Pay poor tax", "$ 15"]
             elif choice == 12:

@@ -140,7 +140,7 @@ class Board:
         # CURRENT PLAYER OWES MONEY -------------------------------------------------------- CURRENT PLAYER OWES MONEY #
         ################################################################################################################
         elif self.special_event == 6:
-            if len(current_player.get_owned_properties) > 0:  # player still has properties to sell
+            if len(current_player.get_owned_properties()) > 0:  # player still has properties to sell
                 if current_player.is_human:
                     self.gui.state_change(MENU_DEBT)
                 else:
@@ -349,7 +349,11 @@ class Board:
             # AI CONSTRUCTION PHASE -------------------------------------------------------------- AI CONSTRUCTION PHASE
             #
             elif self.current_turn_phase == 2:
-                pass  # >>> NOT IMPLEMENTED <<<
+                if not current_player.is_human:
+                    choice = current_player.ai_build()
+                    if choice is not None and choice.get_num_houses() < 4:
+                        choice.add_house()
+                        self.take_money_from_player(current_player.get_name(), choice.get_house_cost())
             #
             # PLAYER END TURN -------------------------------------------------------------------------- PLAYER END TURN
             #
