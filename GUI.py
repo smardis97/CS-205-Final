@@ -1340,6 +1340,7 @@ class ButtonOperands:
                 hotels += property.get_num_hotels()
                 houses += property.get_num_houses()
             board.take_money_from_player(current_player.get_name(), 25 * houses + 100 * hotels)
+            board.next_turn_phase()
 
         # Pay poor tax, $15.
         elif value == 11:
@@ -1424,6 +1425,7 @@ class ButtonOperands:
         # Go to Jail.
         elif value == 6:
             board.player_direct_move(current_player.get_name(), 10, False)
+            board.next_turn_phase()
 
         # Grand Opera Night. Collect $50 from every player for opening night seats.
         elif value == 7:

@@ -319,7 +319,7 @@ class Board:
 
                     if current_player.is_human:
                         self.gui.set_card(landed_tile.pick_card())
-                        if landed_tile.cardType == "Community Chest":
+                        if landed_tile.card_type == "Community Chest":
                             self.gui.state_change(MENU_COM_CH)
                         else:
                             self.gui.state_change(MENU_CHANCE)
@@ -327,7 +327,7 @@ class Board:
 
                     else:
                         choice = landed_tile.pick_card()[0]
-                        if landed_tile.cardType == "Community Chest":
+                        if landed_tile.card_type == "Community Chest":
                             self.gui.state_change(ButtonOperands.community_chest(choice, self, self.gui))
                         else:
                             self.gui.state_change(ButtonOperands.chance(choice, self, self.gui))

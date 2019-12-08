@@ -191,7 +191,7 @@ class CardTile(Tile):
             elif choice == 9:
                 return choice, ["Chance:", "Go to Jail"]
             elif choice == 10:
-                return choice, ["Chance:", "Make general repairs", "on all your properties", "$ 25 for each house", "$ 100 for each hotel"]
+                return choice, ["Chance:", "Make general", "repairs on all", "your properties", "$ 25 for each house", "$ 100 for each hotel"]
             elif choice == 11:
                 return choice, ["Chance:", "Pay poor tax", "$ 15"]
             elif choice == 12:
