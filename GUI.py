@@ -340,7 +340,7 @@ class GUI:
                 self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval), BLACK, "You owe:"))
 
                 self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                         BLACK, "$ {}".format(player.getDebt())))
+                                         BLACK, "$ {}".format(player.get_debt())))
 
                 self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
                                          BLACK, "Choose a property to sell:"))
