@@ -1430,8 +1430,8 @@ class ButtonOperands:
         # Grand Opera Night. Collect $50 from every player for opening night seats.
         elif value == 7:
             for player in board.get_players():
-                if player[0] is not current_player.get_name():
-                    board.take_money_from_player(player[0], 50)
+                if player is not current_player.get_name():
+                    board.take_money_from_player(player, 50)
                     current_player.give_money(50)
             board.next_turn_phase()
 

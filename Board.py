@@ -144,7 +144,7 @@ class Board:
                 if current_player.is_human:
                     self.gui.state_change(MENU_DEBT)
                 else:
-                    sell_off = current_player.ai_debt()
+                    sell_off = current_player.ai_sell_property()
                     self.property_sale(current_player.get_name(), sell_off)
                     self.gui.state_change(MENU_AI_SELL)
             else:  # current_player has no more properties to sell

@@ -158,7 +158,7 @@ class CardTile(Tile):
             elif choice == 9:
                 return choice, ["Community Chest:", "Income tax refund.", "Collect $ 20"]
             elif choice == 10:
-                return choice, ["Community Chest:", "Life insurance matures", "Collect $ 100"]
+                return choice, ["Community Chest:", "Life insurance","matures", "Collect $ 100"]
             elif choice == 11:
                 return choice, ["Community Chest:", "Hospital Fees.", "Pay $ 50"]
             elif choice == 12:
