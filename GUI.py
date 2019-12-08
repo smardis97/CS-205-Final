@@ -337,18 +337,18 @@ class GUI:
             if self.page_number == -1:
                 self.labels.append(Label((window_center_x, 40), BLACK, "You are in Debt"))
 
-                self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval), BLACK, "You owe:"))
-
-                self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval),
-                                         BLACK, "$ {}".format(player.get_debt())))
+                self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval), BLACK, "You owe:"))
 
                 self.labels.append(Label((window_center_x, window_center_y - 2 * y_interval),
+                                         BLACK, "$ {}".format(player.get_debt())))
+
+                self.labels.append(Label((window_center_x, window_center_y - 1 * y_interval),
                                          BLACK, "Choose a property to sell:"))
 
                 self.interactable.append(Button((window_center_x + window_center_x / 2, window_center_y + 4 * y_interval),
                                                 ">>>", ButtonOperands.page_right, BUTTON_COLOR, BUTTON_HIGHLIGHT))
             else:
-                self.labels.append(Label((window_center_x, window_center_y - 5 * y_interval), BLACK,
+                self.labels.append(Label((window_center_x, window_center_y - 4 * y_interval), BLACK,
                                          "{}".format(player.get_owned_properties()[self.page_number].get_name())))
 
                 self.labels.append(Label((window_center_x, window_center_y - 3 * y_interval), BLACK,
