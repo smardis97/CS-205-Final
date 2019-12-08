@@ -4,6 +4,9 @@ PYGAME_WINDOW_DEPTH = 768
 BOARD_FILE = "images/monopoly_768*768.png"
 BOARD_CENTERED_X = (PYGAME_WINDOW_WIDTH - PYGAME_WINDOW_DEPTH) / 2
 
+#
+# Drawn Colors
+#
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 LIGHT_GREEN = (47, 233, 33)
@@ -20,6 +23,7 @@ BRIGHT_ORANGE = (255, 158, 48)
 YELLOW = (247, 248, 6)
 PINK = (255, 21, 188)
 
+# Player colors are selected from:
 COLOR_SELECT = [
     DARK_RED,
     GREEN,
@@ -29,6 +33,7 @@ COLOR_SELECT = [
     LIME_GREEN
 ]
 
+# Property colors as the appear on the board.
 PROPERTY_COLOR = {
     "Purple": PURPLE,
     "Light Blue": LIGHT_BLUE,
@@ -42,10 +47,13 @@ PROPERTY_COLOR = {
     "Utility": WHITE
 }
 
+# Background color of the board.
 BACKGROUND_GREEN = (224, 246, 234)
 
+# number of square on the board.
 TILE_LIMIT = 40
 
+# all possible display state for the gui.
 MENU_NONE = "NONE"
 MENU_WAIT = "WAIT"
 MENU_MAIN = "MAIN"
@@ -73,10 +81,13 @@ MENU_AI_SELL = "AI_SELL"
 MENU_JAIL = "JAIL"
 MENU_OUT = "OUT"
 
+# for drawing player avatars
 PLAYER_GRAPHIC_RADIUS = 15
 HUMAN_MARKER_RADIUS = 5
 PLAYER_GRAPHIC_DIAMETER = 2 * PLAYER_GRAPHIC_RADIUS
+PlAYER_TILE_OFFSET = 20
 
+# for drawing tile details
 OWNER_MARKER_RADIUS = 8
 OWNER_MARKER_POSITION = (-10, -12)
 HOUSE_MARKER_DIMENSIONS = (17, 17)
@@ -84,6 +95,7 @@ HOUSE_MARKER_TEXT_OFFSET = (5, 4)
 HOUSE_MARKER_POSITION = (5, - HOUSE_MARKER_DIMENSIONS[1] - 5)
 HOUSE_MARKER_TEXT_SIZE = 12
 
+# for arranging elements on the left menu
 LEFT_MENU_SEPARATION = 140
 LEFT_MENU_MARGIN = 35
 LEFT_MENU_OFFSET = (25, 25)
@@ -91,6 +103,7 @@ LEFT_MENU_TEXT_OFFSET = (35, - 13)
 LEFT_MENU_TEXT_SIZE = 25
 LEFT_MENU_SUBTEXT_SIZE = 20
 
+# for arranging elements on the right menu
 RIGHT_MENU_MARGIN = 45
 RIGHT_MENU_PROP_MARGIN = 70
 RIGHT_MENU_BUTTON_MARGIN = 25
@@ -100,15 +113,18 @@ RIGHT_MENU_TEXT_SIZE = 25
 RIGHT_MENU_SUBTEXT_SIZE = 20
 RIGHT_MENU_ICON_SIZE = (30, 30)
 
-PlAYER_TILE_OFFSET = 20
-
+# number of distinct phases in a turn
 TURN_STAGE_COUNT = 4
 
+# dimensions for the main central menu
 GUI_WINDOW_DIMENSIONS = (400, 500)
 GUI_WINDOW_POSITION = (PYGAME_WINDOW_WIDTH / 2 - GUI_WINDOW_DIMENSIONS[0] / 2, PYGAME_WINDOW_DEPTH / 2 - GUI_WINDOW_DIMENSIONS[1] / 2)
 GUI_WINDOW_COLOR = (205, 255, 220)
 GUI_BORDER_WIDTH = 10
 
+#
+# Colors and Dimensions for MenuObjects
+#
 MENU_LABEL_SIZE = 40
 
 BUTTON_DIMENSIONS = (150, 40)
@@ -130,29 +146,44 @@ DICE_GRAPHIC_COLOR = (255, 255, 255)
 DICE_TEXT_COLOR = (0, 0, 0)
 DICE_TEXT_SIZE = 50
 
+# Approximate size of sqaures on the board.
 TILE_LONG_AXIS = 103.
 TILE_SHORT_AXIS = 62.25
 
+# A list of pairs of coordinates for the top-left and bottom-right corner of each square.
+
+# Go square
 TILE_BOUNDS = [((PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X - TILE_LONG_AXIS, PYGAME_WINDOW_DEPTH - TILE_LONG_AXIS),
                 (PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, float(PYGAME_WINDOW_DEPTH)))]
+
+# bottom nine squares
 for i in range(9):
     TILE_BOUNDS.append(((PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X - TILE_LONG_AXIS - TILE_SHORT_AXIS - i * TILE_SHORT_AXIS, PYGAME_WINDOW_DEPTH - TILE_LONG_AXIS),
                         (PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X - TILE_LONG_AXIS - i * TILE_SHORT_AXIS, PYGAME_WINDOW_DEPTH)))
 
+# Jail square
 TILE_BOUNDS.append(((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH - TILE_LONG_AXIS),
                     (BOARD_CENTERED_X + TILE_LONG_AXIS, PYGAME_WINDOW_DEPTH)))
+
+# left nine squares
 for i in range(9):
     TILE_BOUNDS.append(((BOARD_CENTERED_X, PYGAME_WINDOW_DEPTH - TILE_LONG_AXIS - TILE_SHORT_AXIS - i * TILE_SHORT_AXIS),
                         (BOARD_CENTERED_X + TILE_LONG_AXIS, PYGAME_WINDOW_DEPTH - TILE_LONG_AXIS - i * TILE_SHORT_AXIS)))
 
+# Free Parking square
 TILE_BOUNDS.append(((BOARD_CENTERED_X, 0.),
                     (BOARD_CENTERED_X + TILE_LONG_AXIS, TILE_LONG_AXIS)))
+
+# top nine sqaures
 for i in range(9):
     TILE_BOUNDS.append(((BOARD_CENTERED_X + TILE_LONG_AXIS + i * TILE_SHORT_AXIS, 0.),
                         (BOARD_CENTERED_X + TILE_LONG_AXIS + TILE_SHORT_AXIS + i * TILE_SHORT_AXIS, TILE_LONG_AXIS)))
 
+# Go To Jail square
 TILE_BOUNDS.append(((PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X - TILE_LONG_AXIS, 0.),
                     (PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, TILE_LONG_AXIS)))
+
+# right nine squares
 for i in range(9):
     TILE_BOUNDS.append(((PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X - TILE_LONG_AXIS, TILE_LONG_AXIS + i * TILE_SHORT_AXIS),
                         (PYGAME_WINDOW_WIDTH - BOARD_CENTERED_X, TILE_LONG_AXIS + TILE_SHORT_AXIS + i * TILE_SHORT_AXIS)))

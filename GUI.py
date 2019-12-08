@@ -1339,7 +1339,6 @@ class ButtonOperands:
             for property in current_player.get_owned_properties():
                 hotels += property.get_num_hotels()
                 houses += property.get_num_houses()
-            houses -= hotels  # since hotels are double counted
             board.take_money_from_player(current_player.get_name(), 25 * houses + 100 * hotels)
 
         # Pay poor tax, $15.
@@ -1471,7 +1470,6 @@ class ButtonOperands:
             for property in current_player.get_owned_properties():
                 hotels += property.get_num_hotels()
                 houses += property.get_num_houses()
-            houses -= hotels
             board.take_money_from_player(current_player.get_name(), 40 * houses + 115 * hotels)
             board.next_turn_phase()
 

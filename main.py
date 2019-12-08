@@ -1,28 +1,31 @@
 import pygame
 import GUI
 import Board
-from pygameWindow import PYGAME_WINDOW
+from pygameWindow import PygameWindow
 
 
 def main():
-    gameWindow = PYGAME_WINDOW()
-    gameBoard = Board.Board(gameWindow)
+    """
+    The actual run loop of the game.
+    """
+    game_window = PygameWindow()
+    game_board = Board.Board(game_window)
     while True:
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 exit(0)
             if event.type == pygame.KEYDOWN:
-                gameBoard.gui.key_listener(event)
+                game_board.gui.key_listener(event)
             if event.type == pygame.MOUSEMOTION:
-                gameBoard.gui.mouse_update(event)
+                game_board.gui.mouse_update(event)
             if event.type == pygame.MOUSEBUTTONDOWN:
-                gameBoard.gui.mouse_click(event)
+                game_board.gui.mouse_click(event)
 
-        gameWindow.Prepare()
+        game_window.prepare()
 
-        gameBoard.update()
+        game_board.update()
 
-        gameWindow.Reveal()
+        game_window.reveal()
 
 main()
