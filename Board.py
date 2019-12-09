@@ -134,8 +134,8 @@ class Board:
             self.turn_order.remove(current_player.get_name())
             del self.players[current_player.get_name()]
             for prop, tile in self.properties.items():
-                print(tile.get_name())
-                print(tile.get_owner())
+                if tile.get_owner() == current_player:
+                    tile.set_owner(None)
             if current_player.is_human:
                 self.gui.current_player = None
                 self.gui.state_change(MENU_OVER)
@@ -748,11 +748,11 @@ class Board:
         property_tile = self.properties[property_name]
 
         if property_tile.get_group() is not "Railroad" and property_tile.get_group() is not "Utility":
-            owner = self.players[property_name][0]
+            owner = self.players[property_tile.get_owner()][0]
             if owner.owns_all_properties_in_group(property_tile.get_group()) and property_tile.get_num_houses() == 0:
-                return 2 * property_tile.get_rent[0]
+                return 2 * property_tile.get_rent()[0]
             else:
-                return property_tile.get_rent[property_tile.get_num_houses()]
+                return property_tile.get_rent()[property_tile.get_num_houses()]
         else:
             owned_count = 0
             for name, prop_tile in self.properties.items():  # find all properties with the same owner and group
