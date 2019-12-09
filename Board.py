@@ -133,7 +133,11 @@ class Board:
         if self.special_event == 7:
             self.turn_order.remove(current_player.get_name())
             del self.players[current_player.get_name()]
+            for prop, tile in self.properties.items():
+                print(tile.get_name())
+                print(tile.get_owner())
             if current_player.is_human:
+                self.gui.current_player = None
                 self.gui.state_change(MENU_OVER)
             self.progress_turn()
         ################################################################################################################
@@ -358,7 +362,8 @@ class Board:
             elif self.current_turn_phase == 2:
                 if not current_player.is_human:
                     choice = current_player.ai_build()
-                    if choice is not None and choice.get_num_houses() < 4:
+                    if choice is not None and choice.get_num_houses() < 4 and\
+                            current_player.owns_all_properties_in_group(choice.get_group()):
                         choice.add_house()
                         self.take_money_from_player(current_player.get_name(), choice.get_house_cost())
             #
@@ -743,7 +748,11 @@ class Board:
         property_tile = self.properties[property_name]
 
         if property_tile.get_group() is not "Railroad" and property_tile.get_group() is not "Utility":
-            return property_tile.get_rent()[property_tile.get_num_houses()]
+            owner = self.players[property_name][0]
+            if owner.owns_all_properties_in_group(property_tile.get_group()) and property_tile.get_num_houses() == 0:
+                return 2 * property_tile.get_rent[0]
+            else:
+                return property_tile.get_rent[property_tile.get_num_houses()]
         else:
             owned_count = 0
             for name, prop_tile in self.properties.items():  # find all properties with the same owner and group

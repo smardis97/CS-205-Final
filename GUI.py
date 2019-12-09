@@ -364,8 +364,8 @@ class GUI:
                     self.interactable.append(Button((window_center_x + window_center_x / 2, window_center_y + 4 * y_interval),
                                                     ">>>", ButtonOperands.page_right, BUTTON_COLOR, BUTTON_HIGHLIGHT))
 
-                    self.interactable.append(Button((window_center_x - window_center_x / 2, window_center_y + 4 * y_interval),
-                                                    "<<<", ButtonOperands.page_left, BUTTON_COLOR, BUTTON_HIGHLIGHT))
+                self.interactable.append(Button((window_center_x - window_center_x / 2, window_center_y + 4 * y_interval),
+                                                "<<<", ButtonOperands.page_left, BUTTON_COLOR, BUTTON_HIGHLIGHT))
         #
         # PLAYER OUT OF JAIL ------------------------------------------------------------------------ PLAYER OUT OF JAIL
         #
@@ -600,6 +600,9 @@ class GUI:
             # only draw details for owned tiles
             if details.get_owner() is not None:
                 # set variables for improved readability
+                print(details.get_name())
+                print(details.get_owner())
+                print(self.board.get_players())
                 owner = self.board.get_players()[details.get_owner()][0]
 
                 # OWNER_MARKER_POSITION is the amount of offset from the bottom-right corner where the
@@ -740,8 +743,8 @@ class GUI:
                 index = player.get_owned_properties().index(property)
 
                 # relative positions for each element of the list
-                icon_pos = vector_add(base_position, (- RIGHT_MENU_ICON_SIZE[0] / 2,
-                                                      RIGHT_MENU_MARGIN + index * RIGHT_MENU_PROP_MARGIN - RIGHT_MENU_ICON_SIZE[1] / 2))
+                icon_pos = vector_add(base_position, vector_floor((- RIGHT_MENU_ICON_SIZE[0] / 2,
+                                                      RIGHT_MENU_MARGIN + index * RIGHT_MENU_PROP_MARGIN - RIGHT_MENU_ICON_SIZE[1] / 2)))
                 text_pos = vector_add(base_text_position, (0, RIGHT_MENU_MARGIN + index * RIGHT_MENU_PROP_MARGIN))
 
                 button_pos = vector_add(text_pos, (0, RIGHT_MENU_BUTTON_MARGIN))
@@ -1506,7 +1509,8 @@ class ButtonOperands:
         prop = board.get_properties()[value]
         if gui.current_player == prop.get_owner():
             owner = board.get_players()[gui.current_player][0]
-            if owner.get_money() >= prop.get_house_cost():
+            if owner.get_money() >= prop.get_house_cost() and prop.get_num_houses() < 4 and \
+                    owner.owns_all_properties_in_group(prop.get_group()):
                 prop.add_house()
                 owner.take_money(prop.get_house_cost())
 
@@ -1679,6 +1683,7 @@ class ButtonOperands:
         #
         elif mstate == MENU_DEBT:
             board.property_sale(gui.current_player, value)
+            gui.page_number = -1
             return MENU_WAIT
 
         #
@@ -1712,13 +1717,14 @@ class ButtonOperands:
             return MENU_WAIT
 
     @staticmethod
-    def cancel(board, **kwargs):
+    def cancel(board, gui, **kwargs):
         """
         Resets the player list and returns to the main menu.
 
 
         Parameters:
             board       (Board.Board):          Reference to the game board.
+            gui         (GUI):                  Reference to the game GUI.
             **kwargs    ({key: arg, ...}):      Additional arguments passed to the Button.
 
         Returns:

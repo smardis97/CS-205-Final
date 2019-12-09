@@ -39,7 +39,14 @@ class Player:
         Returns:
             bool:           Whether the player will buy this property.
         """
-        if property_tile.get_purchase_value() < self.money / 2:
+        group = property_tile.get_group()
+        own_part_of_group = False
+        for prop in self.owned_properties:
+            if prop.get_group() == group:
+                own_part_of_group = True
+        if own_part_of_group and self.money / 1.5 > property_tile.get_purchase_value():
+            return True
+        elif self.money / 2.5 > property_tile.get_purchase_value():
             return True
         else:
             return False
@@ -159,6 +166,19 @@ class Player:
         self.jail_counter -= 1
         if self.jail_counter == 0:
             self.get_out_of_jail()
+
+    def owns_all_properties_in_group(self, group):
+        count = 0
+        for prop in self.owned_properties:
+            if prop.get_group() == group:
+                count += 1
+
+        if group == "Purple" and count == 2 or group == "Blue" and count == 2:
+            return True
+        elif group in ["Light Blue", "Pink", "Orange", "Red", "Yellow", "Green"] and count == 3:
+            return True
+        else:
+            return False
 
     def add_debt(self, amount):
         """
